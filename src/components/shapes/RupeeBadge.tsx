@@ -1,6 +1,8 @@
 type RupeeBadgeProps = {
   // 0..1 over the whole animation duration (3.0s).
   t?: number;
+  // Used to namespace SVG <defs> ids to avoid collisions when multiple instances render.
+  idPrefix?: string;
 };
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
@@ -26,7 +28,7 @@ const dash = (length: number, progress: number) => {
   } as const;
 };
 
-export const RupeeBadge = ({t = 0}: RupeeBadgeProps) => {
+export const RupeeBadge = ({t = 0, idPrefix}: RupeeBadgeProps) => {
   // Phase 1 Prompt 039: 3.0s, play once.
   const time = clamp01(t);
   const sec = time * 3.0;
@@ -92,7 +94,7 @@ export const RupeeBadge = ({t = 0}: RupeeBadgeProps) => {
 
         return (
           <g transform={`translate(${rupeeX} ${rupeeY}) scale(${rupeeScale})`}>
-            {/* Stem (helps read as ₹) */}
+            {/* Stem (helps read as rupee) */}
             <path
               d="M9 7.75V14.25"
               fill="none"
@@ -164,25 +166,30 @@ export const RupeeBadge = ({t = 0}: RupeeBadgeProps) => {
     </g>
   );
 
+  const prefix = (idPrefix && idPrefix.trim().length > 0 ? idPrefix : "rupee").replace(/[^a-zA-Z0-9_-]/g, "-");
+  const bgId = `${prefix}-bg`;
+  const shimmerId = `${prefix}-shimmer`;
+  const clipId = `${prefix}-clip`;
+
   return (
     <g>
       <defs>
-        <radialGradient id="rupee-bg" cx="50%" cy="50%" r="65%">
+        <radialGradient id={bgId} cx="50%" cy="50%" r="65%">
           <stop offset="0%" stopColor={bgCenter} />
           <stop offset="100%" stopColor={bgEdge} />
         </radialGradient>
-        <linearGradient id="rupee-shimmer" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={shimmerId} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
           <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
           <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
         </linearGradient>
-        <clipPath id="rupee-clip">
+        <clipPath id={clipId}>
           <circle cx={cx} cy={cy} r={rOuter + 1} />
         </clipPath>
       </defs>
 
       {/* Soft radial fill INSIDE the badge (avoid a square-looking block) */}
-      <circle cx={cx} cy={cy} r={rOuter - 1.5} fill="url(#rupee-bg)" opacity={0.5} />
+      <circle cx={cx} cy={cy} r={rOuter - 1.5} fill={`url(#${bgId})`} opacity={0.5} />
 
       {/* Outer circle draw */}
       <circle
@@ -231,13 +238,13 @@ export const RupeeBadge = ({t = 0}: RupeeBadgeProps) => {
       {rupeeGroup}
 
       {/* Shimmer sweep */}
-      <g clipPath="url(#rupee-clip)" opacity={shimmerOpacity}>
+      <g clipPath={`url(#${clipId})`} opacity={shimmerOpacity}>
         <rect
           x={shimmerX}
           y={-20}
           width={12}
           height={160}
-          fill="url(#rupee-shimmer)"
+          fill={`url(#${shimmerId})`}
           transform={`rotate(25 ${shimmerX + 6} 50)`}
         />
       </g>

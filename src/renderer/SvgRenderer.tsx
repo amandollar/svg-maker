@@ -202,9 +202,9 @@ const renderShape = (element: AnimatedElement, drawProgress: number) => {
     case "desk":
       return <PersonAtDeskScene t={drawProgress} />;
     case "rupee":
-      return <RupeeBadge t={drawProgress} />;
+      return <RupeeBadge t={drawProgress} idPrefix={element.id} />;
     case "certificate":
-      return <CertificateScrollScene t={drawProgress} />;
+      return <CertificateScrollScene t={drawProgress} idPrefix={element.id} />;
     case "coffee":
       return (
         <CoffeeCup
@@ -498,7 +498,12 @@ const renderTrailLayer = (
             transformOrigin: "center center",
           }}
         >
-          <svg width={element.width} height={element.height} viewBox="0 0 100 100" fill="none">
+          <svg
+            width={element.width}
+            height={element.height}
+            viewBox={`0 0 ${element.viewBoxWidth ?? 100} ${element.viewBoxHeight ?? 100}`}
+            fill="none"
+          >
             {renderShape(element, 1)}
           </svg>
         </div>

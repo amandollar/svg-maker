@@ -37,7 +37,7 @@ const inferElementType = (prompt: string): ShapeType => {
   if (
     includesAny(normalized, [
       "rupee",
-      "₹",
+      "\u20B9",
       "inr",
       "rupee/dollar",
       "rupee dollar",

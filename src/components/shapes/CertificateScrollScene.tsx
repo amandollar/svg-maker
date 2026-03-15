@@ -1,6 +1,8 @@
 type CertificateScrollSceneProps = {
   // 0..1 over the whole scene duration.
   t?: number;
+  // Used to namespace SVG <defs> ids to avoid collisions when multiple instances render.
+  idPrefix?: string;
 };
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
@@ -18,7 +20,7 @@ const springy = (t: number) => {
   return p + Math.sin(p * Math.PI) * 0.16 * (1 - p);
 };
 
-export const CertificateScrollScene = ({t = 0}: CertificateScrollSceneProps) => {
+export const CertificateScrollScene = ({t = 0, idPrefix}: CertificateScrollSceneProps) => {
   // Phase 1 Prompt 040: 4.5s, play once.
   const time = clamp01(t);
   const sec = time * 4.5;
@@ -62,6 +64,9 @@ export const CertificateScrollScene = ({t = 0}: CertificateScrollSceneProps) => 
   const certX = cx - certW / 2;
   const certY = cy - certH / 2 + 1;
   const r = 6;
+  const prefix = (idPrefix && idPrefix.trim().length > 0 ? idPrefix : "cert").replace(/[^a-zA-Z0-9_-]/g, "-");
+  const shimmerId = `${prefix}-shimmer`;
+  const clipId = `${prefix}-clip`;
 
   // Colors (Phase 1).
   const bodyFill = "#FFFBEB";
@@ -110,12 +115,12 @@ export const CertificateScrollScene = ({t = 0}: CertificateScrollSceneProps) => 
   return (
     <g>
       <defs>
-        <linearGradient id="cert-shimmer" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={shimmerId} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
           <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
           <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
         </linearGradient>
-        <clipPath id="cert-clip">
+        <clipPath id={clipId}>
           <rect x={certX} y={certY} width={certW} height={certH} rx={r} />
         </clipPath>
       </defs>
@@ -287,13 +292,13 @@ export const CertificateScrollScene = ({t = 0}: CertificateScrollSceneProps) => 
         {line(certY + 38, 22, lineDate, pLine3)}
 
         {/* Shimmer sweep */}
-        <g clipPath="url(#cert-clip)" opacity={shimmerOpacity}>
+        <g clipPath={`url(#${clipId})`} opacity={shimmerOpacity}>
           <rect
             x={shimmerX}
             y={certY - 40}
             width={4}
             height={certH + 80}
-            fill="url(#cert-shimmer)"
+            fill={`url(#${shimmerId})`}
             transform={`rotate(35 ${shimmerX + 2} ${cy})`}
           />
         </g>
@@ -301,4 +306,3 @@ export const CertificateScrollScene = ({t = 0}: CertificateScrollSceneProps) => 
     </g>
   );
 };
-
