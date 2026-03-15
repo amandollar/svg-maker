@@ -1,0 +1,82 @@
+{
+  "id": "heart-centered-animation",
+  "title": "Heart Animation",
+  "duration": 2.4,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#FFFDD0"
+  },
+  "elements": [
+    {
+      "id": "main-heart",
+      "type": "heart",
+      "layer": "main",
+      "x": 440,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "fill": "#FF0000",
+      "opacity": 1,
+      "offsetX": -4,
+      "offsetY": -8,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 1.2,
+          "property": "scale",
+          "from": 1,
+          "to": 1.1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 1.2,
+          "end": 2.4,
+          "property": "scale",
+          "from": 1.1,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "main-heart-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 440,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#FF2D55",
+      "strokeWidth": 3,
+      "opacity": 0.16,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.2,
+          "property": "scale",
+          "from": 0.92,
+          "to": 1.26,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.55,
+          "property": "opacity",
+          "from": 0.16,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

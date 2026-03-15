@@ -1,0 +1,75 @@
+{
+  "id": "avatar-profile-reveal",
+  "title": "Profile Reveal Animation",
+  "duration": 2,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#001f3f"
+  },
+  "elements": [
+    {
+      "id": "main-avatar",
+      "type": "avatar",
+      "layer": "main",
+      "x": 490,
+      "y": 490,
+      "width": 200,
+      "height": 200,
+      "viewBoxWidth": 24,
+      "viewBoxHeight": 24,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 0,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "main-avatar-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 490,
+      "y": 490,
+      "width": 200,
+      "height": 200,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

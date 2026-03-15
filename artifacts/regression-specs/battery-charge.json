@@ -1,0 +1,107 @@
+{
+  "id": "battery-charge-animation",
+  "title": "Battery Charging Animation",
+  "duration": 2.2,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#1b1b1f"
+  },
+  "elements": [
+    {
+      "id": "battery-icon",
+      "type": "battery",
+      "layer": "main",
+      "x": 860,
+      "y": 340,
+      "width": 260,
+      "height": 400,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "fill": "#ffffff",
+      "stroke": "#22C55E",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.2,
+          "property": "scale",
+          "from": 0.8,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "charge-accent",
+      "type": "glow",
+      "layer": "foreground",
+      "x": 860,
+      "y": 340,
+      "width": 200,
+      "height": 400,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "fill": "#32cd32",
+      "strokeWidth": 0,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#32cd32",
+      "glowStrength": 5,
+      "shadowBlur": 0,
+      "trail": true,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.2,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "battery-icon-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 828.8,
+      "y": 292,
+      "width": 322.4,
+      "height": 496,
+      "fill": "#22C55E",
+      "opacity": 0.1,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1.12,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.8,
+          "property": "opacity",
+          "from": 0.1,
+          "to": 0.02,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

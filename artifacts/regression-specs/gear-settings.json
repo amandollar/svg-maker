@@ -1,0 +1,74 @@
+{
+  "id": "gear-animation",
+  "title": "Settings Gear Processing",
+  "duration": 2.3,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#000000"
+  },
+  "elements": [
+    {
+      "id": "gear1",
+      "type": "gear",
+      "layer": "main",
+      "x": 490,
+      "y": 490,
+      "width": 200,
+      "height": 200,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "stroke": "#FF2D55",
+      "strokeWidth": 1,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.3,
+          "property": "rotate",
+          "from": 0,
+          "to": 360,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "gear1-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 466,
+      "y": 466,
+      "width": 248,
+      "height": 248,
+      "fill": "#FF2D55",
+      "opacity": 0.1,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1.12,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.8,
+          "property": "opacity",
+          "from": 0.1,
+          "to": 0.02,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

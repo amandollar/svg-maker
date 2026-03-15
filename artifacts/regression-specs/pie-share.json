@@ -1,0 +1,115 @@
+{
+  "id": "pie-chart-market-share",
+  "title": "Pie Chart Market Share",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#333333"
+  },
+  "elements": [
+    {
+      "id": "main-pie-chart",
+      "type": "pie",
+      "layer": "main",
+      "x": 440,
+      "y": 440,
+      "width": 220,
+      "height": 220,
+      "viewBoxWidth": 512,
+      "viewBoxHeight": 512,
+      "fill": "#FFD700",
+      "stroke": "#FFFFFF",
+      "strokeWidth": 2,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 3,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "main-pie-chart-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 440,
+      "y": 440,
+      "width": 220,
+      "height": 220,
+      "stroke": "#FFFFFF",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "main-pie-chart-highlight",
+      "type": "glow",
+      "layer": "background",
+      "x": 567.6,
+      "y": 497.2,
+      "width": 101.2,
+      "height": 101.2,
+      "fill": "#6366F1",
+      "opacity": 0.14,
+      "glowColor": "#6366F1",
+      "glowStrength": 0.45,
+      "animations": [
+        {
+          "start": 2.6,
+          "end": 2.8000000000000003,
+          "property": "scale",
+          "from": 0.65,
+          "to": 1.35,
+          "easing": "easeOut"
+        },
+        {
+          "start": 2.6,
+          "end": 2.8000000000000003,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.14,
+          "easing": "easeOut"
+        },
+        {
+          "start": 2.8000000000000003,
+          "end": 3.55,
+          "property": "opacity",
+          "from": 0.14,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

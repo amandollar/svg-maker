@@ -1,0 +1,84 @@
+{
+  "id": "music-podcast-loop",
+  "title": "Music Podcast Animation",
+  "duration": 3,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#000000"
+  },
+  "elements": [
+    {
+      "id": "animated-headphones",
+      "type": "headphones",
+      "layer": "main",
+      "x": 490,
+      "y": 490,
+      "width": 230,
+      "height": 230,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 3,
+          "property": "scale",
+          "from": 1,
+          "to": 1.1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "animated-headphones-screen-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 471.6,
+      "y": 476.2,
+      "width": 266.79999999999995,
+      "height": 257.6,
+      "fill": "#FF2D55",
+      "opacity": 0.11,
+      "glowColor": "#FF2D55",
+      "glowStrength": 0.55,
+      "animations": [
+        {
+          "start": 0.99,
+          "end": 1.17,
+          "property": "scale",
+          "from": 0.88,
+          "to": 1.22,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.99,
+          "end": 1.17,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.11,
+          "easing": "easeOut"
+        },
+        {
+          "start": 1.17,
+          "end": 1.8399999999999999,
+          "property": "opacity",
+          "from": 0.11,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

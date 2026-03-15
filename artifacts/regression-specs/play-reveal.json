@@ -1,0 +1,76 @@
+{
+  "id": "video-intro-play-button",
+  "title": "Video Intro Play Button",
+  "duration": 2,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#1a1a1a"
+  },
+  "elements": [
+    {
+      "id": "play-button",
+      "type": "play",
+      "layer": "main",
+      "x": 910,
+      "y": 490,
+      "width": 200,
+      "height": 200,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "fill": "#ffffff",
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2,
+          "property": "scale",
+          "from": 0.5,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "play-button-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 910,
+      "y": 490,
+      "width": 200,
+      "height": 200,
+      "stroke": "#FF2D55",
+      "strokeWidth": 3,
+      "opacity": 0.14,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.25,
+          "property": "scale",
+          "from": 0.92,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.6,
+          "property": "opacity",
+          "from": 0.14,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

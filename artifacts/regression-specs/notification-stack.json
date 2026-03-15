@@ -1,0 +1,40 @@
+{
+  "id": "notification-stack-on-background-0f172a-1080x1920-9-16-verti",
+  "title": "Notification stack on background #0F172A, 1080x1920 (9:16) vertical, 4 seconds, play once, four notification cards stacked, each slides in from the right with staggered icon/text/badge, accent bars pulse, badge numbers count up, first card shakes then highlights, subtle accent glow at the end",
+  "duration": 4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#0f172a"
+  },
+  "elements": [
+    {
+      "id": "notifstack-1",
+      "type": "notifstack",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1080,
+      "height": 1920,
+      "viewBoxWidth": 90,
+      "viewBoxHeight": 160,
+      "stroke": "#FF2D55",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 4,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "id": "location-pin-animation",
+  "title": "Energetic Pin Drop",
+  "duration": 2.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#E0E0E0"
+  },
+  "elements": [
+    {
+      "id": "pin",
+      "type": "pin",
+      "layer": "main",
+      "x": 910,
+      "y": 490,
+      "width": 140,
+      "height": 140,
+      "viewBoxWidth": 24,
+      "viewBoxHeight": 24,
+      "fill": "#FF0000",
+      "stroke": "#B91C1C",
+      "strokeWidth": 4,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": -6,
+      "glowStrength": 0,
+      "shadowColor": "#000000",
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 1,
+          "property": "translateY",
+          "from": -100,
+          "to": 400,
+          "easing": "spring"
+        },
+        {
+          "start": 1.5,
+          "end": 2.5,
+          "property": "scale",
+          "from": 1,
+          "to": 1.2,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "pin-shadow",
+      "type": "shadow",
+      "layer": "background",
+      "x": 926.8,
+      "y": 593.6,
+      "width": 106.4,
+      "height": 39.2,
+      "fill": "#000000",
+      "opacity": 0.16,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "scale",
+          "from": 0.35,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "opacity",
+          "from": 0.02,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.77,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.12,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "pin-ripple",
+      "type": "ring",
+      "layer": "background",
+      "x": 932.4,
+      "y": 588,
+      "width": 95.2,
+      "height": 42,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.22,
+      "animations": [
+        {
+          "start": 0.32,
+          "end": 0.97,
+          "property": "scale",
+          "from": 0.7,
+          "to": 1.45,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.97,
+          "property": "opacity",
+          "from": 0.28,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

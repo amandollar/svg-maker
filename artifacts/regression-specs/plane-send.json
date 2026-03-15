@@ -1,0 +1,83 @@
+{
+  "id": "animation_001",
+  "title": "Message Sent Animation",
+  "duration": 2.1,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#000000"
+  },
+  "elements": [
+    {
+      "id": "plane_1",
+      "type": "plane",
+      "layer": "main",
+      "x": 910,
+      "y": 490,
+      "width": 230,
+      "height": 230,
+      "viewBoxWidth": 24,
+      "viewBoxHeight": 24,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.1,
+          "property": "translateY",
+          "from": 0,
+          "to": -400,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeIn"
+        }
+      ]
+    },
+    {
+      "id": "plane_1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 910,
+      "y": 490,
+      "width": 230,
+      "height": 230,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

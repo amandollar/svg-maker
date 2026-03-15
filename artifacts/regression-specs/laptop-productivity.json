@@ -1,0 +1,83 @@
+{
+  "id": "productivity_laptop_animation",
+  "title": "Laptop Productivity Animation",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#000000"
+  },
+  "elements": [
+    {
+      "id": "laptop_icon",
+      "type": "laptop",
+      "layer": "main",
+      "x": 860,
+      "y": 440,
+      "width": 300,
+      "height": 300,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "scale",
+          "from": 0.5,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 2.5,
+          "end": 3,
+          "property": "opacity",
+          "from": 1,
+          "to": 0,
+          "easing": "easeIn"
+        }
+      ]
+    },
+    {
+      "id": "laptop_icon-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 860,
+      "y": 440,
+      "width": 300,
+      "height": 300,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

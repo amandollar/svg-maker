@@ -1,0 +1,75 @@
+{
+  "id": "download-animation",
+  "title": "File Saving Animation",
+  "duration": 2.2,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#000000"
+  },
+  "elements": [
+    {
+      "id": "download-icon",
+      "type": "download",
+      "layer": "main",
+      "x": 885,
+      "y": 465,
+      "width": 230,
+      "height": 230,
+      "viewBoxWidth": 150,
+      "viewBoxHeight": 150,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.2,
+          "property": "translateY",
+          "from": -200,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "download-icon-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 885,
+      "y": 465,
+      "width": 230,
+      "height": 230,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

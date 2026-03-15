@@ -1,0 +1,182 @@
+{
+  "id": "restaurant-delivery-burger",
+  "title": "Restaurant Delivery",
+  "duration": 3.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#F5F5DC"
+  },
+  "elements": [
+    {
+      "id": "burger-icon",
+      "type": "burger",
+      "layer": "main",
+      "x": 440,
+      "y": 440,
+      "width": 270,
+      "height": 270,
+      "viewBoxWidth": 32,
+      "viewBoxHeight": 32,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.25,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "translateY",
+          "from": 26,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.5,
+          "end": 0.8,
+          "property": "scale",
+          "from": 1,
+          "to": 1.05,
+          "easing": "spring"
+        },
+        {
+          "start": 0.8,
+          "end": 1.05,
+          "property": "scale",
+          "from": 1.05,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 1.05,
+          "end": 1.35,
+          "property": "scale",
+          "from": 1,
+          "to": 1.06,
+          "easing": "spring"
+        },
+        {
+          "start": 1.35,
+          "end": 1.65,
+          "property": "scale",
+          "from": 1.06,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "burger-icon-shadow",
+      "type": "shadow",
+      "layer": "background",
+      "x": 467,
+      "y": 634.4,
+      "width": 216,
+      "height": 64.8,
+      "fill": "#000000",
+      "opacity": 0.14,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "scale",
+          "from": 0.5,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "opacity",
+          "from": 0.02,
+          "to": 0.14,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.5,
+          "end": 1.1,
+          "property": "opacity",
+          "from": 0.14,
+          "to": 0.12,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "burger-icon-steam",
+      "type": "steam",
+      "layer": "foreground",
+      "x": 521,
+      "y": 407.6,
+      "width": 108,
+      "height": 108,
+      "stroke": "#D4D4D8",
+      "strokeWidth": 4,
+      "opacity": 0,
+      "animations": [
+        {
+          "start": 1.4,
+          "end": 1.8,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 1.4,
+          "end": 1.8,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.55,
+          "easing": "easeOut"
+        },
+        {
+          "start": 1.8,
+          "end": 3.2,
+          "property": "opacity",
+          "from": 0.55,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 1.4,
+          "end": 2.2,
+          "property": "translateX",
+          "from": -4,
+          "to": 4,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 2.2,
+          "end": 3.2,
+          "property": "translateX",
+          "from": 4,
+          "to": -2,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 1.4,
+          "end": 3.2,
+          "property": "translateY",
+          "from": 6,
+          "to": -10,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

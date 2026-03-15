@@ -1,0 +1,40 @@
+{
+  "id": "person-at-desk-productive-work-scene-on-background-fef9ee-19",
+  "title": "Person at desk productive work scene on background #FEF9EE, 1920x1080 (16:9) landscape, 5 seconds, seamless loop, warm cozy workspace: desk and chair spring in, person pops in, laptop/mug/plant stagger in, lamp appears and light cone extends, sticky notes drop, clock hands appear, then idle loop with head nod, steam rising, cursor blink, minute hand subtle advance",
+  "duration": 5,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#fef9ee"
+  },
+  "elements": [
+    {
+      "id": "desk-1",
+      "type": "desk",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#fef9ee",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

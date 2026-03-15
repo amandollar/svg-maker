@@ -1,0 +1,90 @@
+{
+  "id": "dreamy-heart-animation",
+  "title": "Dreamy Heart Animation",
+  "duration": 2.8,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#FFDAB9"
+  },
+  "elements": [
+    {
+      "id": "heart1",
+      "type": "heart",
+      "layer": "main",
+      "x": 490,
+      "y": 490,
+      "width": 160,
+      "height": 160,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "fill": "#FFC0CB",
+      "opacity": 1,
+      "offsetX": -4,
+      "offsetY": -8,
+      "glowColor": "#FFB6C1",
+      "glowStrength": 0.5,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.8,
+          "property": "scale",
+          "from": 1,
+          "to": 1.1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 2.8,
+          "property": "opacity",
+          "from": 0.9,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "heart1-shadow",
+      "type": "shadow",
+      "layer": "background",
+      "x": 509.2,
+      "y": 608.4,
+      "width": 121.6,
+      "height": 44.800000000000004,
+      "fill": "#000000",
+      "opacity": 0.16,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "scale",
+          "from": 0.35,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "opacity",
+          "from": 0.02,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.77,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.12,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

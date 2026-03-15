@@ -1,0 +1,40 @@
+{
+  "id": "rocket-launch-on-background-0b1120-1920x1080-16-9-landscape-",
+  "title": "Rocket launch on background #0B1120, 1920x1080 (16:9) landscape, 4.5 seconds, play once, stars fade in then rocket launches upward with flame flicker and particles, startup launch day animation",
+  "duration": 4.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#0b1120"
+  },
+  "elements": [
+    {
+      "id": "rocket-1",
+      "type": "rocket",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#0b1120",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 4.5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

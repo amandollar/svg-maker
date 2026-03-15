@@ -1,0 +1,85 @@
+{
+  "id": "live-recording-animation",
+  "title": "Live Recording Animation",
+  "duration": 2.2,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#333333"
+  },
+  "elements": [
+    {
+      "id": "mic-icon",
+      "type": "mic",
+      "layer": "main",
+      "x": 440,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "viewBoxWidth": 48,
+      "viewBoxHeight": 48,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#00FF00",
+      "glowStrength": 10,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.2,
+          "property": "scale",
+          "from": 1,
+          "to": 1.1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "mic-icon-screen-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 424,
+      "y": 428,
+      "width": 231.99999999999997,
+      "height": 224.00000000000003,
+      "fill": "#FF2D55",
+      "opacity": 0.11,
+      "glowColor": "#FF2D55",
+      "glowStrength": 0.55,
+      "animations": [
+        {
+          "start": 0.99,
+          "end": 1.17,
+          "property": "scale",
+          "from": 0.88,
+          "to": 1.22,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.99,
+          "end": 1.17,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.11,
+          "easing": "easeOut"
+        },
+        {
+          "start": 1.17,
+          "end": 1.8399999999999999,
+          "property": "opacity",
+          "from": 0.11,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

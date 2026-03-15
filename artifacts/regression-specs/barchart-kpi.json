@@ -1,0 +1,163 @@
+{
+  "id": "barchart-kpi-animation",
+  "title": "Mini Bar Chart KPI Animation",
+  "duration": 3.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#001f3f"
+  },
+  "elements": [
+    {
+      "id": "barchart",
+      "type": "barchart",
+      "layer": "main",
+      "x": 860,
+      "y": 340,
+      "width": 260,
+      "height": 400,
+      "viewBoxWidth": 20,
+      "viewBoxHeight": 40,
+      "fill": "#0074D9",
+      "stroke": "#334155",
+      "strokeWidth": 4,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.38,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 2.2,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.08,
+          "end": 1.9250000000000003,
+          "property": "translateY",
+          "from": 10,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.08,
+          "end": 1.575,
+          "property": "translateX",
+          "from": -4,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.06,
+          "end": 1.75,
+          "property": "rotate",
+          "from": -1.2,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 2.1500000000000004,
+          "end": 2.6500000000000004,
+          "property": "scale",
+          "from": 1,
+          "to": 1.06,
+          "easing": "spring"
+        },
+        {
+          "start": 2.6500000000000004,
+          "end": 2.9000000000000004,
+          "property": "scale",
+          "from": 1.06,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "barchart-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 860,
+      "y": 340,
+      "width": 260,
+      "height": 400,
+      "stroke": "#334155",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "barchart-highlight",
+      "type": "glow",
+      "layer": "background",
+      "x": 1010.8,
+      "y": 444,
+      "width": 119.60000000000001,
+      "height": 184,
+      "fill": "#6366F1",
+      "opacity": 0.14,
+      "glowColor": "#6366F1",
+      "glowStrength": 0.45,
+      "animations": [
+        {
+          "start": 2.2600000000000002,
+          "end": 2.4600000000000004,
+          "property": "scale",
+          "from": 0.65,
+          "to": 1.35,
+          "easing": "easeOut"
+        },
+        {
+          "start": 2.2600000000000002,
+          "end": 2.4600000000000004,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.14,
+          "easing": "easeOut"
+        },
+        {
+          "start": 2.4600000000000004,
+          "end": 3.21,
+          "property": "opacity",
+          "from": 0.14,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

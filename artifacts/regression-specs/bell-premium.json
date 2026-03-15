@@ -1,0 +1,115 @@
+{
+  "id": "golden-notification-bell",
+  "title": "Premium Gold Notification Bell",
+  "duration": 2,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#001f3f"
+  },
+  "elements": [
+    {
+      "id": "bell1",
+      "type": "bell",
+      "layer": "main",
+      "x": 490,
+      "y": 845,
+      "width": 130,
+      "height": 130,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "stroke": "#FACC15",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2,
+          "property": "scale",
+          "from": 1,
+          "to": 1.1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 2,
+          "property": "translateY",
+          "from": 0,
+          "to": -10,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "bell1-ghost",
+      "type": "bell",
+      "layer": "background",
+      "x": 486.1,
+      "y": 845,
+      "width": 130,
+      "height": 130,
+      "stroke": "#FACC15",
+      "strokeWidth": 6,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0.14,
+          "to": 0.06,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.75,
+          "property": "opacity",
+          "from": 0.06,
+          "to": 0.02,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.08,
+          "property": "rotate",
+          "from": 0,
+          "to": 10,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.08,
+          "end": 0.2,
+          "property": "rotate",
+          "from": 10,
+          "to": -10.5,
+          "easing": "spring"
+        },
+        {
+          "start": 0.2,
+          "end": 0.34,
+          "property": "rotate",
+          "from": -10.5,
+          "to": 7,
+          "easing": "spring"
+        },
+        {
+          "start": 0.34,
+          "end": 0.52,
+          "property": "rotate",
+          "from": 7,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "id": "swipe-up-cta",
+  "title": "Swipe Up CTA Animation",
+  "duration": 1.6,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#000000"
+  },
+  "elements": [
+    {
+      "id": "up-arrow",
+      "type": "arrow",
+      "layer": "main",
+      "x": 465,
+      "y": 885,
+      "width": 150,
+      "height": 150,
+      "viewBoxWidth": 150,
+      "viewBoxHeight": 150,
+      "stroke": "#FF2D55",
+      "strokeWidth": 8,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 1.6,
+          "property": "translateY",
+          "from": 15,
+          "to": -15,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "up-arrow-stack-1",
+      "type": "arrow",
+      "layer": "background",
+      "x": 465,
+      "y": 936,
+      "width": 150,
+      "height": 150,
+      "stroke": "#FF2D55",
+      "strokeWidth": 8,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.45,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0.28,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.45,
+          "end": 1,
+          "property": "opacity",
+          "from": 0.28,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0,
+          "end": 1,
+          "property": "translateY",
+          "from": 18,
+          "to": -12,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "up-arrow-stack-2",
+      "type": "arrow",
+      "layer": "background",
+      "x": 465,
+      "y": 987,
+      "width": 150,
+      "height": 150,
+      "stroke": "#FF2D55",
+      "strokeWidth": 8,
+      "opacity": 0.1,
+      "animations": [
+        {
+          "start": 0.12,
+          "end": 0.55,
+          "property": "opacity",
+          "from": 0.1,
+          "to": 0.24,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.55,
+          "end": 1.1,
+          "property": "opacity",
+          "from": 0.24,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.12,
+          "end": 1.1,
+          "property": "translateY",
+          "from": 20,
+          "to": -10,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

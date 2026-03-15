@@ -1,0 +1,75 @@
+{
+  "id": "search-loading-animation",
+  "title": "Search Loading Animation",
+  "duration": 2.1,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#000000"
+  },
+  "elements": [
+    {
+      "id": "search-icon",
+      "type": "search",
+      "layer": "main",
+      "x": 440,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "viewBoxWidth": 24,
+      "viewBoxHeight": 24,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.1,
+          "property": "rotate",
+          "from": 0,
+          "to": 360,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "search-icon-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 440,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

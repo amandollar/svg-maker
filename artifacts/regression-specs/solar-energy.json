@@ -1,0 +1,40 @@
+{
+  "id": "solar-panel-sun-clean-energy-scene-on-background-eff6ff-1920",
+  "title": "Solar panel + sun clean energy scene on background #EFF6FF, 1920x1080 (16:9) landscape, 5 seconds, seamless loop, ground and house appear, solar panel reveals, cells fill in, sun fades in with rays, energy bolt flows from panel to house",
+  "duration": 5,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#eff6ff"
+  },
+  "elements": [
+    {
+      "id": "solar-1",
+      "type": "solar",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#eff6ff",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

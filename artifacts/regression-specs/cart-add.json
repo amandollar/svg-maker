@@ -1,0 +1,83 @@
+{
+  "id": "add-to-cart-animation",
+  "title": "Add to Cart Confirmation",
+  "duration": 2.3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#333333"
+  },
+  "elements": [
+    {
+      "id": "shopping-cart",
+      "type": "cart",
+      "layer": "main",
+      "x": 885,
+      "y": 465,
+      "width": 240,
+      "height": 240,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0.3,
+          "end": 1,
+          "property": "scale",
+          "from": 0.5,
+          "to": 1.2,
+          "easing": "easeOut"
+        },
+        {
+          "start": 1,
+          "end": 2.3,
+          "property": "scale",
+          "from": 1.2,
+          "to": 1,
+          "easing": "easeIn"
+        }
+      ]
+    },
+    {
+      "id": "shopping-cart-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 885,
+      "y": 465,
+      "width": 240,
+      "height": 240,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

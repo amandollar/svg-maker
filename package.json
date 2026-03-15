@@ -1,0 +1,30 @@
+{
+  "name": "animate-svg",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Phase 1 SVG motion graphics engine built with Remotion, React, and TypeScript.",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "start": "remotion studio src/index.ts",
+    "render:generated": "remotion render src/index.ts generated-prompt out/generated-prompt.mp4",
+    "build": "tsc --noEmit",
+    "generate": "tsx src/generate.ts",
+    "qa:generate": "tsx src/qa/run-regression.ts"
+  },
+  "dependencies": {
+    "openai": "^6.27.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.271",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@remotion/cli": "^4.0.271",
+    "@types/node": "^24.3.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "dotenv": "^17.2.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.8.2"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "id": "stock_growth_trend",
+  "title": "Stock Growth Animation",
+  "duration": 2.8,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#000000"
+  },
+  "elements": [
+    {
+      "id": "trend_symbol",
+      "type": "trend",
+      "layer": "main",
+      "x": 490,
+      "y": 490,
+      "width": 230,
+      "height": 230,
+      "viewBoxWidth": 24,
+      "viewBoxHeight": 24,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2.8,
+          "property": "scale",
+          "from": 0.5,
+          "to": 1.5,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "trend_symbol-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 490,
+      "y": 490,
+      "width": 230,
+      "height": 230,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

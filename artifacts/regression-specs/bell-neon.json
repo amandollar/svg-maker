@@ -1,0 +1,137 @@
+{
+  "id": "neon_gold_bell",
+  "title": "Neon Gold Notification Bell",
+  "duration": 2,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#001F3F"
+  },
+  "elements": [
+    {
+      "id": "bell1",
+      "type": "bell",
+      "layer": "main",
+      "x": 440,
+      "y": 845,
+      "width": 200,
+      "height": 200,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "stroke": "#FACC15",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#FFD700",
+      "glowStrength": 15,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 2,
+          "property": "rotate",
+          "from": -15,
+          "to": 15,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "bell1-ghost",
+      "type": "bell",
+      "layer": "background",
+      "x": 434,
+      "y": 845,
+      "width": 200,
+      "height": 200,
+      "stroke": "#FACC15",
+      "strokeWidth": 6,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.06,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.75,
+          "property": "opacity",
+          "from": 0.06,
+          "to": 0.02,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.08,
+          "property": "rotate",
+          "from": 0,
+          "to": 14,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.08,
+          "end": 0.2,
+          "property": "rotate",
+          "from": 14,
+          "to": -14.700000000000001,
+          "easing": "spring"
+        },
+        {
+          "start": 0.2,
+          "end": 0.34,
+          "property": "rotate",
+          "from": -14.700000000000001,
+          "to": 9.799999999999999,
+          "easing": "spring"
+        },
+        {
+          "start": 0.34,
+          "end": 0.52,
+          "property": "rotate",
+          "from": 9.799999999999999,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "bell1-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 424,
+      "y": 829,
+      "width": 231.99999999999997,
+      "height": 231.99999999999997,
+      "fill": "#FACC15",
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1.1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "opacity",
+          "from": 0.14,
+          "to": 0.04,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

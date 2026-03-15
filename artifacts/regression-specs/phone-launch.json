@@ -1,0 +1,116 @@
+{
+  "id": "smartphone-launch",
+  "title": "Smartphone App Launch Animation",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#001f3f"
+  },
+  "elements": [
+    {
+      "id": "phone-icon",
+      "type": "phone",
+      "layer": "main",
+      "x": 440,
+      "y": 860,
+      "width": 220,
+      "height": 220,
+      "viewBoxWidth": 1024,
+      "viewBoxHeight": 1024,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.18,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.95,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.2,
+          "end": 0.95,
+          "property": "translateY",
+          "from": 10,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.95,
+          "end": 1.25,
+          "property": "scale",
+          "from": 1,
+          "to": 1.06,
+          "easing": "spring"
+        },
+        {
+          "start": 1.25,
+          "end": 1.5,
+          "property": "scale",
+          "from": 1.06,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "phone-icon-screen-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 422.4,
+      "y": 846.8,
+      "width": 255.2,
+      "height": 246.40000000000003,
+      "fill": "#FF2D55",
+      "opacity": 0.11,
+      "glowColor": "#FF2D55",
+      "glowStrength": 0.55,
+      "animations": [
+        {
+          "start": 0.99,
+          "end": 1.17,
+          "property": "scale",
+          "from": 0.88,
+          "to": 1.22,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.99,
+          "end": 1.17,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.11,
+          "easing": "easeOut"
+        },
+        {
+          "start": 1.17,
+          "end": 1.8399999999999999,
+          "property": "opacity",
+          "from": 0.11,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}
