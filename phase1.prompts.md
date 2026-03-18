@@ -1566,7 +1566,7 @@ COMPLEXITY STEP UP → Full multi-element story scenes (25–30 paths)
 ───────────────────────────────────────────────────────────────────────────────
 
 ───────────────────────────────────────────────────────────────────────────────
-PROMPT 036: Notification Stack — Social Media Dashboard
+: Notification Stack — Social Media Dashboard
 ───────────────────────────────────────────────────────────────────────────────
 CANVAS: 1080×1920px (9:16 Vertical)
 DURATION: 4.0s | LOOP: No

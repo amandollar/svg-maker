@@ -1,0 +1,132 @@
+{
+  "id": "prompt-013-home-icon-property-real-estate-canvas-1920-1080px",
+  "title": "PROMPT 013: Home Icon — Property/Real Estate\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 3.0s | LOOP: No\r\nSVG: House (6 paths: roof triangle, chimney rect, main body rect, door rect, 2 window squares) — centered 960×520px, 140px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #EFF6FF (very light blue)\r\nRoof fill: #1D4ED8 (deep blue)\r\nBody fill: #DBEAFE (pale blue)\r\nDoor fill: #1D4ED8 (matching roof)\r\nWindow fill: #FEF08A (warm yellow — lit window)\r\nChimney fill: #1D4ED8\r\nOutline stroke (all): #1E40AF (2px, dark blue)\r\n\r\nVISUAL LAYOUT:\r\nHouse assembled piece by piece: base first, then roof, then details.\r\nSits at Y:520 center. Clean flat illustration.\r\n\r\nANIMATION TIMELINE (3.0s total):\r\n0–0.0s: All paths invisible.\r\n0–0.3s: Body rectangle rises from ground (Y: 620 → 520, opacity 0 → 1.0, ease-out).\r\n0.3–0.6s: Roof slides down from above (Y: 360 → 420, ease-out spring).\r\n0.6–0.75s: Chimney pops in (scale 0 → 1.0, spring).\r\n0.75–0.95s: Door scales up from base of body (scaleY 0 → 1.0, transform-origin bottom, ease-out).\r\n0.95–1.1s: Left window pops in (scale 0 → 1.0, spring, slight delay).\r\n1.05–1.2s: Right window pops in (scale 0 → 1.0, spring).\r\n1.2–1.6s: Windows glow warm (fill #FEF08A pulses brightness: 100% → 130% → 100%, ease-in-out, twice).\r\n1.6–2.2s: Whole house scales 1.0 → 1.04 → 1.0 (gentle breathe, ease-in-out).\r\n2.2–3.0s: Hold.\r\n\r\nEASING CURVES:\r\n- Body rise: ease-out\r\n- Roof spring: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Pop-ins: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Window glow: ease-in-out",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#eff6ff"
+  },
+  "elements": [
+    {
+      "id": "arrow-1",
+      "type": "arrow",
+      "layer": "main",
+      "x": 905,
+      "y": 485,
+      "width": 110,
+      "height": 110,
+      "stroke": "#3B82F6",
+      "strokeWidth": 8,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#3B82F6",
+      "glowStrength": 0.45,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.35,
+          "end": 0.9,
+          "property": "translateY",
+          "from": 12,
+          "to": -12,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 1,
+          "end": 1.3,
+          "property": "opacity",
+          "from": 1,
+          "to": 0,
+          "easing": "easeIn"
+        }
+      ]
+    },
+    {
+      "id": "arrow-1-stack-1",
+      "type": "arrow",
+      "layer": "background",
+      "x": 905,
+      "y": 522.4,
+      "width": 110,
+      "height": 110,
+      "stroke": "#3B82F6",
+      "strokeWidth": 8,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.45,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0.28,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.45,
+          "end": 1,
+          "property": "opacity",
+          "from": 0.28,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0,
+          "end": 1,
+          "property": "translateY",
+          "from": 18,
+          "to": -12,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "arrow-1-stack-2",
+      "type": "arrow",
+      "layer": "background",
+      "x": 905,
+      "y": 559.8,
+      "width": 110,
+      "height": 110,
+      "stroke": "#3B82F6",
+      "strokeWidth": 8,
+      "opacity": 0.1,
+      "animations": [
+        {
+          "start": 0.12,
+          "end": 0.55,
+          "property": "opacity",
+          "from": 0.1,
+          "to": 0.24,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.55,
+          "end": 1.1,
+          "property": "opacity",
+          "from": 0.24,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.12,
+          "end": 1.1,
+          "property": "translateY",
+          "from": 20,
+          "to": -10,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "id": "prompt-001-heart-pulse-like-notification-canvas-1080-1080px-",
+  "title": "PROMPT 001: Heart Pulse — Like Notification\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1080px (1:1 Square)\r\nDURATION: 2.5s | LOOP: Yes\r\nSVG: Heart icon (Heroicons solid / 2 paths) — centered at 540×540px, 160px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #1A1A1A (near-black)\r\nHeart fill: #FF2D55 (Instagram red-pink)\r\nHeart stroke: none\r\nGlow color: #FF6680 (soft pink glow)\r\n\r\nVISUAL LAYOUT:\r\nHeart icon centered. No text, no other elements. Full bleed dark background.\r\nAt rest: heart at 120px, opacity 85%.\r\n\r\nANIMATION TIMELINE (2.5s total, loopable):\r\n0–0.1s: Heart scales 1.0 → 1.35 (snap-up, fast ease-in)\r\n0.1–0.3s: Heart scales 1.35 → 0.9 (elastic overshoot back, spring curve)\r\n0.3–0.55s: Heart scales 0.9 → 1.0 (settle, ease-out)\r\n0.55–0.8s: Glow expands outward (blur radius 0 → 18px, opacity 0.8 → 0, ease-out)\r\n0.8–2.0s: Hold at rest — slight breathing scale (1.0 → 1.04 → 1.0, ease-in-out, 1.2s cycle)\r\n2.0–2.5s: Pause before loop\r\n\r\nEASING CURVES:\r\n- Snap-up: cubic-bezier(0.4, 0, 0.6, 1)\r\n- Spring settle: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Breathing: ease-in-out",
+  "duration": 2.5,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#1a1a1a"
+  },
+  "elements": [
+    {
+      "id": "heart-1",
+      "type": "heart",
+      "layer": "main",
+      "x": 460,
+      "y": 460,
+      "width": 160,
+      "height": 160,
+      "fill": "#ff2d55",
+      "opacity": 0.92,
+      "offsetX": -4,
+      "offsetY": -8,
+      "glowColor": "#ff6680",
+      "glowStrength": 0.36000000000000004,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.2,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.12,
+          "property": "scale",
+          "from": 0.92,
+          "to": 1.18,
+          "easing": "snapUp"
+        },
+        {
+          "start": 0.12,
+          "end": 0.28,
+          "property": "scale",
+          "from": 1.18,
+          "to": 0.96,
+          "easing": "spring"
+        },
+        {
+          "start": 0.28,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.96,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.46,
+          "end": 0.82,
+          "property": "scale",
+          "from": 1,
+          "to": 1.06,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.82,
+          "end": 1.12,
+          "property": "scale",
+          "from": 1.06,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "heart-1-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 447.2,
+      "y": 447.2,
+      "width": 185.6,
+      "height": 185.6,
+      "fill": "#ff6680",
+      "opacity": 0.14,
+      "animations": [
+        {
+          "start": 0.039999999999999994,
+          "end": 0.16,
+          "property": "scale",
+          "from": 0.88,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.039999999999999994,
+          "end": 0.16,
+          "property": "opacity",
+          "from": 0.02,
+          "to": 0.14,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.16,
+          "end": 0.67,
+          "property": "opacity",
+          "from": 0.14,
+          "to": 0.04,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

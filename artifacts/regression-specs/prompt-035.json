@@ -1,0 +1,40 @@
+{
+  "id": "prompt-035-solar-panel-sun-clean-energy-canvas-1920-1080px-1",
+  "title": "PROMPT 035: Solar Panel + Sun — Clean Energy\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 5.0s | LOOP: Yes\r\nSVG: Solar panel system (26 paths: panel frame outer rect, 12 individual solar cell rects (3×4 grid), panel mount pole, panel mount base, sun circle, 8 sun ray lines, ground horizon line, house silhouette simple (5 paths), energy bolt path connecting panel to house, cloud path optional) — panel at 780×400px, house at 1300×540px\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #EFF6FF (light sky blue)\r\nSolar panel frame fill: #374151 (dark grey)\r\nSolar cell fill: #1D4ED8 (dark blue, active) / #DBEAFE (pale blue, inactive)\r\nPanel mount fill: #6B7280\r\nSun fill: #FBBF24 (warm gold)\r\nSun rays stroke: #F59E0B (amber, 3px)\r\nGround line fill: #D1FAE5 (light green)\r\nHouse fill: #F59E0B (amber) / roof #B45309 (dark amber)\r\nEnergy bolt stroke: #FBBF24 (gold, dashed animated, 3px)\r\nCloud fill: #FFFFFF (optional, 80% opacity)\r\n\r\nVISUAL LAYOUT:\r\nPanel on left of frame. Sun upper-center. House on right. Energy flows panel → house via bolt path.\r\n\r\nANIMATION TIMELINE (5.0s loopable):\r\n0–0.5s: Ground and sky background establish (fade in, ease-out).\r\n0.5–0.8s: House silhouette slides up from ground (Y: +40px → 0, ease-out spring).\r\n0.8–1.1s: Panel and mount reveal (scale 0 → 1.0, spring).\r\n1.1–1.5s: Solar cells fill in one by one (each cell scales 0→1.0, 0.06s stagger, grid fills L→R top→bottom).\r\n1.5–1.8s: Sun fades in + scales 0.8 → 1.0 (ease-out spring).\r\n1.8–2.2s: Sun rays draw outward (each ray: dashoffset 100%→0%, 0.05s stagger per ray, ease-out).\r\n2.2–2.6s: Solar cells transition pale → dark blue (each cell sequentially, 0.06s stagger, ease-out) — \"charging\" state.\r\n2.6–3.5s (looping): Energy bolt dashes animate along path from panel to house (stroke-dashoffset animated continuously, 0.8s per cycle, linear). Houses glows warmly (opacity pulse 1.0→1.2→1.0 on house fill, ease-in-out).\r\n3.5–4.5s: Sun pulses glow (blur 0→20px→0px, ease-in-out, 1s cycle, loops).\r\n4.5–5.0s: All elements hold. Loop resets.\r\n\r\nEASING CURVES:\r\n- Entry elements: ease-out / spring\r\n- Cell charge: ease-out\r\n- Energy bolt: linear\r\n- Sun glow: ease-in-out",
+  "duration": 5,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#eff6ff"
+  },
+  "elements": [
+    {
+      "id": "solar-1",
+      "type": "solar",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#22C55E",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

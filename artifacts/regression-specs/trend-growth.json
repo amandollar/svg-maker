@@ -1,5 +1,5 @@
 {
-  "id": "stock_growth_trend",
+  "id": "stock-growth-animation",
   "title": "Stock Growth Animation",
   "duration": 2.8,
   "fps": 30,
@@ -7,21 +7,21 @@
   "canvas": {
     "width": 1080,
     "height": 1080,
-    "background": "#000000"
+    "background": "#202020"
   },
   "elements": [
     {
-      "id": "trend_symbol",
+      "id": "trend-line",
       "type": "trend",
       "layer": "main",
-      "x": 490,
-      "y": 490,
-      "width": 230,
-      "height": 230,
-      "viewBoxWidth": 24,
-      "viewBoxHeight": 24,
+      "x": 190,
+      "y": 190,
+      "width": 700,
+      "height": 700,
+      "viewBoxWidth": 700,
+      "viewBoxHeight": 700,
       "stroke": "#FF2D55",
-      "strokeWidth": 6,
+      "strokeWidth": 3,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
@@ -34,21 +34,21 @@
         {
           "start": 0,
           "end": 2.8,
-          "property": "scale",
-          "from": 0.5,
-          "to": 1.5,
-          "easing": "easeOut"
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
         }
       ]
     },
     {
-      "id": "trend_symbol-ring",
+      "id": "trend-line-ring",
       "type": "ring",
       "layer": "background",
-      "x": 490,
-      "y": 490,
-      "width": 230,
-      "height": 230,
+      "x": 190,
+      "y": 190,
+      "width": 700,
+      "height": 700,
       "stroke": "#FF2D55",
       "strokeWidth": 2,
       "opacity": 0.12,

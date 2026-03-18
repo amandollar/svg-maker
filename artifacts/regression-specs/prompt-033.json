@@ -1,0 +1,40 @@
+{
+  "id": "prompt-033-delivery-truck-shipping-ecommerce-canvas-1920-108",
+  "title": "PROMPT 033: Delivery Truck — Shipping / Ecommerce\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 4.0s | LOOP: No\r\nSVG: Delivery truck (22 paths: cargo box body, cab section, windshield, door window, side mirror, front bumper, grille rect, 2 front lights, 2 rear lights, front wheel circle, rear wheel circle, 2 wheel hubcap circles, ground shadow, speed lines ×3 behind truck, company panel on box side, road line below, exhaust pipe) — truck body spanning 700×280px, centered at 960×600px\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #EFF6FF (very light blue)\r\nTruck cab fill: #1D4ED8 (deep blue)\r\nTruck cab stroke: #1E40AF (2px)\r\nCargo box fill: #DBEAFE (pale blue)\r\nCargo box stroke: #3B82F6 (2px)\r\nWindshield fill: #BAE6FD (sky blue)\r\nLights fill: #FBBF24 (amber/yellow)\r\nWheels fill: #1E293B (dark grey)\r\nHubcaps fill: #94A3B8 (silver)\r\nSpeed lines stroke: #93C5FD (pale blue, 2px, dashed)\r\nGround shadow: #1D4ED820 (blue 12%)\r\nRoad line: #CBD5E1 (dashed white line, 2px, below truck)\r\nCompany panel: #1D4ED8 with #FFFFFF \"EXPRESS\" text (16pt bold)\r\n\r\nVISUAL LAYOUT:\r\nTruck drives in from left, crosses center, parks or slows at center-right (1100px).\r\nSpeed lines trail behind left of truck during movement.\r\n\r\nANIMATION TIMELINE (4.0s total):\r\n0–0.1s: Truck starts at X:-400px (off-screen left), invisible.\r\n0.1–0.3s: Truck appears at X:-400px (fade in, ease-out).\r\n0.3–1.8s: Truck translates right (X: -400 → 960, ease-in-out). Speed lines visible behind (trailing at X-40px → X-160px). Wheels rotate (continuous clockwise rotation, rpm proportional to speed). Road line scrolls right (dashoffset animates). Ground shadow visible below wheels.\r\n1.8–2.2s: Truck decelerates (ease-out, X: 960 → 1100px). Speed lines fade out (opacity 1.0 → 0, ease-in). Wheels slow rotation.\r\n2.2–2.5s: Truck stops. Slight rock forward then back on brakes (scaleX squash: 1.0 → 0.96 → 1.0, ease-out).\r\n2.5–2.8s: Front and rear lights flash (opacity 1.0 → 0.2 → 1.0, twice). \r\n2.8–3.3s: Side cargo door opens slightly (right edge of cargo box rotates outward, ease-out) — suggests delivery.\r\n3.3–4.0s: Hold parked. Ground shadow visible. Exhaust path emits small puff (circle, opacity 0→0.4→0, size 4→20px, ease-out, once at 3.3s).\r\n\r\nEASING CURVES:\r\n- Drive-in: ease-in-out\r\n- Decelerate: ease-out\r\n- Brake rock: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Door: ease-out",
+  "duration": 4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#eff6ff"
+  },
+  "elements": [
+    {
+      "id": "truck-1",
+      "type": "truck",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#ffffff",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 4,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

@@ -24,6 +24,9 @@ import {Headphones} from "../components/shapes/Headphones";
 import {HomeIcon} from "../components/shapes/HomeIcon";
 import {Laptop} from "../components/shapes/Laptop";
 import {Lock} from "../components/shapes/Lock";
+import {LockBody} from "../components/shapes/LockBody";
+import {LockShackle} from "../components/shapes/LockShackle";
+import {LockKeyhole} from "../components/shapes/LockKeyhole";
 import {Microphone} from "../components/shapes/Microphone";
 import {PersonAtDeskScene} from "../components/shapes/PersonAtDeskScene";
 import {PaperPlane} from "../components/shapes/PaperPlane";
@@ -295,18 +298,39 @@ const renderShape = (element: AnimatedElement, drawProgress: number) => {
           drawProgress={drawProgress}
         />
       );
-    case "lock":
-      return (
-        <Lock
-          stroke={element.stroke}
-          strokeWidth={element.strokeWidth}
-          drawProgress={drawProgress}
-        />
-      );
-    case "cart":
-      return (
-        <Cart
-          stroke={element.stroke}
+      case "lock":
+        return (
+          <Lock
+            stroke={element.stroke}
+            strokeWidth={element.strokeWidth}
+            drawProgress={drawProgress}
+          />
+        );
+      case "lockbody":
+        return (
+          <LockBody
+            fill={element.fill}
+            stroke={element.stroke}
+            strokeWidth={element.strokeWidth}
+            opacity={element.opacity}
+            drawProgress={drawProgress}
+          />
+        );
+      case "lockshackle":
+        return (
+          <LockShackle
+            stroke={element.stroke}
+            strokeWidth={element.strokeWidth}
+            opacity={element.opacity}
+            drawProgress={drawProgress}
+          />
+        );
+      case "lockkeyhole":
+        return <LockKeyhole fill={element.fill} opacity={element.opacity} />;
+      case "cart":
+        return (
+          <Cart
+            stroke={element.stroke}
           strokeWidth={element.strokeWidth}
           drawProgress={drawProgress}
         />
@@ -332,7 +356,8 @@ const renderShape = (element: AnimatedElement, drawProgress: number) => {
           fill="none"
           stroke={element.stroke ?? "#FFFFFF"}
           strokeWidth={element.strokeWidth ?? 3}
-          opacity={element.opacity ?? 1}
+          // Opacity is handled by the wrapper style (animated via keyframes).
+          opacity={1}
           strokeDasharray={len}
           strokeDashoffset={len * (1 - p)}
         />
@@ -345,7 +370,8 @@ const renderShape = (element: AnimatedElement, drawProgress: number) => {
           cy="50"
           r="32"
           fill={element.fill ?? "#FFFFFF"}
-          opacity={element.opacity ?? 0.22}
+          // Opacity is handled by the wrapper style (animated via keyframes).
+          opacity={1}
         />
       );
     case "spark":
@@ -385,7 +411,8 @@ const renderShape = (element: AnimatedElement, drawProgress: number) => {
           rx="28"
           ry="10"
           fill={element.fill ?? "#000000"}
-          opacity={element.opacity ?? 0.18}
+          // Opacity is handled by the wrapper style (animated via keyframes).
+          opacity={1}
         />
       );
     case "steam":
@@ -399,12 +426,55 @@ const renderShape = (element: AnimatedElement, drawProgress: number) => {
             stroke={element.stroke ?? "#D4D4D8"}
             strokeWidth={element.strokeWidth ?? 4}
             strokeLinecap="round"
-            opacity={element.opacity ?? 0.6}
+            // Opacity is handled by the wrapper style (animated via keyframes).
+            opacity={1}
             strokeDasharray={len}
             strokeDashoffset={len * (1 - p)}
           />
         );
       })();
+    case "wave":
+      return (() => {
+        const p = clamp01(drawProgress);
+        const isLeft = element.id.toLowerCase().includes("left");
+        const variant = element.id.toLowerCase().includes("outer") ? "outer" : "inner";
+
+        const dInner = "M60 34C78 40 78 60 60 66";
+        const dOuter = "M60 28C88 38 88 62 60 72";
+        const d = variant === "outer" ? dOuter : dInner;
+        const len = variant === "outer" ? 120 : 96;
+
+        const path = (
+          <path
+            d={d}
+            fill="none"
+            stroke={element.stroke ?? "#FFFFFF"}
+            strokeWidth={element.strokeWidth ?? 4}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            // Opacity is handled by the wrapper style (animated via keyframes).
+            opacity={1}
+            strokeDasharray={len}
+            strokeDashoffset={len * (1 - p)}
+          />
+        );
+
+        // Mirror for left side.
+        return isLeft ? <g transform="translate(100 0) scale(-1 1)">{path}</g> : path;
+      })();
+    case "text":
+      return (
+        <text
+          x="0"
+          y="72"
+          fill={element.fill ?? element.stroke ?? "#FFFFFF"}
+          fontSize={element.fontSize ?? 72}
+          fontWeight={element.fontWeight ?? 700}
+          fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        >
+          {element.text ?? ""}
+        </text>
+      );
     default:
       return null;
   }
@@ -515,6 +585,8 @@ const renderTrailLayer = (
 export const SvgRenderer = ({spec}: {spec: AnimationSpec}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const loopFrames = Math.max(1, Math.round(spec.duration * fps));
+  const effectiveFrame = spec.loop ? frame % loopFrames : frame;
   const viewBoxWidth = (element: AnimatedElement) => element.viewBoxWidth ?? 100;
   const viewBoxHeight = (element: AnimatedElement) => element.viewBoxHeight ?? 100;
   const sortedElements = spec.elements
@@ -533,7 +605,7 @@ export const SvgRenderer = ({spec}: {spec: AnimationSpec}) => {
         viewBox={`0 0 ${spec.canvas.width} ${spec.canvas.height}`}
       >
         {sortedElements.map((element) => {
-          const state = getAnimatedState(element, frame, fps);
+          const state = getAnimatedState(element, effectiveFrame, fps);
           return (
           <foreignObject
             key={element.id}

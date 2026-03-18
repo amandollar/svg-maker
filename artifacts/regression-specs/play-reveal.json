@@ -1,25 +1,25 @@
 {
-  "id": "video-intro-play-button",
-  "title": "Video Intro Play Button",
+  "id": "video-intro-reveal",
+  "title": "Play Button Reveal",
   "duration": 2,
   "fps": 30,
   "loop": false,
   "canvas": {
     "width": 1920,
     "height": 1080,
-    "background": "#1a1a1a"
+    "background": "#14213d"
   },
   "elements": [
     {
       "id": "play-button",
       "type": "play",
       "layer": "main",
-      "x": 910,
-      "y": 490,
+      "x": 860,
+      "y": 440,
       "width": 200,
       "height": 200,
-      "viewBoxWidth": 100,
-      "viewBoxHeight": 100,
+      "viewBoxWidth": 24,
+      "viewBoxHeight": 24,
       "fill": "#ffffff",
       "stroke": "#FF2D55",
       "strokeWidth": 6,
@@ -34,11 +34,19 @@
       "animations": [
         {
           "start": 0,
-          "end": 2,
+          "end": 0.5,
           "property": "scale",
-          "from": 0.5,
+          "from": 0,
           "to": 1,
           "easing": "easeOut"
+        },
+        {
+          "start": 0.5,
+          "end": 2,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
         }
       ]
     },
@@ -46,8 +54,8 @@
       "id": "play-button-ring",
       "type": "ring",
       "layer": "background",
-      "x": 910,
-      "y": 490,
+      "x": 860,
+      "y": 440,
       "width": 200,
       "height": 200,
       "stroke": "#FF2D55",

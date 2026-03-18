@@ -47,6 +47,9 @@ export const shapeTypeSchema = z.enum([
   "play",
   "wifi",
   "lock",
+  "lockbody",
+  "lockshackle",
+  "lockkeyhole",
   "cart",
   "search",
   "coffee",
@@ -79,6 +82,8 @@ export const shapeTypeSchema = z.enum([
   "rupee",
   "certificate",
   "steam",
+  "wave",
+  "text",
   "ring",
   "glow",
   "spark",
@@ -112,6 +117,11 @@ export const animatedElementSchema = z.object({
   trail: z.boolean().optional(),
   flash: z.boolean().optional(),
   ripple: z.boolean().optional(),
+  // Simple text label (used for Phase 1 overlays like "REC").
+  text: z.string().min(1).optional(),
+  // Font size in the element's local 0..100 viewBox units (not pixels).
+  fontSize: z.number().positive().optional(),
+  fontWeight: z.number().positive().optional(),
   animations: z.array(keyframeSchema).default([]),
 });
 

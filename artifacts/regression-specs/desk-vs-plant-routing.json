@@ -1,0 +1,40 @@
+{
+  "id": "a-cozy-person-at-desk-workspace-scene-with-a-small-plant-on-",
+  "title": "A cozy person at desk workspace scene with a small plant on the desk, 1920x10...",
+  "duration": 5,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#111111"
+  },
+  "elements": [
+    {
+      "id": "desk-1",
+      "type": "desk",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#22C55E",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

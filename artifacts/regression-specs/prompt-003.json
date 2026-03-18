@@ -1,0 +1,180 @@
+{
+  "id": "prompt-003-alert-bell-notification-ring-canvas-1080-1920px-9",
+  "title": "PROMPT 003: Alert Bell — Notification Ring\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1920px (9:16 Vertical)\r\nDURATION: 2.0s | LOOP: Yes\r\nSVG: Bell icon (Heroicons outline / 3 paths: body, clapper, base) — centered at 540×900px, 130px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #0F172A (deep navy)\r\nBell stroke: #FACC15 (gold yellow)\r\nBell fill: none (outline only)\r\nShake trail: #FACC1530 (yellow, 18% opacity trail)\r\n\r\nVISUAL LAYOUT:\r\nBell icon in lower-center of frame (vertical story format). Top 60% of frame reserved for content/text overlay.\r\nSafe zone maintained for TikTok/Reels UI elements at bottom.\r\n\r\nANIMATION TIMELINE (2.0s loopable):\r\n0–0.08s: Bell rotates +18° from center (rotate around base, ease-in)\r\n0.08–0.18s: Bell rotates −22° (overshoot left)\r\n0.18–0.3s: Bell rotates +15° (back right)\r\n0.3–0.42s: Bell rotates −10° (dampening)\r\n0.42–0.55s: Bell rotates +6° → settles to 0° (ease-out)\r\n0.55–0.7s: Clapper path vibrates independently (small ±4px Y offset, 3 cycles)\r\n0.7–1.0s: Shake-trail ghost copies fade (3 ghost frames, opacity 0.15 → 0, staggered 80ms apart)\r\n1.0–1.6s: Bell rests. Subtle glow pulse on stroke (opacity 0.7 → 1.0 → 0.7, ease-in-out)\r\n1.6–2.0s: Hold before loop\r\n\r\nEASING CURVES:\r\n- Swing: spring(1, 80, 10, 0)\r\n- Glow pulse: ease-in-out\r\n- Ghost fade: linear",
+  "duration": 2,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#0f172a"
+  },
+  "elements": [
+    {
+      "id": "bell-1",
+      "type": "bell",
+      "layer": "main",
+      "x": 475,
+      "y": 845,
+      "width": 130,
+      "height": 130,
+      "stroke": "#facc15",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#facc15",
+      "glowStrength": 0.8,
+      "trail": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.18,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.28,
+          "property": "translateY",
+          "from": -14,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.28,
+          "end": 0.46,
+          "property": "translateY",
+          "from": 0,
+          "to": -8,
+          "easing": "spring"
+        },
+        {
+          "start": 0.46,
+          "end": 0.8,
+          "property": "translateY",
+          "from": -8,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.23000000000000004,
+          "end": 0.46,
+          "property": "rotate",
+          "from": 0,
+          "to": -10,
+          "easing": "spring"
+        },
+        {
+          "start": 0.46,
+          "end": 0.7,
+          "property": "rotate",
+          "from": -10,
+          "to": 5.5,
+          "easing": "spring"
+        },
+        {
+          "start": 0.7,
+          "end": 1.84,
+          "property": "rotate",
+          "from": 5.5,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "bell-1-ghost",
+      "type": "bell",
+      "layer": "background",
+      "x": 471.1,
+      "y": 845,
+      "width": 130,
+      "height": 130,
+      "stroke": "#facc15",
+      "strokeWidth": 6,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.06,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.75,
+          "property": "opacity",
+          "from": 0.06,
+          "to": 0.02,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.08,
+          "property": "rotate",
+          "from": 0,
+          "to": 10,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.08,
+          "end": 0.2,
+          "property": "rotate",
+          "from": 10,
+          "to": -10.5,
+          "easing": "spring"
+        },
+        {
+          "start": 0.2,
+          "end": 0.34,
+          "property": "rotate",
+          "from": -10.5,
+          "to": 7,
+          "easing": "spring"
+        },
+        {
+          "start": 0.34,
+          "end": 0.52,
+          "property": "rotate",
+          "from": 7,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "bell-1-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 464.6,
+      "y": 834.6,
+      "width": 150.79999999999998,
+      "height": 150.79999999999998,
+      "fill": "#facc15",
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1.1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "opacity",
+          "from": 0.14,
+          "to": 0.04,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

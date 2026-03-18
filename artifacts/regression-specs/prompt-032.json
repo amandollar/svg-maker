@@ -1,0 +1,40 @@
+{
+  "id": "prompt-032-plant-growing-progress-growth-journey-canvas-1920",
+  "title": "PROMPT 032: Plant Growing — Progress / Growth Journey\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 5.0s | LOOP: No\r\nSVG: Growing plant (20 paths: clay pot body, pot rim, soil line, stem main path, 3 leaf shapes (small medium large), 2 secondary branch stubs, root path below soil, 3 small detail veins on large leaf, 3 soil particle dots, sun circle in upper-right corner) — stem base at 960×700px, grows upward to 960×300px\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #ECFDF5 (very light mint)\r\nPot fill: #C2410C (terracotta orange)\r\nPot stroke: #9A3412 (2px)\r\nSoil fill: #78350F (dark brown)\r\nStem stroke: #15803D (green, 5px, rounded)\r\nLeaf small fill: #22C55E (bright green)\r\nLeaf medium fill: #16A34A (medium green)\r\nLeaf large fill: #166534 (deep green)\r\nLeaf veins stroke: #FFFFFF50 (white 30%, 1px)\r\nRoot paths stroke: #92400E (brown, 2px, dashed)\r\nParticle dots fill: #78350F (brown, 6px)\r\nSun fill: #FDE68A (pale yellow)\r\nSun stroke: #F59E0B (amber, 2px)\r\nSun rays: #F59E0B (short line paths, 6 rays, 8px each)\r\n\r\nVISUAL LAYOUT:\r\nPot at bottom-center. Plant grows upward. Sun in upper-right at 1520×180px.\r\n\r\nANIMATION TIMELINE (5.0s total):\r\n0–0.5s: Pot and soil reveal (scale 0.8 → 1.0, ease-out spring).\r\n0.5–0.8s: Root paths draw downward into pot (stroke-dashoffset 100%→0%, ease-out, 2 root branches, 0.1s stagger).\r\n0.8–1.5s: Main stem grows upward from pot (path stroke-dashoffset 100%→0%, ease-out, vertical growth).\r\n1.5–1.8s: First small leaf unfurls on left (scale 0→1.0, rotateZ -90°→0°, spring — leaf opens outward from stem).\r\n1.9–2.2s: Second small leaf unfurls on right (mirrored, stagger 0.3s).\r\n2.2–2.7s: Stem continues growing. Medium leaf unfurls left.\r\n2.7–3.1s: Second medium leaf unfurls right.\r\n3.1–3.7s: Stem reaches full height. Large leaf unfurls (bigger spring, takes 0.5s).\r\n3.7–4.0s: Soil particles float up slightly from soil line (Y +0 → -12px → 0, opacity 1.0 → 0.4, ease-out — \"soil alive\" effect).\r\n4.0–4.3s: Sun fades in + rays draw outward (sun opacity 0→1.0; rays stroke-dashoffset 100%→0%, staggered 0.05s each, ease-out).\r\n4.3–4.7s: Entire plant sways gently (stem rotateZ: 0° → +2° → -2° → 0°, ease-in-out, 0.4s).\r\n4.7–5.0s: Hold.\r\n\r\nEASING CURVES:\r\n- Pot: spring\r\n- Stem grow: ease-out\r\n- Leaf unfurl: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Sway: ease-in-out",
+  "duration": 5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#ecfdf5"
+  },
+  "elements": [
+    {
+      "id": "plant-1",
+      "type": "plant",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#22C55E",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

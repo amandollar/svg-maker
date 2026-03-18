@@ -1,0 +1,132 @@
+{
+  "id": "prompt-004-arrow-swipe-up-cta-canvas-1080-1920px-9-16-vertic",
+  "title": "PROMPT 004: Arrow — Swipe Up CTA\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1920px (9:16 Vertical)\r\nDURATION: 1.6s | LOOP: Yes\r\nSVG: Upward chevron arrow (2 paths, 8px stroke, no fill) — position at 540×1680px (bottom of frame), 90px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: transparent (overlay use — no background)\r\nArrow stroke: #FFFFFF\r\nArrow glow: #FFFFFF40 (white, 25% opacity)\r\n\r\nVISUAL LAYOUT:\r\nThree stacked chevrons at bottom. Top chevron at 1680px Y, middle at 1730px, bottom at 1780px.\r\nEach 90px wide, spaced 50px apart vertically. All stroke white, 8px.\r\n\r\nANIMATION TIMELINE (1.6s loopable):\r\n0–0.25s: Bottom arrow fades in (opacity 0 → 0.3)\r\n0.25–0.5s: Middle arrow fades in (opacity 0 → 0.6)\r\n0.5–0.75s: Top arrow fades in (opacity 0 → 1.0)\r\n0.75–1.1s: All arrows translate upward 22px together (ease-in-out)\r\n1.1–1.3s: All arrows fade out (opacity → 0, ease-in)\r\n1.3–1.6s: Reset invisible, pause before loop\r\n\r\nEASING CURVES:\r\n- Staggered fade: ease-out\r\n- Float up: ease-in-out\r\n- Fade out: ease-in",
+  "duration": 1.6,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#111111"
+  },
+  "elements": [
+    {
+      "id": "arrow-1",
+      "type": "arrow",
+      "layer": "main",
+      "x": 480,
+      "y": 1459,
+      "width": 120,
+      "height": 120,
+      "stroke": "#ffffff",
+      "strokeWidth": 8,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#ffffff",
+      "glowStrength": 0.45,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.35,
+          "end": 0.9,
+          "property": "translateY",
+          "from": 12,
+          "to": -18,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 1,
+          "end": 1.3,
+          "property": "opacity",
+          "from": 1,
+          "to": 0,
+          "easing": "easeIn"
+        }
+      ]
+    },
+    {
+      "id": "arrow-1-stack-1",
+      "type": "arrow",
+      "layer": "background",
+      "x": 480,
+      "y": 1499.8,
+      "width": 120,
+      "height": 120,
+      "stroke": "#ffffff",
+      "strokeWidth": 8,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.45,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0.28,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.45,
+          "end": 1,
+          "property": "opacity",
+          "from": 0.28,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0,
+          "end": 1,
+          "property": "translateY",
+          "from": 18,
+          "to": -12,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "arrow-1-stack-2",
+      "type": "arrow",
+      "layer": "background",
+      "x": 480,
+      "y": 1540.6,
+      "width": 120,
+      "height": 120,
+      "stroke": "#ffffff",
+      "strokeWidth": 8,
+      "opacity": 0.1,
+      "animations": [
+        {
+          "start": 0.12,
+          "end": 0.55,
+          "property": "opacity",
+          "from": 0.1,
+          "to": 0.24,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.55,
+          "end": 1.1,
+          "property": "opacity",
+          "from": 0.24,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.12,
+          "end": 1.1,
+          "property": "translateY",
+          "from": 20,
+          "to": -10,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

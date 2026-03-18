@@ -1,6 +1,6 @@
 {
-  "id": "heart-centered-animation",
-  "title": "Heart Animation",
+  "id": "heart_animation_001",
+  "title": "Bold Red Heart Animation",
   "duration": 2.4,
   "fps": 30,
   "loop": true,
@@ -11,15 +11,15 @@
   },
   "elements": [
     {
-      "id": "main-heart",
+      "id": "heart_main",
       "type": "heart",
       "layer": "main",
-      "x": 440,
-      "y": 440,
-      "width": 200,
-      "height": 200,
-      "viewBoxWidth": 100,
-      "viewBoxHeight": 100,
+      "x": 390,
+      "y": 390,
+      "width": 300,
+      "height": 300,
+      "viewBoxWidth": 24,
+      "viewBoxHeight": 24,
       "fill": "#FF0000",
       "opacity": 1,
       "offsetX": -4,
@@ -35,27 +35,27 @@
           "end": 1.2,
           "property": "scale",
           "from": 1,
-          "to": 1.1,
-          "easing": "easeInOut"
+          "to": 1.2,
+          "easing": "easeOut"
         },
         {
           "start": 1.2,
           "end": 2.4,
           "property": "scale",
-          "from": 1.1,
+          "from": 1.2,
           "to": 1,
-          "easing": "easeInOut"
+          "easing": "easeIn"
         }
       ]
     },
     {
-      "id": "main-heart-ring",
+      "id": "heart_main-ring",
       "type": "ring",
       "layer": "background",
-      "x": 440,
-      "y": 440,
-      "width": 200,
-      "height": 200,
+      "x": 390,
+      "y": 390,
+      "width": 300,
+      "height": 300,
       "stroke": "#FF2D55",
       "strokeWidth": 3,
       "opacity": 0.16,

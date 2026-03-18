@@ -1,0 +1,53 @@
+{
+  "id": "prompt-008-wifi-signal-connectivity-building-canvas-1080-108",
+  "title": "PROMPT 008: WiFi Signal — Connectivity Building\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1080px (1:1)\r\nDURATION: 2.4s | LOOP: Yes\r\nSVG: WiFi signal icon (4 paths: dot + 3 concentric arcs, stroke only, no fill) — centered 540×580px, 140px wide, stroke-width 8px, rounded linecap\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #F8FAFC (near white)\r\nSignal arcs stroke: #3B82F6 (blue) when active / #CBD5E1 (light grey) when inactive\r\nCenter dot fill: #3B82F6 (blue)\r\n\r\nVISUAL LAYOUT:\r\nWiFi icon centered. 4 elements: dot at base, small arc, medium arc, large arc.\r\nAll start grey. Each arc activates bottom to top with blue stroke draw.\r\n\r\nANIMATION TIMELINE (2.4s loopable):\r\n0–0.1s: All elements grey, dot scales 0 → 1.0 (spring ease)\r\n0.1–0.35s: Dot turns blue (color transition). Small arc strokes in (dashoffset 100% → 0%, ease-out)\r\n0.35–0.65s: Small arc turns blue. Medium arc strokes in.\r\n0.65–1.0s: Medium arc turns blue. Large arc strokes in.\r\n1.0–1.3s: All elements blue, full signal. Brief scale pulse (1.0 → 1.08 → 1.0)\r\n1.3–1.8s: Hold at full signal (all blue)\r\n1.8–2.1s: All arcs fade to grey (reverse: large → medium → small → dot, 0.1s stagger)\r\n2.1–2.4s: Hold grey before loop\r\n\r\nEASING CURVES:\r\n- Arc stroke draw: ease-out\r\n- Scale pulse: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Grey fade: ease-in",
+  "duration": 2.4,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#f8fafc"
+  },
+  "elements": [
+    {
+      "id": "star-1",
+      "type": "star",
+      "layer": "main",
+      "x": 465,
+      "y": 465,
+      "width": 150,
+      "height": 150,
+      "fill": "#3b82f6",
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.6,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.3,
+          "end": 0.55,
+          "property": "scale",
+          "from": 1,
+          "to": 1.2,
+          "easing": "spring"
+        },
+        {
+          "start": 0.55,
+          "end": 0.9,
+          "property": "scale",
+          "from": 1.2,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

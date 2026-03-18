@@ -1,0 +1,117 @@
+{
+  "id": "prompt-009-lock-unlock-security-moment-canvas-1920-1080px-16",
+  "title": "PROMPT 009: Lock → Unlock — Security Moment\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 2.8s | LOOP: No\r\nSVG: Padlock (3 paths: body rectangle, shackle arc, keyhole shape) — centered 960×540px, 100px tall\r\nSVG SECOND STATE: Unlocked padlock (shackle rotated/lifted open)\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #1E293B (dark slate)\r\nLock body fill: #64748B (grey when locked)\r\nLock body fill: #22C55E (green when unlocked)\r\nShackle stroke: #94A3B8 (medium grey) → #16A34A (dark green when unlocked)\r\nKeyhole fill: #1E293B (same as background, negative space)\r\n\r\nVISUAL LAYOUT:\r\nLock centered. Subtle vignette on background edges. No text. Clean icon.\r\n\r\nANIMATION TIMELINE (2.8s total):\r\n0–0.3s: Lock appears — scales 0.5 → 1.0 (ease-out spring). Color: grey locked state.\r\n0.3–0.8s: Hold. Lock body has slight shimmer scan (white diagonal highlight, 2px wide, slides L→R across body, opacity 0.3, ease-in-out).\r\n0.8–1.1s: Shackle path lifts upward (top of arc translates Y: 0 → -28px, ease-in then ease-out).\r\n1.1–1.4s: Lock body transitions grey → green (color morph, ease-out).\r\n1.4–1.65s: Shackle color transitions to dark green.\r\n1.65–1.9s: Whole lock scales 1.0 → 1.12 → 1.0 (success bounce).\r\n1.9–2.3s: Green glow expands from lock (blur 0 → 20px, opacity 0.5 → 0, ease-out).\r\n2.3–2.8s: Hold green unlocked state.\r\n\r\nEASING CURVES:\r\n- Entry spring: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Shackle lift: ease-in-out\r\n- Success bounce: cubic-bezier(0.34, 1.56, 0.64, 1)",
+  "duration": 2.8,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#1e293b"
+  },
+  "elements": [
+    {
+      "id": "checkmark-1",
+      "type": "checkmark",
+      "layer": "main",
+      "x": 860,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#94a3b8",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "flash": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.7,
+          "property": "translateY",
+          "from": 6,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.14,
+          "end": 0.7,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.7,
+          "end": 0.98,
+          "property": "scale",
+          "from": 1,
+          "to": 1.16,
+          "easing": "spring"
+        },
+        {
+          "start": 0.98,
+          "end": 1.23,
+          "property": "scale",
+          "from": 1.16,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.72,
+          "end": 0.9199999999999999,
+          "property": "opacity",
+          "from": 1,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "checkmark-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 860,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#94a3b8",
+      "strokeWidth": 3,
+      "opacity": 0.08,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.85,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.08,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

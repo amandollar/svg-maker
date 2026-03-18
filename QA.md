@@ -39,6 +39,6 @@ For each prompt, check:
 
 1. Run `npm run qa:generate`
 2. Pick any changed prompt
-3. Copy one prompt from `src/qa/prompt-suite.ts`
+3. Copy the exact Phase 1 prompt you want to validate from `phase1.prompts.md` (or use `src/qa/prompt-suite.ts` for the curated regression subset)
 4. Run `npm run generate -- "..."` for the prompt you want to inspect visually
 5. Open `generated-prompt` in Remotion Studio

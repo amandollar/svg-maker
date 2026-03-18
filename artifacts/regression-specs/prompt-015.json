@@ -1,0 +1,109 @@
+{
+  "id": "prompt-015-user-avatar-profile-reveal-canvas-1080-1920px-9-1",
+  "title": "PROMPT 015: User Avatar — Profile Reveal\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1920px (9:16 Vertical)\r\nDURATION: 2.0s | LOOP: No\r\nSVG: User / person icon (3 paths: head circle, shoulder arc body, optional crown detail) — centered 540×820px, 110px tall\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #7C3AED (rich purple)\r\nAvatar circle background: #A855F7 (lighter purple)\r\nHead circle fill: #F3E8FF (very pale lavender)\r\nBody arc fill: #F3E8FF\r\nVerified badge: #3B82F6 (blue circle, white tick, 30px, bottom-right of avatar)\r\nRing border: #FFFFFF (2px ring around avatar circle)\r\n\r\nVISUAL LAYOUT:\r\nCircular avatar frame (200px diameter) centered at 540×820px.\r\nPerson icon inside. Blue verified badge overlaid bottom-right.\r\nSuitable as animated name card for Reels/TikTok profile intro.\r\n\r\nANIMATION TIMELINE (2.0s total):\r\n0–0.3s: Purple circle background scales 0 → 1.0 (spring).\r\n0.3–0.6s: Person icon (head + body) scales 0 → 1.0 inside circle (spring, slight delay).\r\n0.6–0.8s: White ring border draws clockwise (stroke-dashoffset 100% → 0%, ease-out).\r\n0.8–1.0s: Verified badge scales 0 → 1.0 at bottom-right (spring).\r\n1.0–1.3s: Whole avatar group scales 1.0 → 1.08 → 1.0 (confidence pulse).\r\n1.3–2.0s: Hold. Ring has subtle shimmer (white highlight rotates around ring, opacity 0 → 0.5 → 0, 1 revolution, 0.7s).\r\n\r\nEASING CURVES:\r\n- Pop-ins: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Ring draw: ease-out\r\n- Shimmer: ease-in-out",
+  "duration": 2,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#7c3aed"
+  },
+  "elements": [
+    {
+      "id": "checkmark-1",
+      "type": "checkmark",
+      "layer": "main",
+      "x": 450,
+      "y": 870,
+      "width": 180,
+      "height": 180,
+      "stroke": "#3B82F6",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "flash": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.14,
+          "end": 0.85,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.85,
+          "end": 1.07,
+          "property": "scale",
+          "from": 1,
+          "to": 1.16,
+          "easing": "spring"
+        },
+        {
+          "start": 1.07,
+          "end": 1.25,
+          "property": "scale",
+          "from": 1.16,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.87,
+          "end": 1.07,
+          "property": "opacity",
+          "from": 1,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "checkmark-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 450,
+      "y": 870,
+      "width": 180,
+      "height": 180,
+      "stroke": "#3B82F6",
+      "strokeWidth": 4,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.32,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.85,
+          "property": "opacity",
+          "from": 0.32,
+          "to": 0.18,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

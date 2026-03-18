@@ -1,0 +1,40 @@
+{
+  "id": "prompt-037-globe-network-global-reach-canvas-1920-1080px-16-",
+  "title": "PROMPT 037: Globe Network — Global Reach\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 5.0s | LOOP: Yes\r\nSVG: Globe (28 paths: outer circle, 3 longitude arc lines, 3 latitude arc lines, equator line, continent simplified blobs ×5 (Africa, Americas, Europe/Asia, Australia, small shapes), 4 location pin dots at key cities, 4 connection arc lines between pins, 2 orbit ring ellipses around globe) — globe centered 960×540px, 360px diameter\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #030712 (near black)\r\nGlobe circle fill: #0B1120 (very dark blue)\r\nGlobe circle stroke: #1E40AF (blue, 2px)\r\nGrid lines stroke: #1E40AF (blue, 1px, 30% opacity)\r\nContinent fills: #1D4ED8 (blue, 60% opacity)\r\nLocation pins fill: #60A5FA (bright blue, 12px circles)\r\nConnection arc strokes: #60A5FA (blue, 1.5px, dashed, animated)\r\nOrbit ring 1 stroke: #3B82F6 (blue, 1.5px, ellipse, 30° tilt)\r\nOrbit ring 2 stroke: #2563EB (slightly darker blue, 1px, ellipse, -30° tilt)\r\nSmall satellite dot: #FBBF24 (gold, 8px, travels orbit ring 1)\r\n\r\nVISUAL LAYOUT:\r\nGlobe centered. Orbit rings around it. Location pins on continent areas. Connection arcs between pins.\r\nSatellite dot orbits ring 1.\r\n\r\nANIMATION TIMELINE (5.0s loopable):\r\n0–0.5s: Globe circle scales 0→1.0 (ease-out spring). Grid lines fade in (opacity 0→0.3, ease-out).\r\n0.5–1.0s: Continent blobs appear (each scales 0→1.0, 0.08s stagger, spring).\r\n1.0–1.4s: Globe rotates slowly (continuous Y-axis rotation simulation: grid lines and continents drift right at ~2px/s, ease-in). Orbit rings draw in (dashoffset 100%→0%, ease-out, stagger 0.2s).\r\n1.4–1.8s: Location pins appear (scale 0→1.0, spring, staggered 0.15s each). Each pin has ripple ring (circle stroke, opacity 0.6→0, radius 12→40px, ease-out).\r\n1.8–3.5s (continuous): Connection arc dashes animate along arcs (dashoffset cycles continuously, 1.2s per arc, linear, each arc staggered 0.3s). Satellite dot travels orbit ring (360° per 3s, linear, loops).\r\n3.5–4.5s: All elements hold. Globe slow rotation continues. Subtle glow pulse on globe edge (stroke blur 0→12px→0, ease-in-out, 1.0s cycle).\r\n4.5–5.0s: Loop reset preparation.\r\n\r\nEASING CURVES:\r\n- Entry: spring / ease-out\r\n- Arc dash: linear\r\n- Rotation sim: linear\r\n- Glow: ease-in-out",
+  "duration": 5,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#030712"
+  },
+  "elements": [
+    {
+      "id": "globe-1",
+      "type": "globe",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#3B82F6",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

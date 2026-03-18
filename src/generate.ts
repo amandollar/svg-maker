@@ -1,11 +1,8 @@
 import "dotenv/config";
 import fs from "node:fs";
 import path from "node:path";
-import {fileURLToPath} from "node:url";
 import type {PromptRequest} from "./engine/request";
 import {generateAnimationSpec} from "./generation";
-
-const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 const main = async () => {
   const prompt = process.argv.slice(2).join(" ").trim();
@@ -21,8 +18,8 @@ const main = async () => {
   const requestModule = `import type {PromptRequest} from "../engine/request";\n\nexport const GENERATED_REQUEST: PromptRequest = ${JSON.stringify(request, null, 2)};\n`;
   const specModule = `import type {AnimationSpec} from "../engine/types";\n\nexport const GENERATED_SPEC: AnimationSpec = ${JSON.stringify(spec, null, 2)};\n`;
 
-  fs.writeFileSync(path.resolve(currentDir, "./data/generated-request.ts"), requestModule);
-  fs.writeFileSync(path.resolve(currentDir, "./data/generated-spec.ts"), specModule);
+  fs.writeFileSync(path.resolve(process.cwd(), "src/data/generated-request.ts"), requestModule);
+  fs.writeFileSync(path.resolve(process.cwd(), "src/data/generated-spec.ts"), specModule);
 
   console.log("Generated spec written to src/data/generated-request.ts and src/data/generated-spec.ts");
   console.log(

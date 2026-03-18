@@ -1,21 +1,21 @@
 {
   "id": "success-checkmark-animation",
-  "title": "SaaS Completion Success",
+  "title": "Green Success Checkmark",
   "duration": 1.8,
   "fps": 30,
   "loop": false,
   "canvas": {
     "width": 1920,
     "height": 1080,
-    "background": "#F0FFF0"
+    "background": "#E0F7EF"
   },
   "elements": [
     {
-      "id": "checkmark",
+      "id": "checkmark1",
       "type": "checkmark",
       "layer": "main",
-      "x": 860,
-      "y": 440,
+      "x": 885,
+      "y": 465,
       "width": 200,
       "height": 200,
       "viewBoxWidth": 100,
@@ -33,28 +33,28 @@
       "animations": [
         {
           "start": 0,
-          "end": 1.2,
+          "end": 1.4,
           "property": "draw",
           "from": 0,
           "to": 100,
           "easing": "linear"
         },
         {
-          "start": 1.2,
+          "start": 1.4,
           "end": 1.8,
           "property": "scale",
           "from": 1,
           "to": 1.1,
-          "easing": "spring"
+          "easing": "easeOut"
         }
       ]
     },
     {
-      "id": "checkmark-ring",
+      "id": "checkmark1-ring",
       "type": "ring",
       "layer": "background",
-      "x": 860,
-      "y": 440,
+      "x": 885,
+      "y": 465,
       "width": 200,
       "height": 200,
       "stroke": "#22C55E",

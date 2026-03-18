@@ -1,0 +1,149 @@
+{
+  "id": "prompt-018-microphone-recording-live-canvas-1080-1920px-9-16",
+  "title": "PROMPT 018: Microphone — Recording Live\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1920px (9:16 Vertical)\r\nDURATION: 3.0s | LOOP: Yes\r\nSVG: Microphone (6 paths: capsule top, capsule bottom arc, body shaft, base stand, 2 arc soundwave paths flanking mic) — centered 540×880px, 90px tall\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #0A0A0A (near black)\r\nMic capsule fill: #F8FAFC (near white)\r\nMic body stroke: #F8FAFC (3px)\r\nBase stroke: #94A3B8 (grey)\r\nSoundwave arcs stroke: #EF4444 (red, when recording)\r\nRec dot: #EF4444 (20px circle, pulsing, top-right of frame at 920×160px)\r\nRec text: \"REC\" in #EF4444, 22pt bold, beside dot at 950×157px\r\n\r\nVISUAL LAYOUT:\r\nMicrophone in lower-center of frame (story format). Soundwave arcs flank mic body.\r\n\"REC\" indicator top-right corner.\r\n\r\nANIMATION TIMELINE (3.0s loopable):\r\n0–0.4s: Mic icon builds path by path (capsule → shaft → base, each draws in 0.15s stagger, stroke-dashoffset 100%→0%, ease-out).\r\n0.4–0.7s: REC dot appears (scale 0 → 1.0, spring). \"REC\" text fades in (0 → 1.0).\r\n0.7–3.0s (looping):\r\n  - REC dot pulses (scale 1.0 → 1.3 → 1.0, every 0.8s, ease-in-out).\r\n  - Soundwave arc 1 (inner, 50px radius) scales/fades out (scale 1.0 → 1.4, opacity 1.0 → 0, 0.6s cycle, ease-out).\r\n  - Soundwave arc 2 (outer, 70px radius) same cycle, staggered 0.3s after arc 1.\r\n  - Both arcs loop continuously.\r\n\r\nEASING CURVES:\r\n- Build-in: ease-out\r\n- REC spring: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Pulse: ease-in-out\r\n- Wave expand: ease-out",
+  "duration": 3,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#0a0a0a"
+  },
+  "elements": [
+    {
+      "id": "pin-1",
+      "type": "pin",
+      "layer": "main",
+      "x": 475,
+      "y": 895,
+      "width": 130,
+      "height": 130,
+      "fill": "#f8fafc",
+      "stroke": "#FF2D55",
+      "strokeWidth": 4,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": -6,
+      "shadowColor": "#000000",
+      "shadowBlur": 16,
+      "ripple": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "translateY",
+          "from": -140,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.32,
+          "end": 0.5,
+          "property": "translateY",
+          "from": 0,
+          "to": -18,
+          "easing": "spring"
+        },
+        {
+          "start": 0.5,
+          "end": 0.76,
+          "property": "translateY",
+          "from": -18,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.29000000000000004,
+          "end": 0.46,
+          "property": "scale",
+          "from": 1,
+          "to": 0.9,
+          "easing": "spring"
+        },
+        {
+          "start": 0.46,
+          "end": 0.66,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.06,
+          "easing": "spring"
+        },
+        {
+          "start": 0.66,
+          "end": 0.8400000000000001,
+          "property": "scale",
+          "from": 1.06,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "pin-1-shadow",
+      "type": "shadow",
+      "layer": "background",
+      "x": 490.6,
+      "y": 991.2,
+      "width": 98.8,
+      "height": 36.400000000000006,
+      "fill": "#000000",
+      "opacity": 0.16,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "scale",
+          "from": 0.35,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "opacity",
+          "from": 0.02,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.77,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.12,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "pin-1-ripple",
+      "type": "ring",
+      "layer": "background",
+      "x": 495.8,
+      "y": 986,
+      "width": 88.4,
+      "height": 39,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.22,
+      "animations": [
+        {
+          "start": 0.32,
+          "end": 0.97,
+          "property": "scale",
+          "from": 0.7,
+          "to": 1.45,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.97,
+          "property": "opacity",
+          "from": 0.28,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

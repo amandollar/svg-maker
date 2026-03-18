@@ -1,0 +1,93 @@
+{
+  "id": "prompt-017-send-paper-plane-message-sent-canvas-1920-1080px-",
+  "title": "PROMPT 017: Send / Paper Plane — Message Sent\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 2.2s | LOOP: No\r\nSVG: Paper plane icon (4 paths: body triangle, fold crease, tail fold, dotted trail line) — start position 960×540px, 80px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #EFF6FF (very light blue)\r\nPlane fill: #2563EB (bright blue)\r\nPlane stroke: #1D4ED8 (darker blue, 1.5px)\r\nTrail stroke: #93C5FD (pale blue, dashed, 2px)\r\nArrival sparkles: #FDE68A (warm yellow, 6px circles)\r\n\r\nVISUAL LAYOUT:\r\nPlane starts centered, launches diagonally up-right, exits frame, leaving trail.\r\nTrail stays visible, then 3 sparkles appear at end-point of trail.\r\n\r\nANIMATION TIMELINE (2.2s total):\r\n0–0.2s: Plane at 960×540, scales 0.8 → 1.0 (ease-out).\r\n0.2–0.9s: Plane translates diagonally (X: 960→1600, Y: 540→280) while trail draws behind it (dashoffset 100%→0%, ease-in-out).\r\n0.9–1.1s: Plane exits right edge. Trail remains visible.\r\n1.1–1.4s: 3 sparkle dots appear at trail endpoint (X:1600, Y:280) — scale 0 → 1.0 → 0 in sequence (0.1s stagger), burst outward 20px radially.\r\n1.4–2.0s: Trail fades (opacity 1.0 → 0, ease-in, 0.6s).\r\n2.0–2.2s: Hold clear frame.\r\n\r\nEASING CURVES:\r\n- Launch: ease-in (build speed)\r\n- Trail draw: ease-in-out\r\n- Sparkle burst: cubic-bezier(0.34, 1.56, 0.64, 1)",
+  "duration": 2.2,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#eff6ff"
+  },
+  "elements": [
+    {
+      "id": "star-1",
+      "type": "star",
+      "layer": "main",
+      "x": 880,
+      "y": 460,
+      "width": 160,
+      "height": 160,
+      "fill": "#2563eb",
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#3B82F6",
+      "glowStrength": 0.7,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.6,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.3,
+          "end": 0.55,
+          "property": "scale",
+          "from": 1,
+          "to": 1.28,
+          "easing": "spring"
+        },
+        {
+          "start": 0.55,
+          "end": 0.9,
+          "property": "scale",
+          "from": 1.28,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "star-1-spark",
+      "type": "spark",
+      "layer": "foreground",
+      "x": 870.4,
+      "y": 450.4,
+      "width": 179.20000000000002,
+      "height": 179.20000000000002,
+      "stroke": "#3B82F6",
+      "strokeWidth": 4,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0.43000000000000005,
+          "end": 0.63,
+          "property": "scale",
+          "from": 0.72,
+          "to": 1.22,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.43000000000000005,
+          "end": 0.63,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.18,
+          "easing": "linear"
+        },
+        {
+          "start": 0.63,
+          "end": 0.9,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

@@ -8,15 +8,20 @@
     "start": "remotion studio src/index.ts",
     "render:generated": "remotion render src/index.ts generated-prompt out/generated-prompt.mp4",
     "build": "tsc --noEmit",
-    "generate": "tsx src/generate.ts",
-    "qa:generate": "tsx src/qa/run-regression.ts"
+    "build:node": "tsc -p tsconfig.node.json",
+    "generate": "npm run build:node --silent && node dist/generate.js",
+    "generate:json": "npm run build:node --silent && node dist/generate-json.js",
+    "generate:motion": "npm run build:node --silent && node dist/generate-motion.js",
+    "phase1:generate": "npm run build:node --silent && node dist/phase1/generate.js",
+    "phase1:list": "npm run build:node --silent && node dist/phase1/list.js",
+    "qa:generate": "npm run build:node --silent && node dist/qa/run-regression.js"
   },
   "dependencies": {
     "openai": "^6.27.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "remotion": "^4.0.271",
-    "zod": "^3.24.2"
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@remotion/cli": "^4.0.271",

@@ -1,0 +1,38 @@
+{
+  "id": "prompt-039-rupee-dollar-sign-financial-services-india-canvas",
+  "title": "PROMPT 039: Rupee/Dollar Sign — Financial Services India\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1080px (1:1)\r\nDURATION: 3.0s | LOOP: No\r\nSVG: Rupee ₹ symbol (7 paths: vertical stroke, top horizontal bar, second horizontal bar, lower diagonal bar — styled as large display symbol) — centered 540×540px, 220px tall\r\n\r\nPlus surrounding frame: \r\nOuter circle (stroke only): 360px diameter, centered\r\nInner decorative ring: 340px diameter, dashed stroke\r\n4 small ornamental diamond shapes at N/S/E/W on circle\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #FFFBEB (very light warm gold)\r\nRupee symbol fill: #D97706 (amber gold)\r\nRupee symbol stroke: #92400E (dark amber, 2px)\r\nOuter circle stroke: #D97706 (3px)\r\nInner dashed ring stroke: #FCD34D (light gold, 2px, dashes 8px)\r\nDiamond ornaments fill: #D97706\r\nBackground gradient: radial from #FEF3C7 center to #FDE68A edges\r\n\r\nVISUAL LAYOUT:\r\n₹ symbol large, centered. Circle frame around it. Decorative diamonds at cardinal points.\r\n\r\nANIMATION TIMELINE (3.0s total):\r\n0–0.4s: Outer circle draws clockwise (dashoffset 100%→0%, ease-out).\r\n0.4–0.6s: Inner dashed ring fades in (opacity 0→1.0, ease-out). Diamond ornaments appear (scale 0→1.0, spring, 0.05s stagger N→E→S→W).\r\n0.6–1.0s: Rupee vertical stroke draws downward (dashoffset 100%→0%, ease-out).\r\n1.0–1.2s: Top horizontal bar draws left→right (ease-out).\r\n1.2–1.35s: Second horizontal bar draws (slight stagger).\r\n1.35–1.5s: Diagonal descending bar draws.\r\n1.5–1.9s: Full ₹ symbol revealed. Scales 1.0→1.08→1.0 (confidence pulse, spring).\r\n1.9–2.3s: Gold shimmer scan across symbol (diagonal white highlight strip, opacity 0→0.5→0, ease-in-out).\r\n2.3–2.7s: Outer circle rotates 15° (ease-in-out, subtle embellishment).\r\n2.7–3.0s: Hold.\r\n\r\nEASING CURVES:\r\n- Stroke draw: ease-out\r\n- Symbol pulse: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Shimmer: ease-in-out\r\n- Circle rotate: ease-in-out",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#fffbeb"
+  },
+  "elements": [
+    {
+      "id": "rupee-1",
+      "type": "rupee",
+      "layer": "main",
+      "x": 330,
+      "y": 330,
+      "width": 420,
+      "height": 420,
+      "stroke": "#FACC15",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 3,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

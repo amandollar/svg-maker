@@ -1,13 +1,13 @@
 {
-  "id": "restaurant-delivery-burger",
-  "title": "Restaurant Delivery",
+  "id": "restaurant-delivery-animation",
+  "title": "Restaurant Delivery Animation",
   "duration": 3.5,
   "fps": 30,
   "loop": false,
   "canvas": {
     "width": 1080,
     "height": 1080,
-    "background": "#F5F5DC"
+    "background": "#FFF5E1"
   },
   "elements": [
     {
@@ -18,13 +18,15 @@
       "y": 440,
       "width": 270,
       "height": 270,
-      "viewBoxWidth": 32,
-      "viewBoxHeight": 32,
+      "viewBoxWidth": 640,
+      "viewBoxHeight": 640,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
-      "glowStrength": 0,
-      "shadowBlur": 0,
+      "glowColor": "#FFA500",
+      "glowStrength": 0.5,
+      "shadowColor": "#8B4513",
+      "shadowBlur": 10,
       "trail": false,
       "flash": false,
       "ripple": false,

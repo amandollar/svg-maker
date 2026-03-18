@@ -1,0 +1,109 @@
+{
+  "id": "prompt-002-checkmark-draw-task-complete-canvas-1920-1080px-1",
+  "title": "PROMPT 002: Checkmark Draw — Task Complete\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 1.8s | LOOP: No (single play)\r\nSVG: Checkmark (1 open stroke path, no fill) — centered at 960×540px, 140px wide, stroke-width 10px\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #F0FFF4 (very light mint green)\r\nCheck stroke: #22C55E (success green)\r\nCircle outline: #22C55E (same green, 2px)\r\nCompletion flash: #FFFFFF (white flash)\r\n\r\nVISUAL LAYOUT:\r\nThin circle ring (180px diameter) centered on canvas. Checkmark inside circle.\r\nClean minimal — suitable for lower-third success confirmation or mid-video callout.\r\n\r\nANIMATION TIMELINE (1.8s total):\r\n0–0.15s: Circle ring draws clockwise (stroke-dashoffset 100% → 0%, ease-in)\r\n0.15–0.7s: Checkmark strokes in left-to-right (stroke-dashoffset 100% → 0%, ease-out)\r\n0.7–0.85s: Entire icon scales 1.0 → 1.12 (anticipation bounce)\r\n0.85–1.0s: Scales 1.12 → 0.95 → 1.0 (settle)\r\n1.0–1.2s: White flash pulse (opacity 0 → 0.4 → 0) over full icon\r\n1.2–1.8s: Hold final state, icon rests\r\n\r\nEASING CURVES:\r\n- Stroke draw: ease-out\r\n- Scale bounce: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Flash: ease-in-out",
+  "duration": 1.8,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#f0fff4"
+  },
+  "elements": [
+    {
+      "id": "checkmark-1",
+      "type": "checkmark",
+      "layer": "main",
+      "x": 860,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#22c55e",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "flash": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.14,
+          "end": 0.85,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.85,
+          "end": 1.07,
+          "property": "scale",
+          "from": 1,
+          "to": 1.16,
+          "easing": "spring"
+        },
+        {
+          "start": 1.07,
+          "end": 1.25,
+          "property": "scale",
+          "from": 1.16,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.87,
+          "end": 1.07,
+          "property": "opacity",
+          "from": 1,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "checkmark-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 860,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#22c55e",
+      "strokeWidth": 3,
+      "opacity": 0.08,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.85,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.08,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

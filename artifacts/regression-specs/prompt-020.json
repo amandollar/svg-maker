@@ -1,0 +1,92 @@
+{
+  "id": "prompt-020-calendar-date-event-countdown-canvas-1080-1080px-",
+  "title": "PROMPT 020: Calendar Date — Event Countdown\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1080px (1:1)\r\nDURATION: 3.0s | LOOP: No\r\nSVG: Calendar icon (7 paths: outer frame rect, top bar rect, 2 ring hooks at top, date number area, and date \"28\" as two separate numeral paths) — centered 540×540px, 150px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #FFF1F2 (very light rose)\r\nCalendar frame fill: #FFFFFF\r\nCalendar top bar fill: #F43F5E (rose red)\r\nRing hooks fill: #BE123C (dark rose)\r\nDate text \"28\": #1F2937 (near black, 52pt bold)\r\nMonth label \"MARCH\": #F43F5E (14pt medium, top bar in white)\r\nShadow: #F43F5E20 (soft drop shadow)\r\n\r\nVISUAL LAYOUT:\r\nCalendar centered. Top bar says \"MARCH\" in white 14pt. Date area shows \"28\" bold centered.\r\n\r\nANIMATION TIMELINE (3.0s total):\r\n0–0.4s: Calendar shadow appears first (scale 0.8 → 1.0, opacity 0 → 0.3). Calendar frame scales 0.7 → 1.0 (ease-out spring).\r\n0.4–0.6s: Top bar slides down into frame (Y: -20px → 0, ease-out).\r\n0.6–0.75s: Ring hooks pop in (scale 0 → 1.0, spring, slight stagger).\r\n0.75–1.0s: \"MARCH\" text fades into top bar (opacity 0 → 1.0).\r\n1.0–1.5s: Date \"28\" — each digit drops in from above (Y: -30px → 0, opacity 0 → 1.0, stagger 0.15s, ease-out spring). \r\n1.5–1.9s: Whole calendar scales 1.0 → 1.06 → 1.0 (importance pulse).\r\n1.9–2.5s: A subtle ring appears around calendar, expands outward 15px then fades (circle stroke #F43F5E, 2px, opacity 0.6 → 0, ease-out).\r\n2.5–3.0s: Hold.\r\n\r\nEASING CURVES:\r\n- Frame spring: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Text slide: ease-out\r\n- Pulse: ease-in-out",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#fff1f2"
+  },
+  "elements": [
+    {
+      "id": "calendar-1",
+      "type": "calendar",
+      "layer": "main",
+      "x": 435,
+      "y": 435,
+      "width": 210,
+      "height": 210,
+      "stroke": "#FF2D55",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.9,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.9,
+          "end": 1.2,
+          "property": "scale",
+          "from": 1,
+          "to": 1.03,
+          "easing": "spring"
+        },
+        {
+          "start": 1.2,
+          "end": 1.5,
+          "property": "scale",
+          "from": 1.03,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "calendar-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 435,
+      "y": 435,
+      "width": 210,
+      "height": 210,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.22,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

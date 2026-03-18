@@ -1,0 +1,53 @@
+{
+  "id": "prompt-011-coffee-cup-steam-rising-canvas-1080-1080px-1-1-du",
+  "title": "PROMPT 011: Coffee Cup — Steam Rising\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1080px (1:1)\r\nDURATION: 3.0s | LOOP: Yes\r\nSVG: Coffee cup (6 paths: cup body, handle, rim, saucer, 3 steam wave paths) — centered 540×560px, 110px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #1C0A00 (very dark espresso brown)\r\nCup fill: #D4A96A (warm tan/latte)\r\nCup stroke: #A0522D (sienna brown, 2px)\r\nHandle fill: #D4A96A\r\nRim fill: #F5E6C8 (cream)\r\nSteam stroke: #F5E6C880 (cream, 50% opacity, 3px, no fill, rounded linecap)\r\nSaucer fill: #A0522D\r\n\r\nVISUAL LAYOUT:\r\nCup sits on saucer, centered. Three steam wavy paths rise from rim: left-offset, center, right-offset.\r\nEach steam path is a gentle S-curve, 50px tall above rim.\r\n\r\nANIMATION TIMELINE (3.0s loopable):\r\n0–0.4s: Cup and saucer fade in (opacity 0 → 1.0, ease-out).\r\n0.4–0.7s: Rim fades in. Handle fades in.\r\n0.7–1.0s: Steam path 1 (left) strokes upward (dashoffset 100% → 0%, ease-out) + translates Y +0 → -15px.\r\n0.9–1.2s: Steam path 2 (center) strokes upward (staggered 0.2s).\r\n1.1–1.4s: Steam path 3 (right) strokes upward (staggered 0.2s).\r\n1.4–2.4s: All three steam paths rise continuously (Y translate -15px → -50px) while fading out (opacity 1.0 → 0, ease-in). Loop Y position resets to -15px.\r\n2.4–3.0s: New steam loop starts (paths re-draw from 0), overlapping with fade of previous.\r\n\r\nEASING CURVES:\r\n- Cup/saucer fade: ease-out\r\n- Steam draw: ease-out\r\n- Steam rise: linear\r\n- Steam fade: ease-in",
+  "duration": 3,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#1c0a00"
+  },
+  "elements": [
+    {
+      "id": "star-1",
+      "type": "star",
+      "layer": "main",
+      "x": 465,
+      "y": 465,
+      "width": 150,
+      "height": 150,
+      "fill": "#d4a96a",
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.6,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.3,
+          "end": 0.55,
+          "property": "scale",
+          "from": 1,
+          "to": 1.2,
+          "easing": "spring"
+        },
+        {
+          "start": 0.55,
+          "end": 0.9,
+          "property": "scale",
+          "from": 1.2,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

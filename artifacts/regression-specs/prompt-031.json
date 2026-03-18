@@ -1,0 +1,40 @@
+{
+  "id": "prompt-031-rocket-launch-startup-launch-day-canvas-1920-1080",
+  "title": "PROMPT 031: Rocket Launch — Startup / Launch Day\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 4.5s | LOOP: No\r\nSVG: Rocket (18 paths: nose cone, body cylinder, 2 side fins, 2 engine nozzles, porthole window circle, window reflection arc, 3 flame tongue paths at base, 4 particle dots around flames, launch platform base rect, ground line) — start at 960×760px, rocket 200px tall\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #0B1120 (very deep dark blue — night sky)\r\nStars: 8 small circle fills (#FFFFFF, 2–4px, scattered 200px zone above platform) — static\r\nRocket body fill: #F1F5F9 (near white)\r\nRocket stroke: #CBD5E1 (2px)\r\nNose cone fill: #EF4444 (red)\r\nFins fill: #94A3B8 (grey)\r\nEngine nozzles fill: #64748B\r\nPorthole fill: #DBEAFE (pale blue)\r\nWindow reflection: #FFFFFF50 (30% white arc)\r\nFlame outer path: #F97316 (orange)\r\nFlame middle path: #FBBF24 (amber)\r\nFlame inner path: #FEF08A (pale yellow)\r\nParticle dots: #F97316 (orange, 4–6px circles)\r\nPlatform base: #334155\r\nGround line: #1E293B\r\n\r\nVISUAL LAYOUT:\r\nRocket sitting on platform at Y:760. Will launch upward off screen.\r\nStars visible in background from start.\r\n\r\nANIMATION TIMELINE (4.5s total):\r\n0–0.5s: Stars fade in (opacity 0 → 0.7, ease-out, staggered random offsets 0–0.3s).\r\n0.5–1.0s: Rocket and platform fade in (scale 0.9 → 1.0, ease-out spring).\r\n1.0–1.5s: Flame paths flicker — all 3 flames scale between (scaleY 0.7 → 1.0, alternating, 0.1s rapid cycle). Particle dots scatter outward from nozzle (translate 20px radially, opacity 1.0 → 0, repeat each 0.3s).\r\n1.5–1.8s: Rocket shakes (X: 0 → +4px → -4px → +3px → -3px → 0, rapid 50ms intervals).\r\n1.8–2.8s: Rocket launches — translates upward (Y: 760 → -200px, ease-in acceleration). Flame trail grows longer as rocket rises (flame scaleY 1.0 → 2.5). Particle cloud expands below.\r\n2.8–3.2s: Rocket exits frame. Flame trail fades below top of screen.\r\n3.2–3.8s: Particle cloud at launch site disperses (radial scatter, opacity 1.0 → 0, ease-out).\r\n3.8–4.5s: Hold launch site, just ground and platform visible. Stars twinkle (random opacity flicker ±0.3, ease-in-out).\r\n\r\nEASING CURVES:\r\n- Entry: ease-out\r\n- Shake: linear\r\n- Launch: ease-in (accelerating)\r\n- Flame flicker: linear rapid\r\n- Particle scatter: ease-out",
+  "duration": 4.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#0b1120"
+  },
+  "elements": [
+    {
+      "id": "rocket-1",
+      "type": "rocket",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#FF2D55",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 4.5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

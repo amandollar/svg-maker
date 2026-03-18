@@ -1,0 +1,119 @@
+{
+  "id": "prompt-027-headphones-music-podcast-canvas-1920-1080px-16-9-",
+  "title": "PROMPT 027: Headphones — Music / Podcast\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 3.5s | LOOP: Yes\r\nSVG: Over-ear headphones (11 paths: headband arc, left ear cup circle, right ear cup circle, left cushion ring, right cushion ring, left hinge, right hinge, left cable stub, right cable stub, left speaker grille lines ×2) — centered 960×500px, 200px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #09090B (near black)\r\nHeadband stroke: #E4E4E7 (light grey, 6px, no fill)\r\nEar cups fill: #27272A (dark charcoal)\r\nEar cup stroke: #3F3F46 (2px)\r\nCushion ring fill: #52525B (medium grey)\r\nGrille lines stroke: #71717A (1.5px)\r\nActive state glow: #A78BFA (soft purple)\r\nSound waves (looping): #A78BFA (purple, arc paths, stroke-only, fading)\r\n\r\nVISUAL LAYOUT:\r\nHeadphones centered. Two expanding sound wave arc sets emanate from each ear cup outward (left and right).\r\n\r\nANIMATION TIMELINE (3.5s loopable):\r\n0–0.5s: Headband draws in as arc (dashoffset 100%→0%, top to both sides, ease-out). Then ear cups and hinges appear (scale 0→1.0, 0.1s stagger, spring).\r\n0.5–0.8s: Cushion rings and grilles appear (opacity 0→1.0, 0.06s stagger, ease-out).\r\n0.8–3.5s (continuous loop):\r\n  Left ear: wave arc 1 expands (radius 60→90px, opacity 0.6→0, ease-out, 0.8s). Wave arc 2 follows 0.4s later. Loops.\r\n  Right ear: same wave arcs, mirrored, staggered 0.2s offset from left. Loops.\r\n  Headband subtle pulse (stroke color white → purple #A78BFA → white, ease-in-out, 2s cycle).\r\n\r\nEASING CURVES:\r\n- Build: ease-out / spring\r\n- Wave expand: ease-out\r\n- Color pulse: ease-in-out",
+  "duration": 3.5,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#09090b"
+  },
+  "elements": [
+    {
+      "id": "pin-1",
+      "type": "pin",
+      "layer": "main",
+      "x": 890,
+      "y": 470,
+      "width": 140,
+      "height": 140,
+      "fill": "#27272a",
+      "stroke": "#FFFFFF",
+      "strokeWidth": 4,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": -6,
+      "shadowColor": "#000000",
+      "shadowBlur": 16,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "translateY",
+          "from": -120,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.32,
+          "end": 0.5,
+          "property": "translateY",
+          "from": 0,
+          "to": -12,
+          "easing": "spring"
+        },
+        {
+          "start": 0.5,
+          "end": 0.76,
+          "property": "translateY",
+          "from": -12,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.29000000000000004,
+          "end": 0.46,
+          "property": "scale",
+          "from": 1,
+          "to": 0.94,
+          "easing": "spring"
+        },
+        {
+          "start": 0.46,
+          "end": 0.66,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1.04,
+          "easing": "spring"
+        },
+        {
+          "start": 0.66,
+          "end": 0.8400000000000001,
+          "property": "scale",
+          "from": 1.04,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "pin-1-shadow",
+      "type": "shadow",
+      "layer": "background",
+      "x": 906.8,
+      "y": 573.6,
+      "width": 106.4,
+      "height": 39.2,
+      "fill": "#000000",
+      "opacity": 0.16,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "scale",
+          "from": 0.35,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "opacity",
+          "from": 0.02,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.77,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.12,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

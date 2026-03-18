@@ -1,5 +1,5 @@
 {
-  "id": "productivity_laptop_animation",
+  "id": "laptop-productivity-animation",
   "title": "Laptop Productivity Animation",
   "duration": 3,
   "fps": 30,
@@ -7,19 +7,19 @@
   "canvas": {
     "width": 1920,
     "height": 1080,
-    "background": "#000000"
+    "background": "#1a1a1a"
   },
   "elements": [
     {
-      "id": "laptop_icon",
+      "id": "laptop-icon",
       "type": "laptop",
       "layer": "main",
       "x": 860,
       "y": 440,
       "width": 300,
       "height": 300,
-      "viewBoxWidth": 100,
-      "viewBoxHeight": 100,
+      "viewBoxWidth": 24,
+      "viewBoxHeight": 24,
       "stroke": "#FF2D55",
       "strokeWidth": 6,
       "opacity": 1,
@@ -33,14 +33,14 @@
       "animations": [
         {
           "start": 0,
-          "end": 0.5,
+          "end": 1.5,
           "property": "scale",
           "from": 0.5,
           "to": 1,
           "easing": "easeOut"
         },
         {
-          "start": 2.5,
+          "start": 1.5,
           "end": 3,
           "property": "opacity",
           "from": 1,
@@ -50,7 +50,7 @@
       ]
     },
     {
-      "id": "laptop_icon-ring",
+      "id": "laptop-icon-ring",
       "type": "ring",
       "layer": "background",
       "x": 860,

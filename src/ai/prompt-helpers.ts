@@ -24,7 +24,8 @@ const colorMap = {
 
 const findKnownColor = (input: string): string | undefined => {
   for (const [name, hex] of Object.entries(colorMap)) {
-    if (input.includes(name)) {
+    // Avoid substring matches like "staggered" -> "red".
+    if (new RegExp(`\\b${name}\\b`, "i").test(input)) {
       return hex;
     }
   }
@@ -36,15 +37,127 @@ const findKnownColor = (input: string): string | undefined => {
 export const parseCanvasFormat = (prompt: string) => {
   const normalized = normalizePrompt(prompt);
 
-  if (includesAny(normalized, ["vertical", "portrait", "reel", "story", "9:16"])) {
+  // Explicit dimension hint like "1920x1080" should win.
+  // Phase 1 prompts sometimes contain encoding artifacts like "1080Ã—1080" instead of "1080x1080".
+  const dimsMatch = normalized.match(/\b(\d{3,4})\s*(?:x|×|\u00d7|ã—|Ã—)\s*(\d{3,4})\b/i);
+  if (dimsMatch) {
+    const w = Number(dimsMatch[1]);
+    const h = Number(dimsMatch[2]);
+    if (Number.isFinite(w) && Number.isFinite(h) && w > 0 && h > 0) {
+      if (w > h) return "landscape" as const;
+      if (h > w) return "portrait" as const;
+      return "square" as const;
+    }
+  }
+
+  // Note: avoid matching generic "vertical" because Phase 1 prompts contain phrases like "vertical stroke".
+  if (includesAny(normalized, ["portrait", "reel", "story", "9:16", "vertical video"])) {
     return "portrait" as const;
   }
 
-  if (includesAny(normalized, ["landscape", "wide", "youtube", "16:9", "horizontal"])) {
+  // Note: avoid matching generic "wide" because Phase 1 prompts contain phrases like "160px wide".
+  // Note: avoid matching generic "horizontal" because Phase 1 prompts contain phrases like "horizontal bar".
+  if (includesAny(normalized, ["landscape", "youtube", "16:9", "widescreen", "horizontal video"])) {
     return "landscape" as const;
   }
 
   return "square" as const;
+};
+
+const colorNames = Object.keys(colorMap).join("|");
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const parseColorAfterLabel = (normalized: string, label: string): string | undefined => {
+  const re = new RegExp(
+    `\\b${escapeRegExp(label)}\\b\\s*(?:color\\s*)?(?:is|:)?\\s*(#[0-9a-f]{3,6}|${colorNames})\\b`,
+    "i",
+  );
+  const m = normalized.match(re);
+  if (!m) return undefined;
+  return findKnownColor(m[1]!.toLowerCase());
+};
+
+export const parsePrimaryFillColor = (prompt: string, type: string): string | undefined => {
+  const normalized = normalizePrompt(prompt);
+  const t = type.toLowerCase();
+
+  // Prefer explicit labeled lines from Phase 1 prompts.
+  if (t === "heart") {
+    return (
+      parseColorAfterLabel(normalized, "heart fill") ??
+      parseColorAfterLabel(normalized, "heart icon fill") ??
+      parseColorAfterLabel(normalized, "fill")
+    );
+  }
+
+  if (t === "star") {
+    return (
+      parseColorAfterLabel(normalized, "star fill") ??
+      parseColorAfterLabel(normalized, "fill")
+    );
+  }
+
+  if (t === "pin") {
+    return (
+      parseColorAfterLabel(normalized, "pin fill") ??
+      parseColorAfterLabel(normalized, "marker fill") ??
+      parseColorAfterLabel(normalized, "fill")
+    );
+  }
+
+  if (t === "battery") {
+    return parseColorAfterLabel(normalized, "battery fill") ?? parseColorAfterLabel(normalized, "fill");
+  }
+
+  return undefined;
+};
+
+export const parsePrimaryStrokeColor = (prompt: string, type: string): string | undefined => {
+  const normalized = normalizePrompt(prompt);
+  const t = type.toLowerCase();
+
+  if (t === "checkmark") {
+    return (
+      parseColorAfterLabel(normalized, "check stroke") ??
+      parseColorAfterLabel(normalized, "checkmark stroke") ??
+      parseColorAfterLabel(normalized, "stroke")
+    );
+  }
+
+  if (t === "bell") {
+    return parseColorAfterLabel(normalized, "bell stroke") ?? parseColorAfterLabel(normalized, "stroke");
+  }
+
+  if (t === "arrow") {
+    return parseColorAfterLabel(normalized, "arrow stroke") ?? parseColorAfterLabel(normalized, "stroke");
+  }
+
+  if (t === "wifi") {
+    return parseColorAfterLabel(normalized, "wifi stroke") ?? parseColorAfterLabel(normalized, "stroke");
+  }
+
+  if (t === "lock") {
+    return parseColorAfterLabel(normalized, "lock stroke") ?? parseColorAfterLabel(normalized, "stroke");
+  }
+
+  if (t === "cart") {
+    return parseColorAfterLabel(normalized, "cart stroke") ?? parseColorAfterLabel(normalized, "stroke");
+  }
+
+  if (t === "search") {
+    return parseColorAfterLabel(normalized, "search stroke") ?? parseColorAfterLabel(normalized, "stroke");
+  }
+
+  if (t === "coffee") {
+    // Phase 1 coffee prompt labels the cup explicitly.
+    return (
+      parseColorAfterLabel(normalized, "cup stroke") ??
+      parseColorAfterLabel(normalized, "coffee stroke") ??
+      parseColorAfterLabel(normalized, "stroke")
+    );
+  }
+
+  return undefined;
 };
 
 export const parseDuration = (prompt: string): number | undefined => {
@@ -68,6 +181,11 @@ export const parseDuration = (prompt: string): number | undefined => {
 
 export const parseLoop = (prompt: string): boolean => {
   const normalized = normalizePrompt(prompt);
+
+  const explicit = normalized.match(/\bloop\b\s*(?:is|:)?\s*(yes|no)\b/i);
+  if (explicit) {
+    return explicit[1]!.toLowerCase() === "yes";
+  }
 
   if (includesAny(normalized, ["no loop", "single play", "play once", "once", "one shot"])) {
     return false;
@@ -124,7 +242,30 @@ export const parseAccentColor = (prompt: string): string | undefined => {
     return findKnownColor(colorAfterWith[1].toLowerCase());
   }
 
-  return findKnownColor(normalized);
+  // Fallback: first recognized color in the prompt.
+  // Phase 1 prompts often list `Background: #...` first; don't treat that as an accent.
+  const bg = parseBackgroundColor(prompt)?.toLowerCase();
+  const candidate = findKnownColor(normalized);
+  if (candidate && bg && candidate.toLowerCase() === bg) {
+    return undefined;
+  }
+  return candidate;
+};
+
+export const parseGlowColor = (prompt: string, type: string): string | undefined => {
+  const normalized = normalizePrompt(prompt);
+  const t = type.toLowerCase();
+
+  // Phase 1 often uses an explicit "Glow color:" line.
+  // Keep this conservative: only parse when labeled to avoid confusing it with unrelated colors.
+  if (t === "heart" || t === "star" || t === "bell") {
+    return (
+      parseColorAfterLabel(normalized, "glow color") ??
+      parseColorAfterLabel(normalized, "glow")
+    );
+  }
+
+  return parseColorAfterLabel(normalized, "glow color") ?? undefined;
 };
 
 export type MotionHints = {
@@ -147,6 +288,8 @@ export type StyleHints = {
   editorial: boolean;
   minimal: boolean;
 };
+
+export type MotionProfile = "snappy" | "smooth" | "bouncy" | "premium" | "minimal";
 
 export const extractMotionHints = (prompt: string): MotionHints => {
   const normalized = normalizePrompt(prompt);
@@ -175,4 +318,16 @@ export const extractStyleHints = (prompt: string): StyleHints => {
     editorial: includesAny(normalized, ["editorial", "poster", "graphic", "fashion"]),
     minimal: includesAny(normalized, ["minimal", "clean", "simple", "sleek"]),
   };
+};
+
+export const inferMotionProfile = (prompt: string): MotionProfile => {
+  const normalized = normalizePrompt(prompt);
+  const hints = extractMotionHints(prompt);
+  const styles = extractStyleHints(prompt);
+
+  if (styles.minimal || normalized.includes("minimal")) return "minimal";
+  if (styles.premium || normalized.includes("premium")) return "premium";
+  if (hints.bounce || hints.energetic || normalized.includes("bouncy")) return "bouncy";
+  if (styles.soft || hints.subtle || normalized.includes("smooth") || normalized.includes("gentle")) return "smooth";
+  return "snappy";
 };

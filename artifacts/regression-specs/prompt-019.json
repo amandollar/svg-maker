@@ -1,0 +1,117 @@
+{
+  "id": "prompt-019-download-arrow-file-saving-canvas-1920-1080px-16-",
+  "title": "PROMPT 019: Download Arrow — File Saving\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 2.5s | LOOP: No\r\nSVG: Download icon (4 paths: vertical line, arrowhead, horizontal base line, document rect behind) — centered 960×540px, 100px tall\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #F0FDF4 (very light green)\r\nArrow stroke: #16A34A (green, 6px)\r\nArrow fill (head): #16A34A\r\nBase line stroke: #16A34A\r\nDocument rect fill: #DCFCE7 (pale green)\r\nDocument rect stroke: #16A34A (2px)\r\nProgress bar fill: #16A34A\r\n\r\nVISUAL LAYOUT:\r\nDocument rectangle (80×100px) with arrow inside pointing down.\r\nHorizontal progress bar below icon (200px wide, 8px tall, rounded).\r\n\r\nANIMATION TIMELINE (2.5s total):\r\n0–0.3s: Document rect fades in (opacity 0 → 1.0, ease-out). No arrow yet.\r\n0.3–0.6s: Arrow vertical line draws downward (dashoffset 100% → 0%, ease-out).\r\n0.6–0.8s: Arrowhead drops in (Y: -10px → 0, opacity 0 → 1.0, ease-out).\r\n0.8–1.1s: Base line draws in (dashoffset 100% → 0%, ease-out).\r\n1.1–1.3s: Arrow and document scale 1.0 → 1.1 → 1.0 (recognition bounce).\r\n1.3–2.0s: Progress bar fills L→R (width 0 → 200px, ease-in-out, 0.7s).\r\n2.0–2.2s: Brief green pulse on whole icon (glow blur 0 → 15px → 0).\r\n2.2–2.5s: Hold complete state.\r\n\r\nEASING CURVES:\r\n- Draw: ease-out\r\n- Progress fill: ease-in-out\r\n- Glow: ease-in-out",
+  "duration": 2.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#f0fdf4"
+  },
+  "elements": [
+    {
+      "id": "checkmark-1",
+      "type": "checkmark",
+      "layer": "main",
+      "x": 860,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#16a34a",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "flash": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.7,
+          "property": "translateY",
+          "from": 6,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.14,
+          "end": 0.7,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.7,
+          "end": 0.98,
+          "property": "scale",
+          "from": 1,
+          "to": 1.16,
+          "easing": "spring"
+        },
+        {
+          "start": 0.98,
+          "end": 1.23,
+          "property": "scale",
+          "from": 1.16,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.72,
+          "end": 0.9199999999999999,
+          "property": "opacity",
+          "from": 1,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "checkmark-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 860,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#16a34a",
+      "strokeWidth": 4,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.32,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.85,
+          "property": "opacity",
+          "from": 0.32,
+          "to": 0.18,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

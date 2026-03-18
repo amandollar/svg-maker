@@ -1,0 +1,149 @@
+{
+  "id": "prompt-006-location-pin-drop-we-re-here-canvas-1920-1080px-1",
+  "title": "PROMPT 006: Location Pin Drop — \"We're Here\"\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 2.5s | LOOP: No\r\nSVG: Map pin / location marker (3 paths: outer teardrop body, inner circle, shadow ellipse) — centered 960×480px, 100px tall\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #E8F4FD (very light sky blue)\r\nPin body fill: #EF4444 (red)\r\nPin inner circle fill: #FFFFFF (white)\r\nPin stroke: #B91C1C (dark red, 2px)\r\nDrop shadow: #00000025 (black 14% opacity ellipse below pin)\r\nRipple color: #EF4444 (red, fading)\r\n\r\nVISUAL LAYOUT:\r\nPin appears dropping from above-frame. Lands at vertical center. Ground ripple expands at base.\r\nClean flat-map aesthetic. No other elements.\r\n\r\nANIMATION TIMELINE (2.5s total):\r\n0–0.3s: Pin enters from Y:-120px → Y:480px (drops in, ease-in acceleration)\r\n0.3–0.42s: Pin overshoots to Y:510px (squash: scaleY 0.88 at impact)\r\n0.42–0.58s: Pin bounces back to Y:480px (scaleY 1.0, ease-out spring)\r\n0.58–0.75s: Inner circle scales 0 → 1.0 (reveal, elastic spring)\r\n0.75–1.3s: Ground shadow expands (ellipse scaleX 0 → 1.0, ease-out) + ripple ring expands outward (circle, stroke #EF4444, opacity 0.6 → 0, radius 20px → 80px, 0.55s)\r\n1.3–2.0s: Pin holds. Subtle float: Y:480 → Y:472 → Y:480 (ease-in-out, 0.7s cycle)\r\n2.0–2.5s: Hold before cut\r\n\r\nEASING CURVES:\r\n- Drop: ease-in (cubic-bezier(0.55, 0, 1, 0.45))\r\n- Bounce: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Float: ease-in-out",
+  "duration": 2.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#e8f4fd"
+  },
+  "elements": [
+    {
+      "id": "pin-1",
+      "type": "pin",
+      "layer": "main",
+      "x": 890,
+      "y": 470,
+      "width": 140,
+      "height": 140,
+      "fill": "#ef4444",
+      "stroke": "#FF2D55",
+      "strokeWidth": 4,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": -6,
+      "shadowColor": "#000000",
+      "shadowBlur": 16,
+      "ripple": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "translateY",
+          "from": -140,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.32,
+          "end": 0.5,
+          "property": "translateY",
+          "from": 0,
+          "to": -12,
+          "easing": "spring"
+        },
+        {
+          "start": 0.5,
+          "end": 0.76,
+          "property": "translateY",
+          "from": -12,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.29000000000000004,
+          "end": 0.46,
+          "property": "scale",
+          "from": 1,
+          "to": 0.94,
+          "easing": "spring"
+        },
+        {
+          "start": 0.46,
+          "end": 0.66,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1.04,
+          "easing": "spring"
+        },
+        {
+          "start": 0.66,
+          "end": 0.8400000000000001,
+          "property": "scale",
+          "from": 1.04,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "pin-1-shadow",
+      "type": "shadow",
+      "layer": "background",
+      "x": 906.8,
+      "y": 573.6,
+      "width": 106.4,
+      "height": 39.2,
+      "fill": "#000000",
+      "opacity": 0.16,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "scale",
+          "from": 0.35,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "opacity",
+          "from": 0.02,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.77,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.12,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "pin-1-ripple",
+      "type": "ring",
+      "layer": "background",
+      "x": 912.4,
+      "y": 568,
+      "width": 95.2,
+      "height": 42,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.22,
+      "animations": [
+        {
+          "start": 0.32,
+          "end": 0.97,
+          "property": "scale",
+          "from": 0.7,
+          "to": 1.45,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.97,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

@@ -7,60 +7,55 @@ type MicrophoneProps = {
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 
-const dash = (length: number, progress: number) => {
-  const p = clamp01(progress);
-  return {
-    strokeDasharray: length,
-    strokeDashoffset: length * (1 - p),
-  } as const;
-};
-
 export const Microphone = ({
   stroke = "#FFFFFF",
   strokeWidth = 6,
   opacity = 1,
   drawProgress = 1,
 }: MicrophoneProps) => {
-  const capsuleLen = 180;
-  const stemLen = 70;
-  const baseLen = 70;
+  // Use the real Heroicons outline `microphone` path for a more "designed" look.
+  // Heroicons is authored in a 24x24 viewBox; our renderer assumes 0..100.
+  const scale = 100 / 24;
+  const heroStroke = strokeWidth / scale;
+
+  // Add a subtle internal grill that fades in late (adds richness without changing silhouette).
+  const grillT = clamp01((drawProgress - 0.65) / 0.35);
+  const revealH = 24 * clamp01(drawProgress);
+  const revealY = 24 - revealH;
 
   return (
-    <>
-      <path
-        d="M50 18c10 0 18 8 18 18v16c0 10-8 18-18 18s-18-8-18-18V36c0-10 8-18 18-18Z"
-        fill="none"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinejoin="round"
-        opacity={opacity}
-        {...dash(capsuleLen, drawProgress)}
-      />
-      <path
-        d="M28 52c0 12 10 22 22 22s22-10 22-22"
-        fill="none"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        opacity={opacity}
-        {...dash(baseLen, drawProgress)}
-      />
-      <path
-        d="M50 74v12"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        opacity={opacity}
-        {...dash(stemLen, drawProgress)}
-      />
-      <path
-        d="M38 86h24"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        opacity={opacity}
-      />
-    </>
+    <g transform={`scale(${scale})`}>
+      <defs>
+        {/* Reveal bottom-up so "forming" feels different from other outline icons. */}
+        <clipPath id="mic-reveal">
+          <rect x={0} y={revealY} width={24} height={revealH} />
+        </clipPath>
+      </defs>
+
+      <g clipPath="url(#mic-reveal)">
+        <path
+          d="M12 18.75C15.3137 18.75 18 16.0637 18 12.75V11.25M12 18.75C8.68629 18.75 6 16.0637 6 12.75V11.25M12 18.75V22.5M8.25 22.5H15.75M12 15.75C10.3431 15.75 9 14.4069 9 12.75V4.5C9 2.84315 10.3431 1.5 12 1.5C13.6569 1.5 15 2.84315 15 4.5V12.75C15 14.4069 13.6569 15.75 12 15.75Z"
+          fill="none"
+          stroke={stroke}
+          strokeWidth={heroStroke}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={opacity}
+        />
+
+        {[7.7, 9.2, 10.7].map((y, i) => (
+          <path
+            key={i}
+            d={`M10.2 ${y}H13.8`}
+            fill="none"
+            stroke={stroke}
+            strokeWidth={heroStroke * 0.9}
+            strokeLinecap="round"
+            opacity={opacity * grillT * 0.6}
+          />
+        ))}
+      </g>
+
+    </g>
   );
 };
-

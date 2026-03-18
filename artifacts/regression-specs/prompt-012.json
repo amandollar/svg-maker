@@ -1,0 +1,119 @@
+{
+  "id": "prompt-012-search-icon-query-loading-canvas-1920-1080px-16-9",
+  "title": "PROMPT 012: Search Icon — Query Loading\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 2.5s | LOOP: No\r\nSVG: Magnifying glass (3 paths: circle lens, handle line, subtle inner glint line) — centered 960×540px, 120px wide, stroke-width 7px\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #F1F5F9 (cool light grey)\r\nGlass circle stroke: #334155 (dark slate)\r\nHandle stroke: #334155\r\nInner glint: #FFFFFF (white, 3px, 30% opacity, diagonal across lens top-left)\r\nActive state circle stroke: #6366F1 (indigo when searching)\r\nSpin indicator: #6366F1 dashed arc (3px, 40px radius, 60% of circle dash)\r\n\r\nVISUAL LAYOUT:\r\nMagnifying glass centered. On \"searching\" state, a dashed circular spinner arc orbits around the lens.\r\n\r\nANIMATION TIMELINE (2.5s total):\r\n0–0.3s: Magnifying glass scales 0 → 1.0 (spring ease-out).\r\n0.3–0.6s: Glass rocks slightly left then right (rotate -8° → +8° → 0°, ease-in-out) — \"scanning\" gesture.\r\n0.6–0.8s: Circle stroke color transitions from slate → indigo over 0.2s.\r\n0.8–1.8s: Dashed spinner arc appears and rotates 360° around lens (continuous clockwise rotation, 1.0s per revolution, linear).\r\n1.8–2.1s: Spinner arc fades out (opacity 1.0 → 0, ease-in). Circle stroke transitions back to slate.\r\n2.1–2.3s: Glint line sweeps across lens (X: -30px → +40px, opacity 0 → 0.5 → 0, ease-in-out).\r\n2.3–2.5s: Hold final resting state.\r\n\r\nEASING CURVES:\r\n- Entry: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Rock: ease-in-out\r\n- Spinner: linear\r\n- Glint: ease-in-out",
+  "duration": 2.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#f1f5f9"
+  },
+  "elements": [
+    {
+      "id": "pin-1",
+      "type": "pin",
+      "layer": "main",
+      "x": 890,
+      "y": 470,
+      "width": 140,
+      "height": 140,
+      "fill": "#FFFFFF",
+      "stroke": "#FFFFFF",
+      "strokeWidth": 4,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": -6,
+      "shadowColor": "#000000",
+      "shadowBlur": 16,
+      "ripple": false,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "translateY",
+          "from": -120,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.32,
+          "end": 0.5,
+          "property": "translateY",
+          "from": 0,
+          "to": -12,
+          "easing": "spring"
+        },
+        {
+          "start": 0.5,
+          "end": 0.76,
+          "property": "translateY",
+          "from": -12,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.29000000000000004,
+          "end": 0.46,
+          "property": "scale",
+          "from": 1,
+          "to": 0.94,
+          "easing": "spring"
+        },
+        {
+          "start": 0.46,
+          "end": 0.66,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1.04,
+          "easing": "spring"
+        },
+        {
+          "start": 0.66,
+          "end": 0.8400000000000001,
+          "property": "scale",
+          "from": 1.04,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "pin-1-shadow",
+      "type": "shadow",
+      "layer": "background",
+      "x": 906.8,
+      "y": 573.6,
+      "width": 106.4,
+      "height": 39.2,
+      "fill": "#000000",
+      "opacity": 0.16,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "scale",
+          "from": 0.35,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.32,
+          "property": "opacity",
+          "from": 0.02,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.32,
+          "end": 0.77,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.12,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

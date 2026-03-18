@@ -7,7 +7,7 @@
   "canvas": {
     "width": 1080,
     "height": 1080,
-    "background": "#333333"
+    "background": "#000000"
   },
   "elements": [
     {
@@ -18,15 +18,15 @@
       "y": 440,
       "width": 200,
       "height": 200,
-      "viewBoxWidth": 48,
-      "viewBoxHeight": 48,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
       "stroke": "#FF2D55",
       "strokeWidth": 6,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
-      "glowColor": "#00FF00",
-      "glowStrength": 10,
+      "glowColor": "#FF0000",
+      "glowStrength": 4,
       "shadowBlur": 0,
       "trail": false,
       "flash": false,
@@ -36,46 +36,37 @@
           "start": 0,
           "end": 2.2,
           "property": "scale",
-          "from": 1,
+          "from": 0.9,
           "to": 1.1,
           "easing": "easeInOut"
         }
       ]
     },
     {
-      "id": "mic-icon-screen-glow",
-      "type": "glow",
+      "id": "mic-icon-ring",
+      "type": "ring",
       "layer": "background",
-      "x": 424,
-      "y": 428,
-      "width": 231.99999999999997,
-      "height": 224.00000000000003,
-      "fill": "#FF2D55",
-      "opacity": 0.11,
-      "glowColor": "#FF2D55",
-      "glowStrength": 0.55,
+      "x": 440,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#FF2D55",
+      "strokeWidth": 2,
+      "opacity": 0.12,
       "animations": [
         {
-          "start": 0.99,
-          "end": 1.17,
+          "start": 0.05,
+          "end": 0.3,
           "property": "scale",
-          "from": 0.88,
-          "to": 1.22,
+          "from": 0.9,
+          "to": 1.18,
           "easing": "easeOut"
         },
         {
-          "start": 0.99,
-          "end": 1.17,
+          "start": 0.05,
+          "end": 0.7,
           "property": "opacity",
-          "from": 0,
-          "to": 0.11,
-          "easing": "easeOut"
-        },
-        {
-          "start": 1.17,
-          "end": 1.8399999999999999,
-          "property": "opacity",
-          "from": 0.11,
+          "from": 0.12,
           "to": 0,
           "easing": "easeOut"
         }

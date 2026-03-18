@@ -1,5 +1,5 @@
 {
-  "id": "avatar-profile-reveal",
+  "id": "profile-reveal-animation",
   "title": "Profile Reveal Animation",
   "duration": 2,
   "fps": 30,
@@ -7,22 +7,22 @@
   "canvas": {
     "width": 1080,
     "height": 1080,
-    "background": "#001f3f"
+    "background": "#001F3F"
   },
   "elements": [
     {
-      "id": "main-avatar",
+      "id": "user-avatar",
       "type": "avatar",
       "layer": "main",
       "x": 490,
       "y": 490,
       "width": 200,
       "height": 200,
-      "viewBoxWidth": 24,
-      "viewBoxHeight": 24,
+      "viewBoxWidth": 80,
+      "viewBoxHeight": 80,
       "stroke": "#FF2D55",
       "strokeWidth": 6,
-      "opacity": 0,
+      "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
       "glowStrength": 0,
@@ -33,16 +33,16 @@
       "animations": [
         {
           "start": 0,
-          "end": 2,
-          "property": "opacity",
+          "end": 1,
+          "property": "scale",
           "from": 0,
           "to": 1,
-          "easing": "easeInOut"
+          "easing": "easeOut"
         }
       ]
     },
     {
-      "id": "main-avatar-ring",
+      "id": "user-avatar-ring",
       "type": "ring",
       "layer": "background",
       "x": 490,

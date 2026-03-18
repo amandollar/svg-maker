@@ -1,0 +1,132 @@
+{
+  "id": "prompt-029-camera-dslr-photography-brand-canvas-1080-1080px-",
+  "title": "PROMPT 029: Camera / DSLR — Photography Brand\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1080px (1:1)\r\nDURATION: 3.0s | LOOP: No\r\nSVG: DSLR camera (15 paths: body rectangle rounded, lens outer circle, lens inner circle, lens center dot, lens reflection arc, viewfinder rect, top flash hot-shoe rect, grip bump, shutter button circle, mode dial, front AF illuminator dot, strap lug left, strap lug right, body grip texture lines ×2) — centered 540×540px, 200px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #1C1917 (very dark warm black)\r\nCamera body fill: #292524 (dark charcoal brown)\r\nCamera body stroke: #44403C (2px)\r\nLens outer ring fill: #1C1917\r\nLens barrel rings stroke: #57534E (grey, 1px)\r\nLens center glass fill: #1E3A5F (dark blue — glass reflection)\r\nLens reflection arc fill: #FFFFFF20 (white 12% arc highlight)\r\nLens center dot fill: #0EA5E9 (bright blue AF point)\r\nShutter button fill: #EF4444 (red)\r\nTop elements fill: #44403C\r\n\r\nVISUAL LAYOUT:\r\nCamera centered, lens facing viewer, slight 5° tilt (rotated). Lens center catches light.\r\n\r\nANIMATION TIMELINE (3.0s total):\r\n0–0.5s: Camera body reveals (scale 0.9 → 1.0, opacity 0 → 1.0, ease-out spring, slight tilt -5° rotation maintained throughout).\r\n0.5–0.8s: Lens elements build inward (outer ring → barrel rings → inner circle → center dot, each 0.07s stagger, scale from outer→inner, ease-out).\r\n0.8–1.0s: Lens reflection arc sweeps (opacity 0 → 0.4, rotate 0° → 30°, ease-out).\r\n1.0–1.2s: Shutter button pulses (scale 1.0 → 1.3 → 1.0, spring).\r\n1.2–1.5s: Camera \"takes shot\" — white flash overlay (opacity 0 → 0.7 → 0, 0.3s total, ease-in then ease-out).\r\n1.5–1.8s: Post-flash: slight afterglow on lens center dot (blue #0EA5E9, blur 0 → 12px → 0, ease-out).\r\n1.8–3.0s: Hold. Camera rotates very slowly +2° → -2° (gentle rock, ease-in-out, 1.2s cycle).\r\n\r\nEASING CURVES:\r\n- Entry: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Lens build: ease-out\r\n- Flash: ease-in / ease-out\r\n- Rock: ease-in-out",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#1c1917"
+  },
+  "elements": [
+    {
+      "id": "arrow-1",
+      "type": "arrow",
+      "layer": "main",
+      "x": 485,
+      "y": 485,
+      "width": 110,
+      "height": 110,
+      "stroke": "#44403c",
+      "strokeWidth": 8,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#44403c",
+      "glowStrength": 0.45,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.35,
+          "end": 0.9,
+          "property": "translateY",
+          "from": 12,
+          "to": -12,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 1,
+          "end": 1.3,
+          "property": "opacity",
+          "from": 1,
+          "to": 0,
+          "easing": "easeIn"
+        }
+      ]
+    },
+    {
+      "id": "arrow-1-stack-1",
+      "type": "arrow",
+      "layer": "background",
+      "x": 485,
+      "y": 522.4,
+      "width": 110,
+      "height": 110,
+      "stroke": "#44403c",
+      "strokeWidth": 8,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.45,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0.28,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.45,
+          "end": 1,
+          "property": "opacity",
+          "from": 0.28,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0,
+          "end": 1,
+          "property": "translateY",
+          "from": 18,
+          "to": -12,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "arrow-1-stack-2",
+      "type": "arrow",
+      "layer": "background",
+      "x": 485,
+      "y": 559.8,
+      "width": 110,
+      "height": 110,
+      "stroke": "#44403c",
+      "strokeWidth": 8,
+      "opacity": 0.1,
+      "animations": [
+        {
+          "start": 0.12,
+          "end": 0.55,
+          "property": "opacity",
+          "from": 0.1,
+          "to": 0.24,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.55,
+          "end": 1.1,
+          "property": "opacity",
+          "from": 0.24,
+          "to": 0,
+          "easing": "easeIn"
+        },
+        {
+          "start": 0.12,
+          "end": 1.1,
+          "property": "translateY",
+          "from": 20,
+          "to": -10,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

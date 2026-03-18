@@ -1,6 +1,6 @@
 {
   "id": "security-confirmation-animation",
-  "title": "Security Confirmation Animation",
+  "title": "Security Confirmation",
   "duration": 2,
   "fps": 30,
   "loop": false,
@@ -18,13 +18,14 @@
       "y": 440,
       "width": 200,
       "height": 200,
-      "viewBoxWidth": 24,
-      "viewBoxHeight": 24,
+      "viewBoxWidth": 200,
+      "viewBoxHeight": 200,
       "stroke": "#FF2D55",
-      "strokeWidth": 1,
+      "strokeWidth": 6,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
+      "glowColor": "#FFFFFF",
       "glowStrength": 0,
       "shadowBlur": 0,
       "trail": false,
@@ -36,8 +37,8 @@
           "end": 2,
           "property": "scale",
           "from": 0.8,
-          "to": 1,
-          "easing": "spring"
+          "to": 1.2,
+          "easing": "easeOut"
         }
       ]
     },

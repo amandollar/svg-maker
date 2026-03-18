@@ -1,5 +1,5 @@
 {
-  "id": "animation_001",
+  "id": "plane-message-sent",
   "title": "Message Sent Animation",
   "duration": 2.1,
   "fps": 30,
@@ -11,21 +11,21 @@
   },
   "elements": [
     {
-      "id": "plane_1",
+      "id": "plane",
       "type": "plane",
       "layer": "main",
       "x": 910,
       "y": 490,
       "width": 230,
       "height": 230,
-      "viewBoxWidth": 24,
-      "viewBoxHeight": 24,
+      "viewBoxWidth": 64,
+      "viewBoxHeight": 64,
       "stroke": "#FF2D55",
-      "strokeWidth": 6,
+      "strokeWidth": 1,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
-      "glowStrength": 0,
+      "glowStrength": 5,
       "shadowBlur": 0,
       "trail": false,
       "flash": false,
@@ -33,24 +33,32 @@
       "animations": [
         {
           "start": 0,
-          "end": 2.1,
-          "property": "translateY",
+          "end": 0.7,
+          "property": "scale",
           "from": 0,
-          "to": -400,
+          "to": 1,
+          "easing": "spring"
+        },
+        {
+          "start": 0.7,
+          "end": 2.1,
+          "property": "translateX",
+          "from": 0,
+          "to": 400,
           "easing": "easeInOut"
         },
         {
-          "start": 0,
-          "end": 0.3,
-          "property": "opacity",
+          "start": 0.7,
+          "end": 2.1,
+          "property": "translateY",
           "from": 0,
-          "to": 1,
-          "easing": "easeIn"
+          "to": -100,
+          "easing": "easeInOut"
         }
       ]
     },
     {
-      "id": "plane_1-ring",
+      "id": "plane-ring",
       "type": "ring",
       "layer": "background",
       "x": 910,

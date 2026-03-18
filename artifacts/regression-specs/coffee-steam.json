@@ -1,36 +1,102 @@
 {
-  "id": "a-white-coffee-cup-icon-centered-on-a-dark-square-background",
-  "title": "A white coffee cup icon centered on a dark square background, 2.4 seconds, seamless loop, steam rising animation",
+  "id": "coffee-steam-animation",
+  "title": "Coffee Cup with Steam",
   "duration": 2.4,
   "fps": 30,
   "loop": true,
   "canvas": {
     "width": 1080,
     "height": 1080,
-    "background": "#111111"
+    "background": "#000000"
   },
   "elements": [
     {
-      "id": "rupee-1",
-      "type": "rupee",
+      "id": "coffee-cup",
+      "type": "coffee",
       "layer": "main",
-      "x": 330,
-      "y": 330,
-      "width": 420,
-      "height": 420,
+      "x": 490,
+      "y": 490,
+      "width": 200,
+      "height": 200,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
       "stroke": "#FF2D55",
-      "strokeWidth": 10,
+      "strokeWidth": 6,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": false,
+      "flash": false,
+      "ripple": false,
+      "animations": []
+    },
+    {
+      "id": "steam",
+      "type": "glow",
+      "layer": "foreground",
+      "x": 520,
+      "y": 510,
+      "width": 40,
+      "height": 60,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
+      "fill": "#FFFFFF",
+      "strokeWidth": 0,
+      "opacity": 0.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowStrength": 0,
+      "shadowBlur": 0,
+      "trail": true,
+      "flash": false,
+      "ripple": false,
       "animations": [
         {
           "start": 0,
           "end": 2.4,
-          "property": "draw",
-          "from": 0,
-          "to": 1,
-          "easing": "linear"
+          "property": "translateY",
+          "from": 10,
+          "to": -20,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 2.4,
+          "property": "opacity",
+          "from": 0.5,
+          "to": 0,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "coffee-cup-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 466,
+      "y": 466,
+      "width": 248,
+      "height": 248,
+      "fill": "#FF2D55",
+      "opacity": 0.1,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1.12,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.8,
+          "property": "opacity",
+          "from": 0.1,
+          "to": 0.02,
+          "easing": "easeOut"
         }
       ]
     }

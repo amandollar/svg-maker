@@ -1,0 +1,117 @@
+{
+  "id": "prompt-021-bar-chart-mini-kpi-snapshot-canvas-1920-1080px-16",
+  "title": "PROMPT 021: Bar Chart Mini — KPI Snapshot\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 3.5s | LOOP: No\r\nSVG: Mini bar chart (8 paths: 5 bars of varying height + baseline + 2 axis lines) — lower-center 960×600px, 220px wide total, bars 28px wide, 20px gap\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #0F172A (dark navy)\r\nAxis lines stroke: #334155 (medium dark grey, 2px)\r\nBar 1 fill: #3B82F6 (blue) — height 90px\r\nBar 2 fill: #3B82F6 — height 130px\r\nBar 3 fill: #3B82F6 — height 110px\r\nBar 4 fill: #6366F1 (indigo — highlight bar) — height 170px\r\nBar 5 fill: #3B82F6 — height 140px\r\nBar top glow (bar 4 only): #818CF840 (indigo 25% glow)\r\nBaseline stroke: #475569 (2px)\r\n\r\nVISUAL LAYOUT:\r\nFive bars growing from baseline at Y:640. Bar 4 is tallest (highlighted bar).\r\nAxes visible: Y-axis left, baseline bottom. No labels (clean icon version).\r\n\r\nANIMATION TIMELINE (3.5s total):\r\n0–0.4s: Axes draw in (Y-axis top→bottom, baseline left→right, stroke-dashoffset, ease-out).\r\n0.4–0.9s: Bars 1–3 grow from baseline (scaleY 0 → target, transform-origin bottom, ease-out, 0.15s stagger between bars).\r\n0.9–1.3s: Bar 4 grows (slight delay, grows faster — ease-out). Glow appears on bar 4 top.\r\n1.3–1.6s: Bar 5 grows (ease-out).\r\n1.6–2.0s: All bars complete. Bar 4 pulses glow (blur 0 → 16px → 0, ease-in-out).\r\n2.0–2.5s: All bars hold. Subtle up-tick: all bars grow additional 5% (scaleY → 1.05 → 1.0, ease-in-out). \"Growth\" feel.\r\n2.5–3.5s: Hold.\r\n\r\nEASING CURVES:\r\n- Axis draw: ease-out\r\n- Bar grow: ease-out\r\n- Glow pulse: ease-in-out\r\n- Up-tick: ease-in-out",
+  "duration": 3.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#0f172a"
+  },
+  "elements": [
+    {
+      "id": "checkmark-1",
+      "type": "checkmark",
+      "layer": "main",
+      "x": 860,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#334155",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "flash": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.7,
+          "property": "translateY",
+          "from": 6,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.14,
+          "end": 0.7,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.7,
+          "end": 0.98,
+          "property": "scale",
+          "from": 1,
+          "to": 1.16,
+          "easing": "spring"
+        },
+        {
+          "start": 0.98,
+          "end": 1.23,
+          "property": "scale",
+          "from": 1.16,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.72,
+          "end": 0.9199999999999999,
+          "property": "opacity",
+          "from": 1,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "checkmark-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 860,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#334155",
+      "strokeWidth": 3,
+      "opacity": 0.08,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.85,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.08,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

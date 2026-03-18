@@ -1,0 +1,77 @@
+{
+  "id": "prompt-023-wallet-open-payment-cashflow-canvas-1080-1080px-1",
+  "title": "PROMPT 023: Wallet Open — Payment / Cashflow\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1080px (1:1)\r\nDURATION: 3.0s | LOOP: No\r\nSVG: Bifold wallet (8 paths: outer rectangle closed, fold crease, flap, interior card slot, coin circles ×2, small bill rect) — centered 540×540px, 160px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #FEF3C7 (warm light amber)\r\nWallet body fill: #92400E (warm brown leather)\r\nWallet outline stroke: #78350F (dark brown, 2px)\r\nWallet interior fill: #FDE68A (pale yellow interior)\r\nCard slot fill: #D97706 (amber)\r\nCoins fill: #FBBF24 (gold)\r\nBill fill: #86EFAC (pale green — dollar bill)\r\n\r\nVISUAL LAYOUT:\r\nWallet closed initially. Opens like a book (left flap folds back). Interior reveals cards, coins, bill.\r\n\r\nANIMATION TIMELINE (3.0s total):\r\n0–0.4s: Closed wallet scales 0.8 → 1.0 (ease-out spring).\r\n0.4–0.9s: Right flap rotates open (rotateY 0° → -55° — simulate 3D fold open, ease-in-out).\r\n0.9–1.2s: Interior background reveals (clip-path wipes left → right as flap opens, ease-out).\r\n1.2–1.4s: Card slot slides in from right inside wallet (X: +30px → 0, ease-out).\r\n1.4–1.6s: Coins appear (scale 0 → 1.0, spring, stagger 0.1s each).\r\n1.6–1.8s: Bill slides up from wallet base (Y: +20px → 0, opacity 0 → 1.0, ease-out).\r\n1.8–2.3s: Coins have shimmer highlight (diagonal white line sweeps across coin surface, 0.3s each).\r\n2.3–3.0s: Hold open wallet. Subtle breathing scale (1.0 → 1.03 → 1.0).\r\n\r\nEASING CURVES:\r\n- Flip: ease-in-out\r\n- Contents reveal: ease-out\r\n- Shimmer: ease-in-out",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#fef3c7"
+  },
+  "elements": [
+    {
+      "id": "heart-1",
+      "type": "heart",
+      "layer": "main",
+      "x": 460,
+      "y": 460,
+      "width": 160,
+      "height": 160,
+      "fill": "#92400e",
+      "opacity": 0.92,
+      "offsetX": -4,
+      "offsetY": -8,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.2,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.18,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.16,
+          "easing": "snapUp"
+        },
+        {
+          "start": 0.18,
+          "end": 0.4,
+          "property": "scale",
+          "from": 1.16,
+          "to": 0.95,
+          "easing": "spring"
+        },
+        {
+          "start": 0.4,
+          "end": 0.7,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.9,
+          "end": 1.45,
+          "property": "scale",
+          "from": 1,
+          "to": 1.03,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 1.45,
+          "end": 2,
+          "property": "scale",
+          "from": 1.03,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

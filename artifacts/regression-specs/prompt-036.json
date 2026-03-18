@@ -1,0 +1,40 @@
+{
+  "id": "prompt-036-notification-stack-social-media-dashboard-canvas-",
+  "title": "PROMPT 036: Notification Stack — Social Media Dashboard\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1920px (9:16 Vertical)\r\nDURATION: 4.0s | LOOP: No\r\nSVG: 4 notification cards stacked vertically (4 card rects, each 800×140px + rounded corners, each with: icon circle left, text line placeholder rects ×2, time stamp rect, count badge circle right) — total stack from Y:300 to Y:900, centered X:540\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #0F172A (dark navy)\r\nCard 1 fill: #1E293B, stroke #334155 2px, left accent bar #EF4444 (red)\r\nCard 2 fill: #1E293B, stroke #334155, left accent bar #3B82F6 (blue)\r\nCard 3 fill: #1E293B, stroke #334155, left accent bar #22C55E (green)\r\nCard 4 fill: #1E293B, stroke #334155, left accent bar #F59E0B (amber)\r\nIcon circles: same as accent colors\r\nText line 1 (each card): #F1F5F9 placeholder rect 240×12px, opacity 0.9\r\nText line 2 (each card): #94A3B8 placeholder rect 160×10px, opacity 0.6\r\nBadge fills: same as accent colors — \"3\", \"12\", \"1\", \"5\" text #FFFFFF 14pt bold\r\n\r\nVISUAL LAYOUT:\r\nCards stacked vertically. Each slides in from right, staggered.\r\n\r\nANIMATION TIMELINE (4.0s total):\r\n0–0.2s: Background establishes. No cards visible.\r\n0.2–0.5s: Card 1 slides from X:+200px → 0 (ease-out spring). Icon, text lines, badge appear with 0.05s stagger each.\r\n0.5–0.8s: Card 2 slides in (stagger 0.3s from card 1).\r\n0.8–1.1s: Card 3 slides in.\r\n1.1–1.4s: Card 4 slides in.\r\n1.4–1.8s: All 4 cards rest. Each card's left accent bar pulses (scaleX 1.0→1.3→1.0, ease-in-out, each card offset 0.1s stagger).\r\n1.8–2.3s: Badge numbers count up (each badge: 0 → target number, ease-out, 0.4s each, staggered).\r\n2.3–2.8s: Card 1 shakes gently (X: 0 → +5px → -5px → 0, ease-in-out) — \"new notification\" tap.\r\n2.8–3.2s: Card 1 scales 1.0 → 1.03 → 1.0 (highlight).\r\n3.2–4.0s: All cards settle. Subtle glow on each accent bar (opacity 0.6→1.0→0.6, staggered 0.25s cycle).\r\n\r\nEASING CURVES:\r\n- Slide-in: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Badge count: ease-out\r\n- Pulse: ease-in-out",
+  "duration": 4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#0f172a"
+  },
+  "elements": [
+    {
+      "id": "notifstack-1",
+      "type": "notifstack",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1080,
+      "height": 1920,
+      "viewBoxWidth": 90,
+      "viewBoxHeight": 160,
+      "stroke": "#0F172A",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 4,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

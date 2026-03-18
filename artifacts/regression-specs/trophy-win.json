@@ -1,5 +1,5 @@
 {
-  "id": "trophy_winner_achievement",
+  "id": "gold_trophy_winner_animation",
   "title": "Gold Trophy Winner Achievement",
   "duration": 3,
   "fps": 30,
@@ -7,22 +7,22 @@
   "canvas": {
     "width": 1920,
     "height": 1080,
-    "background": "#1A1A1A"
+    "background": "#333333"
   },
   "elements": [
     {
-      "id": "trophy_1",
+      "id": "main_trophy",
       "type": "trophy",
       "layer": "main",
-      "x": 810,
-      "y": 390,
-      "width": 300,
-      "height": 300,
-      "viewBoxWidth": 24,
-      "viewBoxHeight": 24,
+      "x": 860,
+      "y": 440,
+      "width": 240,
+      "height": 240,
+      "viewBoxWidth": 100,
+      "viewBoxHeight": 100,
       "fill": "#FFD700",
       "stroke": "#FF2D55",
-      "strokeWidth": 2,
+      "strokeWidth": 6,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
@@ -36,28 +36,28 @@
           "start": 0,
           "end": 0.5,
           "property": "scale",
-          "from": 0,
-          "to": 1,
-          "easing": "easeOut"
+          "from": 0.5,
+          "to": 1.3,
+          "easing": "snapUp"
         },
         {
-          "start": 1.5,
-          "end": 3,
-          "property": "opacity",
-          "from": 1,
-          "to": 0,
+          "start": 0.5,
+          "end": 1,
+          "property": "scale",
+          "from": 1.3,
+          "to": 1,
           "easing": "easeOut"
         }
       ]
     },
     {
-      "id": "trophy_1-ring",
+      "id": "main_trophy-ring",
       "type": "ring",
       "layer": "background",
-      "x": 810,
-      "y": 390,
-      "width": 300,
-      "height": 300,
+      "x": 860,
+      "y": 440,
+      "width": 240,
+      "height": 240,
       "stroke": "#FF2D55",
       "strokeWidth": 2,
       "opacity": 0.12,

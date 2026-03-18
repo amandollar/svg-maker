@@ -1,5 +1,5 @@
 {
-  "id": "wallet-animation-001",
+  "id": "payment-cashflow-animation",
   "title": "Payment Cashflow Animation",
   "duration": 3,
   "fps": 30,
@@ -11,15 +11,15 @@
   },
   "elements": [
     {
-      "id": "wallet-icon",
+      "id": "wallet1",
       "type": "wallet",
       "layer": "main",
-      "x": 440,
-      "y": 440,
+      "x": 490,
+      "y": 490,
       "width": 230,
       "height": 230,
-      "viewBoxWidth": 50,
-      "viewBoxHeight": 50,
+      "viewBoxWidth": 1024,
+      "viewBoxHeight": 1024,
       "stroke": "#FF2D55",
       "strokeWidth": 6,
       "opacity": 1,
@@ -35,26 +35,26 @@
           "start": 0,
           "end": 1.5,
           "property": "scale",
-          "from": 0.8,
-          "to": 1.1,
+          "from": 1,
+          "to": 1.2,
           "easing": "easeOut"
         },
         {
           "start": 1.5,
           "end": 3,
           "property": "scale",
-          "from": 1.1,
+          "from": 1.2,
           "to": 1,
           "easing": "easeIn"
         }
       ]
     },
     {
-      "id": "wallet-icon-ring",
+      "id": "wallet1-ring",
       "type": "ring",
       "layer": "background",
-      "x": 440,
-      "y": 440,
+      "x": 490,
+      "y": 490,
       "width": 230,
       "height": 230,
       "stroke": "#FF2D55",

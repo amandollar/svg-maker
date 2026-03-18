@@ -1,0 +1,77 @@
+{
+  "id": "prompt-026-smartphone-app-launch-canvas-1080-1920px-9-16-ver",
+  "title": "PROMPT 026: Smartphone — App Launch\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1920px (9:16 Vertical)\r\nDURATION: 3.0s | LOOP: No\r\nSVG: Smartphone device (12 paths: outer chassis rect rounded, inner screen rect, home bar rect, front camera dot, top speaker rect, volume button left, power button right, screen content: 4 app icon squares in 2×2 grid) — centered 540×920px, 180px tall\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #F8FAFC (near white)\r\nPhone chassis fill: #1E293B (dark slate)\r\nPhone chassis stroke: #334155 (2px)\r\nScreen fill: #FFFFFF\r\nHome bar fill: #94A3B8\r\nCamera dot fill: #0F172A\r\nSpeaker fill: #475569\r\nApp icon 1 (top-left): #3B82F6 blue — 36×36px rounded rect\r\nApp icon 2 (top-right): #EF4444 red\r\nApp icon 3 (bottom-left): #10B981 green\r\nApp icon 4 (bottom-right): #F59E0B amber\r\nButton fills: #334155\r\n\r\nVISUAL LAYOUT:\r\nPhone centered vertically. Screen content visible. Clean product shot aesthetic.\r\n\r\nANIMATION TIMELINE (3.0s total):\r\n0–0.5s: Phone chassis fades in + scales 0.85 → 1.0 (ease-out spring).\r\n0.5–0.7s: Screen brightens (fill #F1F5F9 → #FFFFFF, ease-out) — like screen turning on.\r\n0.7–0.85s: Camera, speaker, home bar, buttons each fade in (0.04s stagger, opacity 0→1).\r\n0.85–1.1s: App icons appear one by one (scale 0 → 1.0, 0.1s stagger per icon, spring).\r\n1.1–1.5s: One app icon (top-left, blue) scales up to 1.15 → 1.0 (tap highlight, spring) + brief bright flash (#3B82F6 → #FFFFFF → #3B82F6).\r\n1.5–2.0s: Screen glint: diagonal white strip sweeps across screen (opacity 0 → 0.25 → 0, ease-in-out).\r\n2.0–3.0s: Hold. Phone has subtle float (Y 0 → -10px → 0, ease-in-out, 1s).\r\n\r\nEASING CURVES:\r\n- Entry spring: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- App pop: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Float: ease-in-out",
+  "duration": 3,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#f8fafc"
+  },
+  "elements": [
+    {
+      "id": "heart-1",
+      "type": "heart",
+      "layer": "main",
+      "x": 460,
+      "y": 880,
+      "width": 160,
+      "height": 160,
+      "fill": "#1e293b",
+      "opacity": 0.92,
+      "offsetX": -4,
+      "offsetY": -8,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.2,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.18,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.16,
+          "easing": "snapUp"
+        },
+        {
+          "start": 0.18,
+          "end": 0.4,
+          "property": "scale",
+          "from": 1.16,
+          "to": 0.95,
+          "easing": "spring"
+        },
+        {
+          "start": 0.4,
+          "end": 0.7,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.9,
+          "end": 1.45,
+          "property": "scale",
+          "from": 1,
+          "to": 1.03,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 1.45,
+          "end": 2,
+          "property": "scale",
+          "from": 1.03,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

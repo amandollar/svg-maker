@@ -1,0 +1,40 @@
+{
+  "id": "prompt-034-doctor-medical-health-consultation-canvas-1920-10",
+  "title": "PROMPT 034: Doctor / Medical — Health Consultation\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 4.0s | LOOP: No\r\nSVG: Doctor figure (24 paths: head circle, hair detail arc, neck rect, white coat body, collar V-shape, pocket rect, stethoscope arc, stethoscope earpiece dots ×2, stethoscope chest piece circle, hands ×2 simplified, clipboard rect, clipboard lines ×3, cross emblem on coat pocket, medical cross on background panel) — full figure at 960×540px, 280px tall\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #F0FDF4 (very light mint green)\r\nSkin tone fill: #FDDCB5 (warm light skin)\r\nHair fill: #292524 (dark brown)\r\nWhite coat fill: #FFFFFF\r\nCoat stroke: #E2E8F0 (2px)\r\nCoat collar fill: #F1F5F9\r\nStethoscope stroke: #374151 (dark, 3px)\r\nStethoscope chest piece fill: #6B7280\r\nClipboard fill: #FEF9EE (warm white)\r\nClipboard stroke: #D97706 (amber)\r\nMedical cross fill: #EF4444 (red)\r\nPocket cross fill: #EF4444\r\n\r\nVISUAL LAYOUT:\r\nDoctor figure standing front-facing, centered. Slightly friendly tilt (+3°). Clipboard in one hand. Stethoscope around neck.\r\n\r\nANIMATION TIMELINE (4.0s total):\r\n0–0.5s: Background + body silhouette fades in (scale 0.9 → 1.0, ease-out spring).\r\n0.5–0.8s: White coat fills in (opacity 0 → 1.0, ease-out).\r\n0.8–1.0s: Head, hair, skin elements appear (scale 0→1.0, spring).\r\n1.0–1.3s: Coat details: collar, pocket, cross — each fades in (0.06s stagger, ease-out).\r\n1.3–1.6s: Stethoscope draws from neck down (dashoffset 100%→0%, ease-out) — arc path draws first, then earpieces and chest piece appear.\r\n1.6–1.9s: Clipboard slides in from side (X: +40px → 0, ease-out).\r\n1.9–2.2s: Clipboard lines appear (each draws left→right, 0.08s stagger, ease-out).\r\n2.2–2.6s: Medical cross on pocket pulses (scale 1.0 → 1.2 → 1.0, spring, #EF4444 glow 0→8px→0).\r\n2.6–3.2s: Doctor figure does slight friendly nod (rotateZ: 0° → -3° → 3° → 0°, ease-in-out, natural movement).\r\n3.2–4.0s: Hold.\r\n\r\nEASING CURVES:\r\n- Silhouette: ease-out\r\n- Detail stagger: ease-out\r\n- Stethoscope draw: ease-out\r\n- Nod: ease-in-out",
+  "duration": 4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#f0fdf4"
+  },
+  "elements": [
+    {
+      "id": "doctor-1",
+      "type": "doctor",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#FF2D55",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 4,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "id": "prompt-005-star-burst-rating-reveal-canvas-1920-1080px-16-9-",
+  "title": "PROMPT 005: Star Burst — Rating Reveal\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 2.2s | LOOP: No\r\nSVG: 5-point star (1 polygon path, solid fill) — five stars in a row, each 64px, centered at Y:540, X:720–1200px, 120px gaps\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #111827 (very dark grey-blue)\r\nStars fill (empty): #374151 (dim grey)\r\nStars fill (active): #FBBF24 (warm amber gold)\r\nStars stroke: none\r\nParticle burst color: #FDE68A (pale yellow)\r\n\r\nVISUAL LAYOUT:\r\nFive stars evenly spaced in horizontal row, vertically centered.\r\nStars start dim grey. Each fills gold left to right with particle burst on fill.\r\n\r\nANIMATION TIMELINE (2.2s total):\r\n0–0.1s: All 5 stars visible dim grey. Slight scale-in (0.6 → 1.0) staggered 40ms each.\r\n0.1–0.4s: Star 1 fills gold (fill color transition 0.2s) + scales 1.0 → 1.25 → 1.0\r\n0.4–0.7s: Star 2 fills gold (same), particle micro-burst (4 particles, 12px, radial, fade 0.3s)\r\n0.7–1.0s: Star 3 fills gold\r\n1.0–1.3s: Star 4 fills gold\r\n1.3–1.6s: Star 5 fills gold — largest particle burst (8 particles, 20px radial)\r\n1.6–2.0s: All 5 stars lit. Collective glow pulse (0→6px blur → 0, ease-in-out, 0.4s)\r\n2.0–2.2s: Hold\r\n\r\nEASING CURVES:\r\n- Fill reveal: ease-out\r\n- Star scale bounce: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Glow: ease-in-out",
+  "duration": 2.2,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#111827"
+  },
+  "elements": [
+    {
+      "id": "star-1",
+      "type": "star",
+      "layer": "main",
+      "x": 880,
+      "y": 460,
+      "width": 160,
+      "height": 160,
+      "fill": "#3B82F6",
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#3B82F6",
+      "glowStrength": 0.7,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.6,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.3,
+          "end": 0.55,
+          "property": "scale",
+          "from": 1,
+          "to": 1.28,
+          "easing": "spring"
+        },
+        {
+          "start": 0.55,
+          "end": 0.9,
+          "property": "scale",
+          "from": 1.28,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "star-1-spark",
+      "type": "spark",
+      "layer": "foreground",
+      "x": 870.4,
+      "y": 450.4,
+      "width": 179.20000000000002,
+      "height": 179.20000000000002,
+      "stroke": "#3B82F6",
+      "strokeWidth": 4,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0.43000000000000005,
+          "end": 0.63,
+          "property": "scale",
+          "from": 0.72,
+          "to": 1.22,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.43000000000000005,
+          "end": 0.63,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0.18,
+          "easing": "linear"
+        },
+        {
+          "start": 0.63,
+          "end": 0.9,
+          "property": "opacity",
+          "from": 0.18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "id": "prompt-010-shopping-cart-add-to-cart-canvas-1080-1080px-1-1-",
+  "title": "PROMPT 010: Shopping Cart — Add to Cart\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1080×1080px (1:1)\r\nDURATION: 2.2s | LOOP: No\r\nSVG: Shopping cart (4 paths: cart body, handle, 2 wheels) — position 540×580px, 130px wide\r\nSVG EXTRA: Small \"+\" badge circle (36px, top-right of cart)\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #FFF7ED (warm cream)\r\nCart stroke: #EA580C (orange, stroke-only, 6px)\r\nCart fill: none\r\nBadge fill: #EA580C (orange)\r\nBadge \"+\" text: #FFFFFF (white, 20pt bold)\r\nSuccess tick: #16A34A (green)\r\n\r\nVISUAL LAYOUT:\r\nCart icon centered-bottom area (540×620px). Badge starts invisible.\r\n\r\nANIMATION TIMELINE (2.2s total):\r\n0–0.2s: Cart scales 0.8 → 1.0 (ease-out spring).\r\n0.2–0.5s: Cart rocks slightly (rotate -6° → +6° → 0°, ease-in-out) — shopping motion.\r\n0.5–0.7s: Badge \"+\" appears from top-right (scale 0 → 1.0 with spring, position 620×490px).\r\n0.7–0.9s: Badge transitions \"+\" → checkmark (morph or swap, 0.2s crossfade). Color stays orange → brief flash → green #16A34A.\r\n0.9–1.2s: Green glow from badge (blur 0 → 14px → 0, ease-in-out).\r\n1.2–2.0s: Cart and badge hold. Subtle float bounce (Y 0 → -8px → 0, ease-in-out, 0.8s).\r\n2.0–2.2s: Hold.\r\n\r\nEASING CURVES:\r\n- Entry spring: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Rock: ease-in-out\r\n- Badge morph: ease-out",
+  "duration": 2.2,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#fff7ed"
+  },
+  "elements": [
+    {
+      "id": "checkmark-1",
+      "type": "checkmark",
+      "layer": "main",
+      "x": 450,
+      "y": 450,
+      "width": 180,
+      "height": 180,
+      "stroke": "#ea580c",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "flash": true,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.7,
+          "property": "translateY",
+          "from": 6,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.14,
+          "end": 0.7,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.7,
+          "end": 0.98,
+          "property": "scale",
+          "from": 1,
+          "to": 1.2,
+          "easing": "spring"
+        },
+        {
+          "start": 0.98,
+          "end": 1.23,
+          "property": "scale",
+          "from": 1.2,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.72,
+          "end": 0.9199999999999999,
+          "property": "opacity",
+          "from": 1,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "id": "checkmark-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 450,
+      "y": 450,
+      "width": 180,
+      "height": 180,
+      "stroke": "#ea580c",
+      "strokeWidth": 4,
+      "opacity": 0.18,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0,
+          "end": 0.22,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.32,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 0.85,
+          "property": "opacity",
+          "from": 0.32,
+          "to": 0.18,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

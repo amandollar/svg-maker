@@ -1,0 +1,94 @@
+{
+  "id": "prompt-025-pie-chart-slice-market-share-canvas-1920-1080px-1",
+  "title": "PROMPT 025: Pie Chart Slice — Market Share\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 3.5s | LOOP: No\r\nSVG: Pie chart (5 arc segment paths forming full circle) — centered 960×540px, 240px diameter\r\n\r\nSegment breakdown:\r\nSegment 1 (top-right): 32% — #3B82F6 blue — \"Our Brand\"\r\nSegment 2 (right-bottom): 24% — #6366F1 indigo — \"Competitor A\"\r\nSegment 3 (bottom): 18% — #94A3B8 grey — \"Competitor B\"\r\nSegment 4 (bottom-left): 15% — #CBD5E1 light grey — \"Competitor C\"\r\nSegment 5 (left-top): 11% — #E2E8F0 very light grey — \"Other\"\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #0F172A (dark navy)\r\nCenter circle (donut hole): #0F172A (120px diameter — donut style)\r\nActive segment stroke: #FFFFFF (2px, only on segment 1)\r\nLabel connector lines: #94A3B8 (1px, thin, from segment to label)\r\n\r\nVISUAL LAYOUT:\r\nDonut chart centered. Segment 1 (blue \"Our Brand\") will pull out 20px from center on reveal.\r\nLabels are NOT part of this prompt (icon-only version).\r\n\r\nANIMATION TIMELINE (3.5s total):\r\n0–0.5s: All segments draw simultaneously as arcs (stroke-dashoffset, clockwise from 12 o'clock, ease-out, 0.5s).\r\n0.5–0.8s: Donut hole circle fades in (opacity 0 → 1.0, ease-out) — turning filled pie into donut.\r\n0.8–1.3s: Each segment fades in at target opacity with slight stagger (0.05s between), colors lock in.\r\n1.3–1.7s: Segment 1 (blue) pulls out 20px from center (translate away from center point, ease-out spring).\r\n1.7–2.1s: Segment 1 glow (filter brightness 100% → 130% → 110%, ease-in-out).\r\n2.1–2.5s: Segment 1 white stroke pulses (opacity 0 → 1.0 → 0.5, ease-in-out).\r\n2.5–3.5s: Hold. Segment 1 has slight breathing scale (1.0 → 1.02 → 1.0, ease-in-out, 1s cycle).\r\n\r\nEASING CURVES:\r\n- Arc draw: ease-out\r\n- Pull-out: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Glow: ease-in-out",
+  "duration": 3.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#0f172a"
+  },
+  "elements": [
+    {
+      "id": "lock-1",
+      "type": "lock",
+      "layer": "main",
+      "x": 855,
+      "y": 435,
+      "width": 210,
+      "height": 210,
+      "stroke": "#ffffff",
+      "strokeWidth": 6,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#ffffff",
+      "glowStrength": 0.45,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.3,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.95,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.95,
+          "end": 1.25,
+          "property": "scale",
+          "from": 1,
+          "to": 1.08,
+          "easing": "spring"
+        },
+        {
+          "start": 1.25,
+          "end": 1.55,
+          "property": "scale",
+          "from": 1.08,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "lock-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 855,
+      "y": 435,
+      "width": 210,
+      "height": 210,
+      "stroke": "#ffffff",
+      "strokeWidth": 2,
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0.05,
+          "end": 0.3,
+          "property": "scale",
+          "from": 0.9,
+          "to": 1.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.05,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

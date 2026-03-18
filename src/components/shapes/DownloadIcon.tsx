@@ -21,40 +21,51 @@ export const DownloadIcon = ({
   opacity = 1,
   drawProgress = 1,
 }: DownloadIconProps) => {
-  const arrowLen = 120;
-  const trayLen = 140;
+  // Use a real icon shape (Heroicons outline "arrow-down-tray") so it doesn't feel hand-drawn.
+  // Heroicons is authored in a 24x24 viewBox; our renderer assumes 0..100.
+  // Scale up geometry and compensate strokeWidth so the visual weight matches our system.
+  const scale = 100 / 24;
+  const heroStroke = strokeWidth / scale;
+
+  const shaftLen = 24;
+  const headLen = 18;
+  const trayLen = 40;
 
   return (
-    <>
+    <g transform={`scale(${scale})`}>
+      {/* Tray */}
       <path
-        d="M50 18v38"
+        d="M3 16.5V18.75C3 19.9926 4.00736 21 5.25 21H18.75C19.9926 21 21 19.9926 21 18.75V16.5"
         fill="none"
         stroke={stroke}
-        strokeWidth={strokeWidth}
+        strokeWidth={heroStroke}
         strokeLinecap="round"
-        opacity={opacity}
-        {...dash(arrowLen, drawProgress)}
-      />
-      <path
-        d="M34 44 50 56 66 44"
-        fill="none"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity={opacity}
-        {...dash(arrowLen, Math.max(0, drawProgress - 0.12))}
-      />
-      <path
-        d="M28 70h44v14c0 4-4 8-8 8H36c-4 0-8-4-8-8V70Z"
-        fill="none"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
         strokeLinejoin="round"
         opacity={opacity}
         {...dash(trayLen, drawProgress)}
       />
-    </>
+      {/* Arrow head */}
+      <path
+        d="M16.5 12L12 16.5M12 16.5L7.5 12"
+        fill="none"
+        stroke={stroke}
+        strokeWidth={heroStroke}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={opacity}
+        {...dash(headLen, Math.max(0, drawProgress - 0.08))}
+      />
+      {/* Arrow shaft */}
+      <path
+        d="M12 16.5V3"
+        fill="none"
+        stroke={stroke}
+        strokeWidth={heroStroke}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={opacity}
+        {...dash(shaftLen, Math.max(0, drawProgress - 0.14))}
+      />
+    </g>
   );
 };
-

@@ -1,0 +1,40 @@
+{
+  "id": "prompt-038-person-at-desk-productive-work-scene-canvas-1920-",
+  "title": "PROMPT 038: Person at Desk — Productive Work Scene\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 5.0s | LOOP: Yes\r\nSVG: Work scene (30 paths: desk rect, chair back arc, chair seat, person silhouette (head circle, torso rect, arms suggestion), laptop simplified (3 paths), coffee mug (3 paths), desk lamp (4 paths: stand, arm, head, light cone), potted plant small (4 paths), sticky notes ×2 rects on wall, window frame (4 paths) with light rays diagonal, clock circle on wall) — scene width ~800px, centered 960×580px\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #FEF9EE (warm off-white)\r\nDesk fill: #D97706 (warm amber wood)\r\nDesk stroke: #92400E (2px)\r\nChair fill: #374151 (dark grey)\r\nPerson fill: #FDDCB5 (skin tone) / #3B82F6 (blue shirt)\r\nLaptop fill: #1E293B (dark) / screen #DBEAFE (light blue)\r\nCoffee mug fill: #C2410C (terracotta) / steam #94A3B8 (grey)\r\nLamp fill: #FBBF24 (gold) / light cone fill #FBBF2420 (gold 12% opacity triangle)\r\nPlant fill: #16A34A (green) / pot #C2410C (terracotta)\r\nSticky notes: #FDE68A (yellow) and #BBF7D0 (pale green)\r\nWindow light rays: #FEF08A20 (pale yellow 12%, diagonal slanted rects)\r\nClock face: #FFFFFF / clock hands #1E293B\r\n\r\nVISUAL LAYOUT:\r\nDesk scene in center-lower area. Window on right wall letting in light rays. Clock on left wall. Scene feels warm and cozy.\r\n\r\nANIMATION TIMELINE (5.0s loopable):\r\n0–0.5s: Background, window, walls establish (fade in, ease-out). Light rays visible.\r\n0.5–1.0s: Desk and chair appear (scale 0.9→1.0, ease-out spring).\r\n1.0–1.4s: Person appears sitting (scale 0→1.0, spring).\r\n1.4–1.8s: Laptop, mug, plant appear (each 0.08s stagger, scale spring).\r\n1.8–2.0s: Desk lamp appears, light cone extends (scaleY 0→1.0, ease-out).\r\n2.0–2.4s: Sticky notes drop from above onto wall (Y: -20px→0, ease-out, stagger 0.2s each).\r\n2.4–2.7s: Clock hands appear. Hour hand at 10, minute at 2.\r\n2.7–5.0s (continuous loop):\r\n  - Person head nods slightly (rotateZ 0→-4°→0→-4°→0, ease-in-out, every 1.8s — typing/reading motion).\r\n  - Coffee steam path rises and fades (Y translate -15px, opacity 1→0, ease-out, 0.8s cycle, loops continuously).\r\n  - Laptop screen has cursor blink (small rect opacity 1→0→1, 0.8s cycle).\r\n  - Clock minute hand slowly advances (rotateZ 0→6°, ease-in-out over 3s, subtle).\r\n\r\nEASING CURVES:\r\n- Entry: spring / ease-out\r\n- Nod: ease-in-out\r\n- Steam: ease-out",
+  "duration": 5,
+  "fps": 30,
+  "loop": true,
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": "#fef9ee"
+  },
+  "elements": [
+    {
+      "id": "desk-1",
+      "type": "desk",
+      "layer": "main",
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "viewBoxWidth": 160,
+      "viewBoxHeight": 90,
+      "stroke": "#22C55E",
+      "strokeWidth": 10,
+      "opacity": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 5,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "linear"
+        }
+      ]
+    }
+  ]
+}
