@@ -23,6 +23,8 @@ import {
   type StyleHints,
 } from "./prompt-helpers";
 import {routePromptToType} from "./prompt-router";
+import {buildObjectSceneSpec, shouldBuildObjectScene} from "./object-scene-spec";
+import {buildTextAnimationSpec} from "./text-template-spec";
 
 const slugify = (value: string) =>
   value
@@ -2437,6 +2439,38 @@ const stripViewBoxForNonScene = (element: AnimatedElement): AnimatedElement => {
   };
 };
 
+const normalizeTemplateElement = (
+  element: AnimatedElement,
+  promptAccent: string | undefined,
+  format: CanvasFormat,
+  hints: MotionHints,
+): AnimatedElement => {
+  const withLayer = ensureLayer(element);
+  if (
+    withLayer.type === "text" ||
+    withLayer.type === "panel" ||
+    withLayer.type === "glow" ||
+    withLayer.type === "ring" ||
+    withLayer.type === "spark" ||
+    withLayer.type === "shadow" ||
+    withLayer.type === "steam" ||
+    withLayer.type === "wave"
+  ) {
+    return normalizeViewBoxForType(withLayer);
+  }
+
+  if (getSceneViewBox(withLayer.type)) {
+    const {offsetX, offsetY} = getOpticalOffsets(withLayer.type);
+    return normalizeViewBoxForType({
+      ...withLayer,
+      offsetX,
+      offsetY,
+    });
+  }
+
+  return normalizeViewBoxForType(normalizeElementForType(withLayer, withLayer.type, promptAccent, format, hints));
+};
+
 export const normalizeGeneratedSpec = (
   candidate: unknown,
   request: PromptRequest,
@@ -2451,6 +2485,24 @@ export const normalizeGeneratedSpec = (
   const hints = extractMotionHints(prompt);
   const canvas = getCanvas(format, background);
   const {type} = routePromptToType(request);
+  if (type === "text") {
+    const textSpec = buildTextAnimationSpec(request);
+    return animationSpecSchema.parse({
+      ...textSpec,
+      elements: textSpec.elements.map((element) =>
+        normalizeTemplateElement(element, parseAccentColor(request.prompt), format, hints),
+      ),
+    });
+  }
+  if (shouldBuildObjectScene(request, type)) {
+    const sceneSpec = buildObjectSceneSpec(request, type);
+    return animationSpecSchema.parse({
+      ...sceneSpec,
+      elements: sceneSpec.elements.map((element) =>
+        normalizeTemplateElement(element, parseAccentColor(request.prompt), format, hints),
+      ),
+    });
+  }
   const accent = getStyleAdjustedAccent(type, parsedAccent, styles) ?? parsedAccent;
   const size = getDefaultSize(type, format);
   const isScene =

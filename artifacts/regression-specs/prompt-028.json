@@ -1,6 +1,6 @@
 {
-  "id": "prompt-028-laptop-work-from-home-productivity-canvas-1920-10",
-  "title": "PROMPT 028: Laptop — Work From Home / Productivity\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 3.5s | LOOP: No\r\nSVG: Open laptop (13 paths: base bottom rect, keyboard section rect, 2 trackpad rects, screen frame rect, inner display rect, hinge area, 3 keyboard row detail lines, webcam dot, screen content rect) — centered 960×560px, 260px wide\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #F0F9FF (very light cool blue)\r\nChassis fill: #E2E8F0 (silver-grey)\r\nChassis stroke: #94A3B8 (2px)\r\nKeyboard area fill: #CBD5E1\r\nKeyboard row lines stroke: #94A3B8 (1px)\r\nTrackpad fill: #B0BDCC\r\nScreen frame fill: #1E293B (dark, bezel)\r\nScreen display fill: #DBEAFE (light blue \"on\" state)\r\nWebcam dot fill: #475569\r\nScreen content (simulated app window): #3B82F6 rect (120×70px, top-center of display)\r\n\r\nVISUAL LAYOUT:\r\nLaptop open, lid open at ~120° angle. Screen glowing blue. Centered on canvas.\r\n\r\nANIMATION TIMELINE (3.5s total):\r\n0–0.6s: Laptop base + keyboard fades in + scales 0.85 → 1.0 (ease-out spring).\r\n0.6–1.2s: Screen lid rises from closed (rotateX 90° → 20°, transform-origin: bottom of hinge, ease-out, simulated 3D open). Screen reveals.\r\n1.2–1.5s: Screen display brightens (#0F172A → #DBEAFE, ease-out) — boot up.\r\n1.5–1.7s: Webcam dot appears (scale 0 → 1.0, spring).\r\n1.7–2.0s: App window rect slides in from top of screen (Y: -40px → 0, ease-out).\r\n2.0–2.3s: Keyboard detail lines draw in (stroke-dashoffset, left to right across 3 rows, 0.05s stagger, ease-out).\r\n2.3–2.8s: Screen glint scan (diagonal white strip, opacity 0 → 0.2 → 0, ease-in-out).\r\n2.8–3.5s: Hold. Laptop has gentle breathing scale (1.0 → 1.02 → 1.0, ease-in-out).\r\n\r\nEASING CURVES:\r\n- Lid open: ease-out\r\n- Screen brighten: ease-out\r\n- Glint: ease-in-out",
+  "id": "animation-timeline-3-5s-total-028",
+  "title": "ANIMATION TIMELINE (3.5s total):",
   "duration": 3.5,
   "fps": 30,
   "loop": false,
@@ -11,82 +11,257 @@
   },
   "elements": [
     {
-      "id": "home-1",
-      "type": "home",
-      "layer": "main",
-      "x": 850,
-      "y": 430,
-      "width": 220,
-      "height": 220,
-      "stroke": "#3B82F6",
-      "strokeWidth": 6,
-      "opacity": 1,
-      "offsetX": 0,
-      "offsetY": 0,
-      "glowColor": "#3B82F6",
-      "glowStrength": 0.45,
+      "id": "stat-card",
+      "type": "panel",
+      "layer": "background",
+      "x": 230,
+      "y": 320,
+      "width": 1459,
+      "height": 440,
+      "fill": "#111827",
+      "opacity": 0,
+      "cornerRadius": 36,
       "animations": [
         {
           "start": 0,
-          "end": 0.3,
+          "end": 0.42,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.08,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.42,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "stat-accent-bar",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 266,
+      "y": 356,
+      "width": 120,
+      "height": 10,
+      "fill": "#3B82F6",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.06,
+          "end": 0.46,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.95,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.06,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.5,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "stat-value",
+      "type": "text",
+      "layer": "main",
+      "x": 266,
+      "y": 412,
+      "width": 1387,
+      "height": 174,
+      "fill": "#111827",
+      "opacity": 0,
+      "text": "028",
+      "fontSize": 150,
+      "fontWeight": 900,
+      "fontFamily": "'Arial Black', 'Segoe UI', sans-serif",
+      "textAlign": "left",
+      "letterSpacing": -3,
+      "lineHeight": 0.94,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.72,
           "property": "opacity",
           "from": 0,
           "to": 1,
           "easing": "easeOut"
         },
         {
-          "start": 0,
-          "end": 0.95,
-          "property": "draw",
-          "from": 0,
-          "to": 1,
-          "easing": "easeInOut"
-        },
-        {
-          "start": 0.95,
-          "end": 1.25,
-          "property": "scale",
-          "from": 1,
-          "to": 1.03,
+          "start": 0.08,
+          "end": 0.72,
+          "property": "translateY",
+          "from": 34,
+          "to": 0,
           "easing": "spring"
         },
         {
-          "start": 1.25,
-          "end": 1.55,
+          "start": 0.08,
+          "end": 0.72,
           "property": "scale",
-          "from": 1.03,
+          "from": 0.92,
           "to": 1,
           "easing": "easeOut"
         }
       ]
     },
     {
-      "id": "home-1-ring",
-      "type": "ring",
-      "layer": "background",
-      "x": 850,
-      "y": 430,
-      "width": 220,
-      "height": 220,
-      "stroke": "#3B82F6",
-      "strokeWidth": 2,
-      "opacity": 0.12,
+      "id": "stat-headline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 266,
+      "y": 580,
+      "width": 1387,
+      "height": 66,
+      "fill": "#3B82F6",
+      "opacity": 0,
+      "text": "ANIMATION TIMELINE (3.5s total):",
+      "fontSize": 48,
+      "fontWeight": 800,
+      "fontFamily": "'Trebuchet MS', 'Segoe UI', sans-serif",
+      "textAlign": "left",
+      "letterSpacing": -1,
+      "lineHeight": 1,
       "animations": [
         {
-          "start": 0.05,
-          "end": 0.3,
-          "property": "scale",
-          "from": 0.9,
-          "to": 1.18,
+          "start": 0.22,
+          "end": 1,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
           "easing": "easeOut"
         },
         {
-          "start": 0.05,
-          "end": 0.7,
-          "property": "opacity",
-          "from": 0.12,
+          "start": 0.22,
+          "end": 1,
+          "property": "translateY",
+          "from": 18,
           "to": 0,
           "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "stat-label",
+      "type": "text",
+      "layer": "foreground",
+      "x": 266,
+      "y": 676,
+      "width": 1255,
+      "height": 44,
+      "fill": "#374151",
+      "opacity": 0,
+      "text": "CONVERSION LIFT",
+      "fontSize": 28,
+      "fontWeight": 700,
+      "fontFamily": "'Segoe UI', Arial, sans-serif",
+      "textAlign": "left",
+      "letterSpacing": 1.2,
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0.28,
+          "end": 1.14,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.92,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.28,
+          "end": 1.14,
+          "property": "translateY",
+          "from": 14,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "stat-subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 266,
+      "y": 650,
+      "width": 1387,
+      "height": 72,
+      "fill": "#374151",
+      "opacity": 0,
+      "text": "Screen content (simulated app\nwindow): #3B82F6 rect (120×70px, top-center of display)",
+      "fontSize": 30,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "left",
+      "letterSpacing": -0.3,
+      "lineHeight": 1.15,
+      "animations": [
+        {
+          "start": 0.3,
+          "end": 1.2,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.9,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.3,
+          "end": 1.2,
+          "property": "translateY",
+          "from": 16,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "stat-icon",
+      "type": "play",
+      "layer": "foreground",
+      "x": 1515,
+      "y": 586,
+      "width": 200,
+      "height": 200,
+      "fill": "#3B82F6",
+      "stroke": "#3B82F6",
+      "strokeWidth": 6,
+      "opacity": 0,
+      "offsetX": 0,
+      "offsetY": 0,
+      "glowColor": "#3B82F6",
+      "glowStrength": 0.55,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.34,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.78,
+          "to": 1,
+          "easing": "spring"
+        },
+        {
+          "start": 0,
+          "end": 0.8,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
         }
       ]
     }

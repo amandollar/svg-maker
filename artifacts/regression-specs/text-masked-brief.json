@@ -1,0 +1,256 @@
+{
+  "id": "create-a-section-title-interstitial-for-a-product-story",
+  "title": "Create a section title interstitial for a product story.",
+  "duration": 4.4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#0B1020"
+  },
+  "elements": [
+    {
+      "id": "chapter-number",
+      "type": "text",
+      "layer": "background",
+      "x": 400,
+      "y": 485,
+      "width": 280,
+      "height": 280,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "01",
+      "fontSize": 280,
+      "fontWeight": 900,
+      "fontFamily": "'Arial Black', 'Segoe UI', sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -6,
+      "lineHeight": 0.88,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.16,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "scale",
+          "from": 0.82,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "chapter-frame",
+      "type": "panel",
+      "layer": "background",
+      "x": 105,
+      "y": 609,
+      "width": 871,
+      "height": 558.0799999999999,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "cornerRadius": 44,
+      "animations": [
+        {
+          "start": 0.06,
+          "end": 0.46,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.06,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.06,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "chapter-divider",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 141,
+      "y": 635,
+      "width": 148,
+      "height": 6,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.36,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.95,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.36,
+          "property": "scale",
+          "from": 0.4,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "chapter-kicker",
+      "type": "text",
+      "layer": "foreground",
+      "x": 141,
+      "y": 597,
+      "width": 799,
+      "height": 24,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "NEXT STORY",
+      "fontSize": 22,
+      "fontWeight": 800,
+      "fontFamily": "'Segoe UI', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": 2,
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0.02,
+          "end": 0.3,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.02,
+          "end": 0.3,
+          "property": "translateY",
+          "from": 14,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "chapter-headline",
+      "type": "text",
+      "layer": "main",
+      "x": 141,
+      "y": 653,
+      "width": 799,
+      "height": 324.56,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "text": "Create a\nsection title\ninterstitial for a product story.",
+      "fontSize": 108,
+      "fontWeight": 900,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -2,
+      "lineHeight": 0.94,
+      "animations": [
+        {
+          "start": 0.12,
+          "end": 0.88,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.12,
+          "end": 0.88,
+          "property": "translateY",
+          "from": 32,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.12,
+          "end": 0.88,
+          "property": "scale",
+          "from": 0.96,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "chapter-subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 141,
+      "y": 991.56,
+      "width": 799,
+      "height": 95.52,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "Large reveal headline,\nclean wipe, centered composition.",
+      "fontSize": 34,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -0.3,
+      "lineHeight": 1.14,
+      "animations": [
+        {
+          "start": 0.28,
+          "end": 1.16,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.92,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.28,
+          "end": 1.16,
+          "property": "translateY",
+          "from": 18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "chapter-bottom-line",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 444,
+      "y": 1087.08,
+      "width": 192,
+      "height": 5,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.34,
+          "end": 1.22,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.85,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.34,
+          "end": 1.22,
+          "property": "scale",
+          "from": 0.42,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    }
+  ]
+}

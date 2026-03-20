@@ -1,0 +1,231 @@
+{
+  "id": "the-message-should-feel-polished-and-editorial",
+  "title": "The message should feel polished and editorial.",
+  "duration": 4.5,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#0B1020"
+  },
+  "elements": [
+    {
+      "id": "hero-frame",
+      "type": "panel",
+      "layer": "background",
+      "x": 94,
+      "y": 258,
+      "width": 893,
+      "height": 513.44,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "cornerRadius": 44,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.52,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.06,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.52,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "text-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 230,
+      "y": 108,
+      "width": 620,
+      "height": 620,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "glowColor": "#38BDF8",
+      "glowStrength": 0.6,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.18,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.8,
+          "property": "scale",
+          "from": 0.75,
+          "to": 1,
+          "easing": "spring"
+        },
+        {
+          "start": 1.1,
+          "end": 2.3,
+          "property": "scale",
+          "from": 1,
+          "to": 1.02,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 2.3,
+          "end": 3.1,
+          "property": "scale",
+          "from": 1.02,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "headline-sweep",
+      "type": "panel",
+      "layer": "background",
+      "x": 110,
+      "y": 559.92,
+      "width": 320,
+      "height": 21,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.18,
+          "end": 0.78,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.22,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.18,
+          "end": 0.78,
+          "property": "translateX",
+          "from": -48,
+          "to": 42,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "accent-line",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 130,
+      "y": 607.04,
+      "width": 136,
+      "height": 8,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.44,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.95,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.44,
+          "property": "scale",
+          "from": 0.4,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "headline",
+      "type": "text",
+      "layer": "main",
+      "x": 130,
+      "y": 302,
+      "width": 821,
+      "height": 319.04,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "text": "The message\nshould feel\npolished and editorial.",
+      "fontSize": 104,
+      "fontWeight": 900,
+      "fontFamily": "Georgia, 'Times New Roman', serif",
+      "textAlign": "left",
+      "letterSpacing": -2.4,
+      "lineHeight": 0.92,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.88,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.88,
+          "property": "translateY",
+          "from": 44,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0,
+          "end": 0.88,
+          "property": "scale",
+          "from": 0.96,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 130,
+      "y": 643.04,
+      "width": 821,
+      "height": 118.39999999999999,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "Bold centered title with\nsupporting copy and a subtle highlight sweep.",
+      "fontSize": 40,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "left",
+      "letterSpacing": -0.4,
+      "lineHeight": 1.18,
+      "animations": [
+        {
+          "start": 0.2,
+          "end": 1.18,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.92,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.2,
+          "end": 1.18,
+          "property": "translateY",
+          "from": 24,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "id": "create-a-premium-chapter-intro-card-for-a-documentary-style-",
+  "title": "Create a premium chapter intro card for a documentary-style product...",
+  "duration": 4.4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#0B1020"
+  },
+  "elements": [
+    {
+      "id": "chapter-number",
+      "type": "text",
+      "layer": "background",
+      "x": 410,
+      "y": 212,
+      "width": 260,
+      "height": 260,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "03",
+      "fontSize": 260,
+      "fontWeight": 900,
+      "fontFamily": "'Arial Black', 'Segoe UI', sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -6,
+      "lineHeight": 0.88,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.16,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "scale",
+          "from": 0.82,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "chapter-frame",
+      "type": "panel",
+      "layer": "background",
+      "x": 105,
+      "y": 312,
+      "width": 871,
+      "height": 535.52,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "cornerRadius": 44,
+      "animations": [
+        {
+          "start": 0.06,
+          "end": 0.46,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.06,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.06,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "chapter-divider",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 141,
+      "y": 338,
+      "width": 148,
+      "height": 6,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.36,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.95,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.36,
+          "property": "scale",
+          "from": 0.4,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "chapter-kicker",
+      "type": "text",
+      "layer": "foreground",
+      "x": 141,
+      "y": 300,
+      "width": 799,
+      "height": 24,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "NEXT STORY",
+      "fontSize": 22,
+      "fontWeight": 800,
+      "fontFamily": "'Segoe UI', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": 2,
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0.02,
+          "end": 0.3,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.02,
+          "end": 0.3,
+          "property": "translateY",
+          "from": 14,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "chapter-headline",
+      "type": "text",
+      "layer": "main",
+      "x": 141,
+      "y": 356,
+      "width": 799,
+      "height": 302,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "text": "Create a premium\nchapter intro card\nfor a documentary-style product...",
+      "fontSize": 100,
+      "fontWeight": 900,
+      "fontFamily": "Georgia, 'Times New Roman', serif",
+      "textAlign": "center",
+      "letterSpacing": -2,
+      "lineHeight": 0.94,
+      "animations": [
+        {
+          "start": 0.12,
+          "end": 0.88,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.12,
+          "end": 0.88,
+          "property": "translateY",
+          "from": 32,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.12,
+          "end": 0.88,
+          "property": "scale",
+          "from": 0.96,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "chapter-subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 141,
+      "y": 672,
+      "width": 799,
+      "height": 95.52,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "Large translucent number in\nthe background, bold editorial title, clean divider, supporting line below.",
+      "fontSize": 34,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -0.3,
+      "lineHeight": 1.14,
+      "animations": [
+        {
+          "start": 0.28,
+          "end": 1.16,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.92,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.28,
+          "end": 1.16,
+          "property": "translateY",
+          "from": 18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "chapter-bottom-line",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 444,
+      "y": 767.52,
+      "width": 192,
+      "height": 5,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.34,
+          "end": 1.22,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.85,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.34,
+          "end": 1.22,
+          "property": "scale",
+          "from": 0.42,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    }
+  ]
+}

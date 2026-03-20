@@ -57,6 +57,7 @@ export const templateTypeSchema = z.enum([
   "desk",
   "rupee",
   "certificate",
+  "text",
 ]);
 
 // MotionSpec is a semantic intermediate representation:

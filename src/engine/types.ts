@@ -84,6 +84,7 @@ export const shapeTypeSchema = z.enum([
   "steam",
   "wave",
   "text",
+  "panel",
   "ring",
   "glow",
   "spark",
@@ -119,9 +120,14 @@ export const animatedElementSchema = z.object({
   ripple: z.boolean().optional(),
   // Simple text label (used for Phase 1 overlays like "REC").
   text: z.string().min(1).optional(),
-  // Font size in the element's local 0..100 viewBox units (not pixels).
+  // Font size in the element's local SVG viewBox units.
   fontSize: z.number().positive().optional(),
   fontWeight: z.number().positive().optional(),
+  fontFamily: z.string().min(1).optional(),
+  textAlign: z.enum(["left", "center", "right"]).optional(),
+  letterSpacing: z.number().optional(),
+  lineHeight: z.number().positive().optional(),
+  cornerRadius: z.number().min(0).optional(),
   animations: z.array(keyframeSchema).default([]),
 });
 

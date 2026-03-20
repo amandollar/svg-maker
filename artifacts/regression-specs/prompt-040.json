@@ -1,6 +1,6 @@
 {
-  "id": "prompt-040-certificate-award-scroll-course-completion-canvas",
-  "title": "PROMPT 040: Certificate / Award Scroll — Course Completion\r\n───────────────────────────────────────────────────────────────────────────────\r\nCANVAS: 1920×1080px (16:9)\r\nDURATION: 4.5s | LOOP: No\r\nSVG: Certificate (25 paths: outer border rect rounded, inner border rect (ornamental frame), top decorative ribbon banner rect, banner fold triangles ×2, seal circle bottom-center, seal inner ring, seal emblem shape, 3 horizontal text lines on cert (title, name, date as placeholder rects), left corner flourish paths ×3, right corner flourish paths ×3, ribbon strip left, ribbon strip right) — certificate 900×640px, centered 960×540px\r\n\r\nCOLOR SPECIFICATION:\r\nBackground: #1C1917 (very dark warm black)\r\nCertificate body fill: #FFFBEB (warm cream)\r\nCertificate stroke: none\r\nOuter border fill: #D97706 (gold frame)\r\nInner border stroke: #92400E (dark amber, 1px, decorative)\r\nBanner fill: #D97706 (gold)\r\nBanner text: \"CERTIFICATE OF COMPLETION\" in #1C1917 18pt bold\r\nSeal fill: #D97706 / inner seal fill #92400E\r\nSeal emblem: star shape #FBBF24\r\nText line 1 (title): #1C1917 rect 400×20px — \"Motion Graphics Mastery\"\r\nText line 2 (name): #374151 rect 300×16px — \"Adarsh Kumar\"\r\nText line 3 (date): #6B7280 rect 200×12px — \"March 2026\"\r\nRibbons left/right: #EF4444 (red, diagonal ribbon strips)\r\nCorner flourishes: #D97706 (gold, stroke paths)\r\n\r\nVISUAL LAYOUT:\r\nCertificate centered. Appears to unfurl or drop into frame. Gold and cream premium feel. Dark background for contrast.\r\n\r\nANIMATION TIMELINE (4.5s total):\r\n0–0.5s: Certificate starts as thin horizontal line (scaleY:0.02) at center Y. Expands to full height (scaleY 0.02→1.0, ease-out, 0.5s). Transform-origin: center.\r\n0.5–0.8s: Cream body fills in (opacity 0→1.0, ease-out).\r\n0.8–1.0s: Outer gold border draws (stroke-dashoffset 100%→0%, ease-out, clockwise).\r\n1.0–1.2s: Inner border draws (same technique).\r\n1.2–1.4s: Corner flourishes appear (scale 0→1.0, spring, stagger: top-left, top-right, bottom-left, bottom-right, 0.05s stagger).\r\n1.4–1.7s: Banner slides down from top (Y: -30px→0, ease-out spring). Banner text fades in.\r\n1.7–2.0s: Seal scales 0→1.0 at bottom-center (spring). Seal ring draws. Emblem star appears.\r\n2.0–2.3s: Red ribbon strips slide in from left and right diagonally (ease-out).\r\n2.3–2.6s: Text line 1 (title) fades in + slides up 10px (opacity 0→1.0, Y:+10→0).\r\n2.6–2.9s: Text line 2 (name) follows.\r\n2.9–3.2s: Text line 3 (date) follows.\r\n3.2–3.7s: Gold shimmer scan from top-left to bottom-right across entire certificate (diagonal white band, 4px wide, opacity 0→0.4→0, ease-in-out).\r\n3.7–4.0s: Seal pulses (scale 1.0→1.08→1.0, spring). Warm gold glow from seal (blur 0→18px→0).\r\n4.0–4.5s: Hold. Certificate breathes (scale 1.0→1.01→1.0, ease-in-out).\r\n\r\nEASING CURVES:\r\n- Unfurl: ease-out\r\n- Border draw: ease-out\r\n- Details spring: cubic-bezier(0.34, 1.56, 0.64, 1)\r\n- Shimmer: ease-in-out",
+  "id": "certificate-of-completion",
+  "title": "CERTIFICATE OF COMPLETION",
   "duration": 4.5,
   "fps": 30,
   "loop": false,
@@ -11,28 +11,232 @@
   },
   "elements": [
     {
-      "id": "certificate-1",
-      "type": "certificate",
-      "layer": "main",
-      "x": 0,
-      "y": 0,
-      "width": 1920,
-      "height": 1080,
-      "viewBoxWidth": 160,
-      "viewBoxHeight": 90,
-      "stroke": "#FF2D55",
-      "strokeWidth": 10,
-      "opacity": 1,
-      "offsetX": 0,
-      "offsetY": 0,
+      "id": "kinetic-rail",
+      "type": "panel",
+      "layer": "background",
+      "x": 115,
+      "y": 419,
+      "width": 10,
+      "height": 254,
+      "fill": "#FF2D55",
+      "opacity": 0,
+      "cornerRadius": 999,
       "animations": [
         {
           "start": 0,
-          "end": 4.5,
-          "property": "draw",
+          "end": 0.48,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.2,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "scale",
+          "from": 0.2,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "line-panel-0",
+      "type": "panel",
+      "layer": "background",
+      "x": 174,
+      "y": 437,
+      "width": 855,
+      "height": 126,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "cornerRadius": 30,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.56,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.08,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.56,
+          "property": "scale",
+          "from": 0.92,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "line-text-0",
+      "type": "text",
+      "layer": "main",
+      "x": 192,
+      "y": 455,
+      "width": 819,
+      "height": 110,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "text": "CERTIFICATE OF",
+      "fontSize": 92,
+      "fontWeight": 900,
+      "fontFamily": "Georgia, 'Times New Roman', serif",
+      "textAlign": "left",
+      "letterSpacing": 1.1,
+      "lineHeight": 0.96,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.62,
+          "property": "opacity",
           "from": 0,
           "to": 1,
-          "easing": "linear"
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.62,
+          "property": "translateY",
+          "from": 34,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.08,
+          "end": 0.62,
+          "property": "translateX",
+          "from": -34,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.62,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "line-panel-1",
+      "type": "panel",
+      "layer": "background",
+      "x": 1104,
+      "y": 522,
+      "width": 642,
+      "height": 126,
+      "fill": "#FF2D55",
+      "opacity": 0,
+      "cornerRadius": 30,
+      "animations": [
+        {
+          "start": 0.24,
+          "end": 0.72,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.16,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.24,
+          "end": 0.72,
+          "property": "scale",
+          "from": 0.92,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "line-text-1",
+      "type": "text",
+      "layer": "main",
+      "x": 1122,
+      "y": 540,
+      "width": 606,
+      "height": 110,
+      "fill": "#FF2D55",
+      "opacity": 0,
+      "text": "COMPLETION",
+      "fontSize": 92,
+      "fontWeight": 900,
+      "fontFamily": "Georgia, 'Times New Roman', serif",
+      "textAlign": "right",
+      "letterSpacing": 1.1,
+      "lineHeight": 0.96,
+      "animations": [
+        {
+          "start": 0.24,
+          "end": 0.78,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.24,
+          "end": 0.78,
+          "property": "translateY",
+          "from": 34,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.24,
+          "end": 0.78,
+          "property": "translateX",
+          "from": 34,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.24,
+          "end": 0.78,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "kinetic-subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 192,
+      "y": 659,
+      "width": 1536,
+      "height": 61.76,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "Motion Graphics Mastery",
+      "fontSize": 34,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -0.2,
+      "lineHeight": 1.16,
+      "animations": [
+        {
+          "start": 0.62,
+          "end": 1.7,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.9,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.62,
+          "end": 1.7,
+          "property": "translateY",
+          "from": 18,
+          "to": 0,
+          "easing": "easeOut"
         }
       ]
     }

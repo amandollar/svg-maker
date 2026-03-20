@@ -11,79 +11,86 @@
   },
   "elements": [
     {
-      "id": "star-1",
-      "type": "star",
+      "id": "plane-1",
+      "type": "plane",
       "layer": "main",
-      "x": 880,
-      "y": 460,
-      "width": 160,
-      "height": 160,
-      "fill": "#2563eb",
+      "x": 845,
+      "y": 425,
+      "width": 230,
+      "height": 230,
+      "stroke": "#3B82F6",
+      "strokeWidth": 6,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
-      "glowColor": "#3B82F6",
-      "glowStrength": 0.7,
       "animations": [
         {
           "start": 0,
-          "end": 0.3,
-          "property": "scale",
-          "from": 0.6,
+          "end": 0.25,
+          "property": "opacity",
+          "from": 0,
           "to": 1,
           "easing": "easeOut"
         },
         {
-          "start": 0.3,
-          "end": 0.55,
-          "property": "scale",
-          "from": 1,
-          "to": 1.28,
-          "easing": "spring"
+          "start": 0,
+          "end": 0.75,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
         },
         {
-          "start": 0.55,
-          "end": 0.9,
-          "property": "scale",
-          "from": 1.28,
-          "to": 1,
-          "easing": "easeOut"
+          "start": 0.75,
+          "end": 1.4,
+          "property": "translateX",
+          "from": -12,
+          "to": 22,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.75,
+          "end": 1.4,
+          "property": "translateY",
+          "from": 8,
+          "to": -18,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 0.75,
+          "end": 1.4,
+          "property": "rotate",
+          "from": -6,
+          "to": 8,
+          "easing": "easeInOut"
         }
       ]
     },
     {
-      "id": "star-1-spark",
-      "type": "spark",
-      "layer": "foreground",
-      "x": 870.4,
-      "y": 450.4,
-      "width": 179.20000000000002,
-      "height": 179.20000000000002,
+      "id": "plane-1-ring",
+      "type": "ring",
+      "layer": "background",
+      "x": 845,
+      "y": 425,
+      "width": 230,
+      "height": 230,
       "stroke": "#3B82F6",
-      "strokeWidth": 4,
-      "opacity": 0.18,
+      "strokeWidth": 2,
+      "opacity": 0.12,
       "animations": [
         {
-          "start": 0.43000000000000005,
-          "end": 0.63,
+          "start": 0.05,
+          "end": 0.3,
           "property": "scale",
-          "from": 0.72,
-          "to": 1.22,
+          "from": 0.9,
+          "to": 1.18,
           "easing": "easeOut"
         },
         {
-          "start": 0.43000000000000005,
-          "end": 0.63,
+          "start": 0.05,
+          "end": 0.7,
           "property": "opacity",
-          "from": 0.18,
-          "to": 0.18,
-          "easing": "linear"
-        },
-        {
-          "start": 0.63,
-          "end": 0.9,
-          "property": "opacity",
-          "from": 0.18,
+          "from": 0.12,
           "to": 0,
           "easing": "easeOut"
         }

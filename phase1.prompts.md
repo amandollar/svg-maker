@@ -56,7 +56,7 @@ USAGE CONTEXT:
 Social media engagement overlays, like-counter animations, dating app UI, notification badge.
 
 ───────────────────────────────────────────────────────────────────────────────
-PROMPT 002: Checkmark Draw — Task Complete
+: Checkmark Draw — Task Complete
 ───────────────────────────────────────────────────────────────────────────────
 CANVAS: 1920×1080px (16:9)
 DURATION: 1.8s | LOOP: No (single play)

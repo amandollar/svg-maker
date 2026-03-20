@@ -1,0 +1,250 @@
+{
+  "id": "ship-with-confidence",
+  "title": "Ship With Confidence",
+  "duration": 4.4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#0B1020"
+  },
+  "elements": [
+    {
+      "id": "masked-frame",
+      "type": "panel",
+      "layer": "background",
+      "x": 68,
+      "y": 339,
+      "width": 944,
+      "height": 429.6,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "cornerRadius": 42,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.4,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.06,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.4,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "masked-top-bar",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 108,
+      "y": 369,
+      "width": 124,
+      "height": 8,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.04,
+          "end": 0.34,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.04,
+          "end": 0.34,
+          "property": "scale",
+          "from": 0.35,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "masked-wipe",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 90,
+      "y": 482.5424,
+      "width": 860,
+      "height": 32,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.12,
+          "end": 0.68,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.24,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.12,
+          "end": 0.68,
+          "property": "translateX",
+          "from": -72,
+          "to": 72,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "masked-headline",
+      "type": "text",
+      "layer": "main",
+      "x": 108,
+      "y": 389,
+      "width": 864,
+      "height": 222.72,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "text": "Ship With\nConfidence",
+      "fontSize": 108,
+      "fontWeight": 900,
+      "fontFamily": "'Trebuchet MS', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -2.1,
+      "lineHeight": 0.92,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.82,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.82,
+          "property": "translateY",
+          "from": 38,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.08,
+          "end": 0.82,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "masked-kicker",
+      "type": "text",
+      "layer": "foreground",
+      "x": 108,
+      "y": 331,
+      "width": 864,
+      "height": 24,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "RELEASE SYSTEM",
+      "fontSize": 22,
+      "fontWeight": 800,
+      "fontFamily": "'Segoe UI', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": 1.6,
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.28,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.28,
+          "property": "translateY",
+          "from": 12,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "masked-subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 108,
+      "y": 635.72,
+      "width": 864,
+      "height": 98.88,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "A polished motion layer for\nlaunches, onboarding, and product stories",
+      "fontSize": 34,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -0.3,
+      "lineHeight": 1.16,
+      "animations": [
+        {
+          "start": 0.24,
+          "end": 1.08,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.92,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.24,
+          "end": 1.08,
+          "property": "translateY",
+          "from": 18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "masked-sub-line",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 456,
+      "y": 613.72,
+      "width": 168,
+      "height": 5,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.18,
+          "end": 0.72,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.85,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.18,
+          "end": 0.72,
+          "property": "scale",
+          "from": 0.45,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    }
+  ]
+}

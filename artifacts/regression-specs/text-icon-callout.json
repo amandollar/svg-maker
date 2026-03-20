@@ -1,0 +1,252 @@
+{
+  "id": "built-secure",
+  "title": "Built Secure",
+  "duration": 4.4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#0B1020"
+  },
+  "elements": [
+    {
+      "id": "callout-card",
+      "type": "panel",
+      "layer": "background",
+      "x": 108,
+      "y": 238,
+      "width": 864,
+      "height": 540,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "cornerRadius": 36,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.46,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.08,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "callout-accent",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 138,
+      "y": 268,
+      "width": 112,
+      "height": 8,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.04,
+          "end": 0.36,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.95,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.04,
+          "end": 0.36,
+          "property": "scale",
+          "from": 0.4,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "callout-icon",
+      "type": "lock",
+      "layer": "foreground",
+      "x": 445,
+      "y": 276,
+      "width": 190,
+      "height": 190,
+      "stroke": "#38BDF8",
+      "strokeWidth": 6,
+      "opacity": 0,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.34,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.78,
+          "to": 1,
+          "easing": "spring"
+        },
+        {
+          "start": 0,
+          "end": 0.8,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "callout-highlight",
+      "type": "panel",
+      "layer": "background",
+      "x": 140,
+      "y": 573.82,
+      "width": 280,
+      "height": 16,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.18,
+          "end": 0.74,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.2,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.18,
+          "end": 0.74,
+          "property": "translateX",
+          "from": -18,
+          "to": 22,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "callout-headline",
+      "type": "text",
+      "layer": "main",
+      "x": 150,
+      "y": 520,
+      "width": 780,
+      "height": 92.1,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "text": "Built Secure",
+      "fontSize": 78,
+      "fontWeight": 900,
+      "fontFamily": "'Trebuchet MS', 'Segoe UI', sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -1.8,
+      "lineHeight": 0.95,
+      "animations": [
+        {
+          "start": 0.14,
+          "end": 0.92,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.14,
+          "end": 0.92,
+          "property": "translateY",
+          "from": 26,
+          "to": 0,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "callout-subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 150,
+      "y": 622.1,
+      "width": 780,
+      "height": 98.88,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "Motion language for\ntrust, onboarding, and product demos",
+      "fontSize": 34,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -0.4,
+      "lineHeight": 1.16,
+      "animations": [
+        {
+          "start": 0.28,
+          "end": 1.18,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.92,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.28,
+          "end": 1.18,
+          "property": "translateY",
+          "from": 14,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "callout-kicker",
+      "type": "text",
+      "layer": "foreground",
+      "x": 150,
+      "y": 476,
+      "width": 780,
+      "height": 24,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "PLATFORM LAYER",
+      "fontSize": 22,
+      "fontWeight": 800,
+      "fontFamily": "'Segoe UI', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": 1.4,
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.44,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.44,
+          "property": "translateY",
+          "from": 10,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

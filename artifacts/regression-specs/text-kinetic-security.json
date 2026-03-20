@@ -1,0 +1,162 @@
+{
+  "id": "built-for-trust",
+  "title": "Built For Trust",
+  "duration": 4.4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#0B1020"
+  },
+  "elements": [
+    {
+      "id": "kinetic-rail",
+      "type": "panel",
+      "layer": "background",
+      "x": 65,
+      "y": 456,
+      "width": 10,
+      "height": 180,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.2,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.48,
+          "property": "scale",
+          "from": 0.2,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "line-panel-0",
+      "type": "panel",
+      "layer": "background",
+      "x": 90,
+      "y": 474,
+      "width": 922,
+      "height": 138,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 30,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.56,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.16,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.56,
+          "property": "scale",
+          "from": 0.92,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "line-text-0",
+      "type": "text",
+      "layer": "main",
+      "x": 108,
+      "y": 492,
+      "width": 886,
+      "height": 122,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "BUILT FOR TRUST",
+      "fontSize": 104,
+      "fontWeight": 900,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "left",
+      "letterSpacing": 1.1,
+      "lineHeight": 0.96,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.62,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.62,
+          "property": "translateY",
+          "from": 34,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.08,
+          "end": 0.62,
+          "property": "translateX",
+          "from": -34,
+          "to": 0,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.62,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "kinetic-subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 108,
+      "y": 622,
+      "width": 864,
+      "height": 61.76,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "Security motion that feels premium",
+      "fontSize": 34,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "center",
+      "letterSpacing": -0.2,
+      "lineHeight": 1.16,
+      "animations": [
+        {
+          "start": 0.45999999999999996,
+          "end": 1.6,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.9,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.45999999999999996,
+          "end": 1.6,
+          "property": "translateY",
+          "from": 18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

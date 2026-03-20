@@ -1,0 +1,211 @@
+{
+  "id": "great-products-feel-obvious-in-hindsight",
+  "title": "Great products feel obvious in hindsight.",
+  "duration": 4.4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "background": "#0B1020"
+  },
+  "elements": [
+    {
+      "id": "quote-card",
+      "type": "panel",
+      "layer": "background",
+      "x": 86,
+      "y": 443,
+      "width": 954,
+      "height": 410.92,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "cornerRadius": 42,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.46,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.06,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "quote-line",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 102,
+      "y": 509,
+      "width": 10,
+      "height": 269.7,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.42,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.42,
+          "property": "scale",
+          "from": 0.2,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "quote-mark",
+      "type": "text",
+      "layer": "background",
+      "x": 122,
+      "y": 369,
+      "width": 180,
+      "height": 180,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "“",
+      "fontSize": 180,
+      "fontWeight": 900,
+      "fontFamily": "Georgia, 'Times New Roman', serif",
+      "textAlign": "left",
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.22,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.5,
+          "property": "translateY",
+          "from": 28,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "quote-body",
+      "type": "text",
+      "layer": "main",
+      "x": 130,
+      "y": 499,
+      "width": 842,
+      "height": 270.92,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "text": "Great products\nfeel obvious in\nhindsight.",
+      "fontSize": 82,
+      "fontWeight": 700,
+      "fontFamily": "Georgia, 'Times New Roman', serif",
+      "textAlign": "left",
+      "letterSpacing": -1.1,
+      "lineHeight": 1.02,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.9,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.9,
+          "property": "translateY",
+          "from": 36,
+          "to": 0,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "quote-attribution-line",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 130,
+      "y": 767.9200000000001,
+      "width": 96,
+      "height": 5,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.24,
+          "end": 0.86,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.9,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.24,
+          "end": 0.86,
+          "property": "scale",
+          "from": 0.4,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "quote-attribution",
+      "type": "text",
+      "layer": "foreground",
+      "x": 130,
+      "y": 791.9200000000001,
+      "width": 842,
+      "height": 42,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "FOUNDER NOTE",
+      "fontSize": 26,
+      "fontWeight": 800,
+      "fontFamily": "'Segoe UI', Arial, sans-serif",
+      "textAlign": "left",
+      "letterSpacing": 1.4,
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0.28,
+          "end": 1.15,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.28,
+          "end": 1.15,
+          "property": "translateY",
+          "from": 18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    }
+  ]
+}

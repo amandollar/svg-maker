@@ -1,0 +1,266 @@
+{
+  "id": "revenue-growth-128",
+  "title": "Revenue Growth",
+  "duration": 4.4,
+  "fps": 30,
+  "loop": false,
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "background": "#0B1020"
+  },
+  "elements": [
+    {
+      "id": "stat-card",
+      "type": "panel",
+      "layer": "background",
+      "x": 130,
+      "y": 320,
+      "width": 842,
+      "height": 440,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "cornerRadius": 36,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.42,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.08,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.42,
+          "property": "scale",
+          "from": 0.94,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "stat-accent-bar",
+      "type": "panel",
+      "layer": "foreground",
+      "x": 166,
+      "y": 356,
+      "width": 120,
+      "height": 10,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "cornerRadius": 999,
+      "animations": [
+        {
+          "start": 0.06,
+          "end": 0.46,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.95,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.06,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.5,
+          "to": 1,
+          "easing": "spring"
+        }
+      ]
+    },
+    {
+      "id": "stat-value",
+      "type": "text",
+      "layer": "main",
+      "x": 166,
+      "y": 412,
+      "width": 770,
+      "height": 174,
+      "fill": "#F8FAFC",
+      "opacity": 0,
+      "text": "128%",
+      "fontSize": 150,
+      "fontWeight": 900,
+      "fontFamily": "'Arial Black', 'Segoe UI', sans-serif",
+      "textAlign": "left",
+      "letterSpacing": -3,
+      "lineHeight": 0.94,
+      "animations": [
+        {
+          "start": 0.08,
+          "end": 0.72,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.08,
+          "end": 0.72,
+          "property": "translateY",
+          "from": 34,
+          "to": 0,
+          "easing": "spring"
+        },
+        {
+          "start": 0.08,
+          "end": 0.72,
+          "property": "scale",
+          "from": 0.92,
+          "to": 1,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "stat-headline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 166,
+      "y": 580,
+      "width": 770,
+      "height": 66,
+      "fill": "#38BDF8",
+      "opacity": 0,
+      "text": "Revenue Growth",
+      "fontSize": 48,
+      "fontWeight": 800,
+      "fontFamily": "'Trebuchet MS', 'Segoe UI', sans-serif",
+      "textAlign": "left",
+      "letterSpacing": -1,
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0.22,
+          "end": 1,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.22,
+          "end": 1,
+          "property": "translateY",
+          "from": 18,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "stat-label",
+      "type": "text",
+      "layer": "foreground",
+      "x": 166,
+      "y": 676,
+      "width": 638,
+      "height": 44,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "YOY LIFT",
+      "fontSize": 28,
+      "fontWeight": 700,
+      "fontFamily": "'Segoe UI', Arial, sans-serif",
+      "textAlign": "left",
+      "letterSpacing": 1.2,
+      "lineHeight": 1,
+      "animations": [
+        {
+          "start": 0.28,
+          "end": 1.14,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.92,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.28,
+          "end": 1.14,
+          "property": "translateY",
+          "from": 14,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "stat-subheadline",
+      "type": "text",
+      "layer": "foreground",
+      "x": 166,
+      "y": 650,
+      "width": 770,
+      "height": 72,
+      "fill": "#CBD5E1",
+      "opacity": 0,
+      "text": "Q4 performance across the funnel",
+      "fontSize": 30,
+      "fontWeight": 600,
+      "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+      "textAlign": "left",
+      "letterSpacing": -0.3,
+      "lineHeight": 1.15,
+      "animations": [
+        {
+          "start": 0.3,
+          "end": 1.2,
+          "property": "opacity",
+          "from": 0,
+          "to": 0.9,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0.3,
+          "end": 1.2,
+          "property": "translateY",
+          "from": 16,
+          "to": 0,
+          "easing": "easeOut"
+        }
+      ]
+    },
+    {
+      "id": "stat-icon",
+      "type": "trend",
+      "layer": "foreground",
+      "x": 798,
+      "y": 586,
+      "width": 230,
+      "height": 230,
+      "stroke": "#38BDF8",
+      "strokeWidth": 6,
+      "opacity": 0,
+      "offsetX": 0,
+      "offsetY": 0,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.34,
+          "property": "opacity",
+          "from": 0,
+          "to": 1,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.46,
+          "property": "scale",
+          "from": 0.78,
+          "to": 1,
+          "easing": "spring"
+        },
+        {
+          "start": 0,
+          "end": 0.8,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    }
+  ]
+}

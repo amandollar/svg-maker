@@ -9,6 +9,16 @@ export type PromptRoute = {
 };
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+const splitPromptTokens = (normalized: string) => normalized.split(/[^a-z0-9%+$#]+/g).filter(Boolean);
+
+const matchesPromptTerm = (normalized: string, tokens: string[], term: string) => {
+  const normalizedTerm = normalizePrompt(term);
+  if (!normalizedTerm) return false;
+  if (/^[a-z0-9%+$#]+$/.test(normalizedTerm)) {
+    return tokens.includes(normalizedTerm);
+  }
+  return normalized.includes(normalizedTerm);
+};
 
 type ScoredIntent = {
   type: ShapeType;
@@ -16,17 +26,17 @@ type ScoredIntent = {
   negatives?: Array<{w: number; terms: string[]}>;
 };
 
-const scoreIntent = (normalized: string, intent: ScoredIntent) => {
+const scoreIntent = (normalized: string, tokens: string[], intent: ScoredIntent) => {
   let score = 0;
 
   for (const rule of intent.positives) {
-    if (includesAny(normalized, rule.terms)) {
+    if (rule.terms.some((term) => matchesPromptTerm(normalized, tokens, term))) {
       score += rule.w;
     }
   }
 
   for (const rule of intent.negatives ?? []) {
-    if (includesAny(normalized, rule.terms)) {
+    if (rule.terms.some((term) => matchesPromptTerm(normalized, tokens, term))) {
       score -= rule.w;
     }
   }
@@ -77,12 +87,13 @@ const templateIdToType = (templateId: string): ShapeType | null => {
   if (has("wallet")) return "wallet";
   if (has("trophy")) return "trophy";
   if (has("pie") || (has("pie") && has("chart"))) return "pie";
+  if (hasAny(["phone", "smartphone", "mobile"])) return "phone";
   if (has("headphones")) return "headphones";
   if (has("laptop")) return "laptop";
   if (has("camera")) return "camera";
   if (has("burger")) return "burger";
   if (has("play")) return "play";
-  if (hasAny(["phone", "smartphone", "mobile"])) return "phone";
+  if (hasAny(["hero", "headline", "quote", "typography", "kinetic", "masked", "text", "bullet", "steps", "list", "callout", "chapter", "interstitial", "section"])) return "text";
 
   return null;
 };
@@ -101,8 +112,7 @@ const PRIMARY_INTENTS: ScoredIntent[] = [
   {
     type: "rupee",
     positives: [
-      // Match actual rupee sign via unicode escape (avoid relying on terminal/MD encoding).
-      {w: 6, terms: ["\u20B9", "inr", "rupee"]},
+      {w: 6, terms: ["\u20b9", "inr", "rupee"]},
       {w: 4, terms: ["fintech india", "indian fintech", "upi", "payment gateway"]},
       {w: 2, terms: ["currency badge", "gold circular frame", "wealth", "investment"]},
     ],
@@ -199,7 +209,7 @@ const ICON_INTENTS: Array<{type: ShapeType; terms: string[]}> = [
   {type: "download", terms: ["download", "save file", "file saving"]},
   {type: "calendar", terms: ["calendar", "date", "event", "countdown"]},
   {type: "barchart", terms: ["bar chart", "barchart", "kpi", "dashboard"]},
-  {type: "trend", terms: ["trending", "trend", "stock", "upward line"]},
+  {type: "trend", terms: ["trending up", "growth chart", "upward trend", "trending", "trend", "stock", "upward line"]},
   {type: "wallet", terms: ["wallet", "payment", "cashflow", "payout"]},
   {type: "trophy", terms: ["trophy", "winner", "achievement", "award"]},
   {type: "pie", terms: ["pie chart", "market share", "slice"]},
@@ -210,6 +220,66 @@ const ICON_INTENTS: Array<{type: ShapeType; terms: string[]}> = [
   {type: "burger", terms: ["burger", "food", "restaurant", "delivery"]},
 ];
 
+const TEXT_INTENT: ScoredIntent = {
+  type: "text",
+  positives: [
+    {w: 6, terms: ["kinetic typography", "text animation", "headline animation", "quote animation"]},
+    {w: 5, terms: ["hero text", "title card", "masked text", "text reveal", "typewriter", "icon callout", "feature highlight", "chapter intro", "chapter break", "section marker"]},
+    {w: 4, terms: ["headline", "subheadline", "tagline", "quote", "testimonial", "bullet list", "checklist", "text only", "interstitial", "chapter title"]},
+    {w: 3, terms: ["words on screen", "typography", "title", "statement", "quote card", "chapter", "section"]},
+  ],
+};
+
+const hasExplicitTextStructure = (prompt: string) =>
+  /(?:^|\n)\s*(headline|title|main text|copy|subheadline|subtitle|supporting text|body|description|tagline|kicker|eyebrow|label|quote|author|attribution|source|items|bullets|points|features|steps|value|stat|metric|number|section|chapter|part|scene)\s*:/im.test(
+    prompt,
+  );
+
+const hasQuotedText = (prompt: string) => /["\u201c\u201d][^"\u201c\u201d\n]{2,140}["\u201c\u201d]/i.test(prompt);
+
+const isStrongTextCue = (normalized: string) =>
+  includesAny(normalized, [
+    "kinetic typography",
+    "text animation",
+    "headline animation",
+    "quote animation",
+    "text only",
+    "words on screen",
+    "title card",
+    "chapter intro",
+    "chapter break",
+    "section marker",
+    "interstitial",
+  ]);
+
+const hasMixedSceneCue = (normalized: string) =>
+  includesAny(normalized, [
+    "written",
+    "with text",
+    "with headline",
+    "video intro",
+    "video player",
+    "player",
+    "app launch",
+    "add to cart",
+    "query loading",
+    "search result",
+    "countdown",
+    "kpi",
+    "dashboard",
+    "market share",
+    "cashflow",
+    "podcast",
+    "recording live",
+    "battery charging",
+    "charging up",
+    "charging",
+    "energy level",
+    "download",
+    "save file",
+    "file saving",
+  ]);
+
 export const routePromptToType = (request: PromptRequest): PromptRoute => {
   if (request.templateId) {
     const override = templateIdToType(request.templateId);
@@ -219,6 +289,7 @@ export const routePromptToType = (request: PromptRequest): PromptRoute => {
   }
 
   const normalized = normalizePrompt(request.prompt);
+  const tokens = splitPromptTokens(normalized);
   const scores: Record<string, number> = {};
 
   // Prefer deterministic templates when we have signal.
@@ -226,7 +297,7 @@ export const routePromptToType = (request: PromptRequest): PromptRoute => {
   let second: {type: ShapeType; score: number} = {type: "heart", score: Number.NEGATIVE_INFINITY};
 
   for (const intent of PRIMARY_INTENTS) {
-    const s = scoreIntent(normalized, intent);
+    const s = scoreIntent(normalized, tokens, intent);
     scores[intent.type] = s;
     if (s > best.score) {
       second = best;
@@ -236,23 +307,56 @@ export const routePromptToType = (request: PromptRequest): PromptRoute => {
     }
   }
 
-  // If we have enough signal for a primary intent, use it.
+  const explicitTextStructure = hasExplicitTextStructure(request.prompt);
+  const hasQuotedCopy = hasQuotedText(request.prompt);
+  const strongTextCue = explicitTextStructure || hasQuotedCopy || isStrongTextCue(normalized);
+  const mixedSceneCue = hasMixedSceneCue(normalized);
+  const textScore = scoreIntent(normalized, tokens, TEXT_INTENT) + (hasQuotedCopy ? 2 : 0) + (explicitTextStructure ? 3 : 0);
+  scores.text = textScore;
+
+  const iconScores = ICON_INTENTS
+    .map((icon) => {
+      const matchedTerms = icon.terms.filter((term) => matchesPromptTerm(normalized, tokens, term));
+      const score = matchedTerms.reduce((sum, term) => sum + (term.includes(" ") ? 2 : 1), 0);
+      return {icon, score};
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score);
+  const iconMatch = iconScores[0]?.icon;
+  const sceneLikePrompt = mixedSceneCue || Boolean(iconMatch && best.type !== "text");
+
   if (best.score >= 4) {
+    if (strongTextCue && textScore >= 5 && (!sceneLikePrompt || best.type === "text")) {
+      const confidence = clamp01(0.52 + textScore / 12);
+      return {type: "text", confidence, scores};
+    }
     const margin = best.score - Math.max(0, second.score);
     const confidence = clamp01(0.35 + margin / 10 + best.score / 16);
     return {type: best.type, confidence, scores};
   }
 
-  // Otherwise fall back to icon intent mapping.
-  for (const icon of ICON_INTENTS) {
-    if (includesAny(normalized, icon.terms)) {
-      // Small confidence bump if we also had some primary signal.
-      const primarySignal = Math.max(0, best.score);
-      const confidence = clamp01(0.55 + primarySignal / 10);
-      return {type: icon.type, confidence, scores};
-    }
+  if (iconMatch && mixedSceneCue) {
+    const primarySignal = Math.max(0, best.score, textScore - 2);
+    const confidence = clamp01(0.62 + primarySignal / 12);
+    return {type: iconMatch.type, confidence, scores};
   }
 
-  // Default safe fallback.
+  if (iconMatch && !strongTextCue && textScore < 6) {
+    const primarySignal = Math.max(0, best.score);
+    const confidence = clamp01(0.55 + primarySignal / 10);
+    return {type: iconMatch.type, confidence, scores};
+  }
+
+  if (((strongTextCue && textScore >= 4) || textScore >= 5) && !sceneLikePrompt) {
+    const confidence = clamp01(0.52 + textScore / 12);
+    return {type: "text", confidence, scores};
+  }
+
+  if (iconMatch) {
+    const primarySignal = Math.max(0, best.score);
+    const confidence = clamp01(0.55 + primarySignal / 10);
+    return {type: iconMatch.type, confidence, scores};
+  }
+
   return {type: "heart", confidence: 0.2, scores};
 };

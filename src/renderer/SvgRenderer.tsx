@@ -463,17 +463,53 @@ const renderShape = (element: AnimatedElement, drawProgress: number) => {
         return isLeft ? <g transform="translate(100 0) scale(-1 1)">{path}</g> : path;
       })();
     case "text":
+      return (() => {
+        const lines = (element.text ?? "").split("\n");
+        const viewBoxW = element.viewBoxWidth ?? element.width;
+        const align = element.textAlign ?? "left";
+        const anchor = align === "center" ? "middle" : align === "right" ? "end" : "start";
+        const x = align === "center" ? viewBoxW / 2 : align === "right" ? viewBoxW : 0;
+        const fontSize = element.fontSize ?? 72;
+        const lineHeight = element.lineHeight ?? 1.05;
+
+        return (
+          <text
+            x={x}
+            y={fontSize}
+            fill={element.fill ?? element.stroke ?? "#FFFFFF"}
+            fontSize={fontSize}
+            fontWeight={element.fontWeight ?? 700}
+            fontFamily={
+              element.fontFamily ??
+              "'Trebuchet MS', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+            }
+            letterSpacing={
+              typeof element.letterSpacing === "number" ? `${element.letterSpacing}px` : undefined
+            }
+            textAnchor={anchor}
+          >
+            {lines.map((line, index) => (
+              <tspan key={`${element.id}-line-${index}`} x={x} dy={index === 0 ? 0 : fontSize * lineHeight}>
+                {line}
+              </tspan>
+            ))}
+          </text>
+        );
+      })();
+    case "panel":
       return (
-        <text
+        <rect
           x="0"
-          y="72"
-          fill={element.fill ?? element.stroke ?? "#FFFFFF"}
-          fontSize={element.fontSize ?? 72}
-          fontWeight={element.fontWeight ?? 700}
-          fontFamily="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
-        >
-          {element.text ?? ""}
-        </text>
+          y="0"
+          width={element.viewBoxWidth ?? element.width}
+          height={element.viewBoxHeight ?? element.height}
+          rx={element.cornerRadius ?? Math.min(element.width, element.height) * 0.18}
+          ry={element.cornerRadius ?? Math.min(element.width, element.height) * 0.18}
+          fill={element.fill ?? "none"}
+          stroke={element.stroke}
+          strokeWidth={element.strokeWidth}
+          opacity={1}
+        />
       );
     default:
       return null;
@@ -573,6 +609,7 @@ const renderTrailLayer = (
             height={element.height}
             viewBox={`0 0 ${element.viewBoxWidth ?? 100} ${element.viewBoxHeight ?? 100}`}
             fill="none"
+            style={{overflow: "visible"}}
           >
             {renderShape(element, 1)}
           </svg>
@@ -622,6 +659,7 @@ export const SvgRenderer = ({spec}: {spec: AnimationSpec}) => {
                 height={element.height}
                 viewBox={`0 0 ${viewBoxWidth(element)} ${viewBoxHeight(element)}`}
                 fill="none"
+                style={{overflow: "visible"}}
               >
                 {renderShape(element, state.draw)}
               </svg>

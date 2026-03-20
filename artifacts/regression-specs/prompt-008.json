@@ -11,40 +11,78 @@
   },
   "elements": [
     {
-      "id": "star-1",
-      "type": "star",
+      "id": "wifi-1",
+      "type": "wifi",
       "layer": "main",
-      "x": 465,
-      "y": 465,
-      "width": 150,
-      "height": 150,
-      "fill": "#3b82f6",
+      "x": 440,
+      "y": 440,
+      "width": 200,
+      "height": 200,
+      "stroke": "#3b82f6",
+      "strokeWidth": 6,
       "opacity": 1,
       "offsetX": 0,
       "offsetY": 0,
       "animations": [
         {
           "start": 0,
-          "end": 0.3,
-          "property": "scale",
-          "from": 0.6,
+          "end": 0.28,
+          "property": "opacity",
+          "from": 0,
           "to": 1,
           "easing": "easeOut"
         },
         {
-          "start": 0.3,
-          "end": 0.55,
-          "property": "scale",
-          "from": 1,
-          "to": 1.2,
-          "easing": "spring"
+          "start": 0,
+          "end": 0.9,
+          "property": "draw",
+          "from": 0,
+          "to": 1,
+          "easing": "easeInOut"
         },
         {
-          "start": 0.55,
-          "end": 0.9,
+          "start": 0.98,
+          "end": 1.2,
           "property": "scale",
-          "from": 1.2,
+          "from": 1,
+          "to": 1.055,
+          "easing": "easeInOut"
+        },
+        {
+          "start": 1.2,
+          "end": 1.48,
+          "property": "scale",
+          "from": 1.055,
           "to": 1,
+          "easing": "easeInOut"
+        }
+      ]
+    },
+    {
+      "id": "wifi-1-glow",
+      "type": "glow",
+      "layer": "background",
+      "x": 416,
+      "y": 416,
+      "width": 248,
+      "height": 248,
+      "fill": "#3b82f6",
+      "opacity": 0.12,
+      "animations": [
+        {
+          "start": 0,
+          "end": 0.35,
+          "property": "scale",
+          "from": 0.95,
+          "to": 1.12,
+          "easing": "easeOut"
+        },
+        {
+          "start": 0,
+          "end": 0.7,
+          "property": "opacity",
+          "from": 0.12,
+          "to": 0.02,
           "easing": "easeOut"
         }
       ]
