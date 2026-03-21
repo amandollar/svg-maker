@@ -21,6 +21,7 @@
     "qa:render-scene-previews": "npm run build:node --silent && node dist/qa/render-scene-previews.js",
     "qa:render-scene-videos": "npm run build:node --silent && node dist/qa/render-scene-videos.js",
     "qa:render-prompt-trial-videos": "npm run build:node --silent && node dist/qa/render-prompt-trial-videos.js",
+    "qa:render-progress-videos": "npm run build:node --silent && node dist/qa/render-progress-videos.js",
     "qa:render-text-videos": "npm run build:node --silent && node dist/qa/render-text-videos.js",
     "qa:render-text-motion-checkpoints": "npm run build:node --silent && node dist/qa/render-text-motion-checkpoints.js"
   },

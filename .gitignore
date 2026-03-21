@@ -2,6 +2,8 @@
 .*.env.*
 node_modules
 dist
+out
+artifacts/regression-specs
 coverage
 *.log
 .DS_Store
