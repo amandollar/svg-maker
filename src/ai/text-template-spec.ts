@@ -10,6 +10,7 @@ import {
   parseCanvasFormat,
   parseDuration,
 } from "./prompt-helpers";
+import {fitTextBlock, resolveSceneDesignTokens} from "./scene-design";
 
 type TextVariant = "hero" | "kinetic" | "quote" | "stat" | "list" | "icon-callout" | "masked" | "chapter";
 type CanvasSpec = {format: "square" | "portrait" | "landscape"; width: number; height: number; background: string};
@@ -405,27 +406,41 @@ const buildHeroElements = (payload: TextPayload, spec: CanvasSpec, accent: strin
   const landscape = spec.format === "landscape";
   const portrait = spec.format === "portrait";
   const motion = inferMotionProfile(prompt);
+  const design = resolveSceneDesignTokens(prompt, "product");
   const fontFamily = pickFontFamily(prompt);
-  const headlineLines = wrapText(payload.headline, landscape ? 17 : portrait ? 11 : 13, 3);
-  const subLines = payload.subheadline ? wrapText(payload.subheadline, landscape ? 28 : portrait ? 18 : 22, portrait ? 3 : 2) : [];
   const baseX = landscape ? 176 : portrait ? 122 : 128;
   const blockWidth = landscape ? Math.round(spec.width * 0.46) : portrait ? Math.round(spec.width * 0.66) : Math.round(spec.width * 0.62);
-  const headlineFontSize = fitFontSize(
-    headlineLines,
-    blockWidth,
-    landscape ? 92 : portrait ? 78 : 84,
-    landscape ? 74 : portrait ? 54 : 62,
-    0.76,
-    -2.8,
-  );
-  const subFontSize = landscape ? 30 : portrait ? 24 : 30;
   const topY = landscape ? 292 : portrait ? 450 : 300;
   const lineHeight = 0.9;
   const glowSize = landscape ? 540 : portrait ? 520 : 560;
   const secondaryText = getSecondaryTextColor(spec.background);
-  const headlineHeight = headlineLines.length * headlineFontSize * lineHeight + 30;
+  const fit = fitTextBlock({
+    headline: payload.headline,
+    subheadline: payload.subheadline,
+    maxWidth: blockWidth,
+    maxHeight: portrait ? 404 : landscape ? 316 : 344,
+    headlineChars: landscape ? 17 : portrait ? 11 : 13,
+    maxHeadlineLines: 3,
+    subChars: landscape ? 28 : portrait ? 18 : 22,
+    maxSubLines: portrait ? 3 : 2,
+    headlineDesired: landscape ? 92 : portrait ? 78 : 84,
+    headlineMin: landscape ? 70 : portrait ? 48 : 56,
+    subDesired: landscape ? 30 : portrait ? 24 : 30,
+    subMin: portrait ? 20 : 22,
+    headlineWidthFactor: 0.76,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2.8,
+    subLetterSpacing: -0.35,
+    headlineLineHeight: lineHeight,
+    subLineHeight: 1.16,
+  });
+  const headlineLines = fit.headlineLines;
+  const subLines = fit.subLines;
+  const headlineFontSize = fit.headlineSize;
+  const subFontSize = fit.subSize || (landscape ? 30 : portrait ? 24 : 30);
+  const headlineHeight = fit.headlineHeight;
   const subY = topY + headlineHeight + 56;
-  const subHeight = subLines.length > 0 ? subLines.length * subFontSize * 1.16 + 24 : 0;
+  const subHeight = fit.subHeight;
   const frameHeight = headlineHeight + subHeight + (subLines.length > 0 ? 168 : 132);
   const frameWidth = landscape ? Math.round(spec.width * 0.62) : portrait ? Math.round(spec.width * 0.76) : Math.round(spec.width * 0.72);
   const frameX = baseX - 56;
@@ -512,8 +527,8 @@ const buildHeroElements = (payload: TextPayload, spec: CanvasSpec, accent: strin
   const elements: AnimatedElement[] = [
     buildPanelElement({id: "hero-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: textColor, cornerRadius: 52, opacity: 0, animations: [{start: 0, end: Math.min(0.52, duration * 0.24), property: "opacity", from: 0, to: 0.075, easing: "easeOut"}, {start: 0, end: Math.min(0.52, duration * 0.24), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
     buildPanelElement({id: "hero-rail", layer: "foreground", x: frameX + 22, y: frameY + 26, width: 12, height: Math.max(180, frameHeight - 52), fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.04, end: Math.min(0.4, duration * 0.18), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.04, end: Math.min(0.4, duration * 0.18), property: "scale", from: 0.2, to: 1, easing: "spring"}]}),
-    {id: "text-glow", type: "glow", layer: "background", x: landscape ? baseX - 160 : portrait ? baseX - 120 : baseX - 110, y: landscape ? topY - 130 : portrait ? topY - 150 : topY - 110, width: glowSize, height: glowSize, fill: accent, glowColor: accent, glowStrength: 0.72, opacity: 0, animations: glowAnimations},
-    buildPanelElement({id: "hero-accent-block", layer: "background", x: accentBlockX, y: accentBlockY, width: accentBlockWidth, height: accentBlockHeight, fill: accent, stroke: accent, strokeWidth: 2, cornerRadius: 34, opacity: 0, animations: [{start: 0.06, end: Math.min(0.48, duration * 0.22), property: "opacity", from: 0, to: 0.12, easing: "easeOut"}, {start: 0.06, end: Math.min(0.48, duration * 0.22), property: "scale", from: 0.88, to: 1, easing: "spring"}]}),
+    {id: "text-glow", type: "glow", layer: "background", x: landscape ? baseX - 160 : portrait ? baseX - 120 : baseX - 110, y: landscape ? topY - 130 : portrait ? topY - 150 : topY - 110, width: glowSize, height: glowSize, fill: accent, glowColor: accent, glowStrength: design.objectProminence === "dominant" ? 0.82 : 0.72, opacity: 0, animations: glowAnimations},
+    buildPanelElement({id: "hero-accent-block", layer: "background", x: accentBlockX, y: accentBlockY, width: accentBlockWidth, height: accentBlockHeight, fill: accent, stroke: accent, strokeWidth: 2, cornerRadius: 34, opacity: 0, animations: [{start: 0.06, end: Math.min(0.48, duration * 0.22), property: "opacity", from: 0, to: design.ornamentOpacity, easing: "easeOut"}, {start: 0.06, end: Math.min(0.48, duration * 0.22), property: "scale", from: 0.88, to: 1, easing: "spring"}]}),
     buildPanelElement({id: "headline-sweep", layer: "background", x: sweepX, y: sweepY, width: sweepWidth, height: Math.max(20, Math.round(headlineFontSize * 0.2)), fill: accent, cornerRadius: 999, opacity: 0, animations: sweepAnimations}),
     buildTextElement({id: "headline", layer: "main", x: baseX, y: topY, width: blockWidth, height: headlineHeight, fill: textColor, text: headlineLines.join("\n"), fontSize: headlineFontSize, fontWeight: 900, fontFamily, textAlign: "left", letterSpacing: -2.8, lineHeight, opacity: 0, animations: headlineAnimations}),
   ];
@@ -549,34 +564,88 @@ const buildKineticElements = (payload: TextPayload, spec: CanvasSpec, accent: st
   const fontFamily = pickFontFamily(prompt);
   const secondaryText = getSecondaryTextColor(spec.background);
   const portrait = spec.format === "portrait";
-  const lines = wrapText(payload.headline, portrait ? 12 : 16, 5);
-  const blockWidth = portrait ? Math.round(spec.width * 0.76) : Math.round(spec.width * 0.74);
+  const square = spec.format === "square";
+  const design = resolveSceneDesignTokens(prompt, "editorial");
+  const lines = wrapText(payload.headline, portrait ? 12 : square ? 12 : 16, portrait ? 4 : square ? 3 : 4);
+    const blockWidth = portrait ? Math.round(spec.width * 0.76) : square ? Math.round(spec.width * 0.7) : Math.round(spec.width * 0.74);
   const fontSize = fitFontSize(
     lines.map((line) => line.toUpperCase()),
     blockWidth - 24,
-    portrait ? 94 : spec.format === "landscape" ? 84 : 92,
-    portrait ? 62 : spec.format === "landscape" ? 64 : 68,
+    portrait ? 94 : spec.format === "landscape" ? 84 : square ? 74 : 92,
+    portrait ? 62 : spec.format === "landscape" ? 64 : square ? 52 : 68,
     0.82,
     1.1,
   );
   const lineGap = Math.round(fontSize * 0.92);
-  const startY = Math.round((spec.height - lines.length * lineGap) / 2);
-  const elements: AnimatedElement[] = [
-    buildPanelElement({id: "kinetic-rail", layer: "background", x: Math.round(spec.width * 0.06), y: startY - 36, width: 10, height: lines.length * lineGap + 84, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0, end: Math.min(0.48, duration * 0.24), property: "opacity", from: 0, to: 0.2, easing: "easeOut"}, {start: 0, end: Math.min(0.48, duration * 0.24), property: "scale", from: 0.2, to: 1, easing: "spring"}]}),
-  ];
+  const availableHeight = Math.round(spec.height * (portrait ? 0.44 : square ? 0.34 : 0.5));
+  const safeLineCount = square
+    ? Math.max(2, Math.min(lines.length, 2))
+    : Math.max(2, Math.min(lines.length, Math.floor(availableHeight / Math.max(56, lineGap))));
+  const safeLines = lines.slice(0, safeLineCount);
+    const squareLineStep = square ? fontSize + 14 : lineGap;
+    const stackHeight = square ? safeLines.length * squareLineStep : safeLines.length * lineGap;
+    const startY = square
+      ? Math.round(spec.height * 0.3)
+      : Math.max(Math.round(spec.height * 0.18), Math.round((spec.height - stackHeight) / 2));
+    const frameX = square ? Math.round(spec.width * 0.13) : Math.round(spec.width * 0.08);
+    const frameWidth = square ? Math.round(spec.width * 0.74) : Math.round(spec.width * 0.84);
+    const frameY = square ? startY - 58 : startY - 28;
+    const frameHeight = square ? stackHeight + 196 : stackHeight + 84;
+  const centerX = Math.round((spec.width - blockWidth) / 2);
+    const elements: AnimatedElement[] = [
+      buildPanelElement({id: "kinetic-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: textColor, cornerRadius: square ? 42 : 36, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: square ? 0.06 : 0.04, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
+      buildPanelElement({id: "kinetic-rail", layer: "background", x: square ? frameX + Math.round((frameWidth - Math.round(frameWidth * 0.34)) / 2) : Math.round(spec.width * 0.06), y: square ? frameY + 20 : startY - 36, width: square ? Math.round(frameWidth * 0.34) : 10, height: square ? 8 : safeLines.length * lineGap + 84, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0, end: Math.min(0.48, duration * 0.24), property: "opacity", from: 0, to: design.ornamentOpacity, easing: "easeOut"}, {start: 0, end: Math.min(0.48, duration * 0.24), property: "scale", from: 0.2, to: 1, easing: "spring"}]}),
+    ];
 
-  lines.forEach((line, index) => {
-    const width = Math.min(blockWidth, Math.round(line.length * fontSize * 0.74) + 56);
-    const align = portrait ? "center" : index % 2 === 0 ? "left" : "right";
+    if (payload.iconType && square) {
+      const badgeSize = 104;
+      const badgeX = frameX + 28;
+      const badgeY = frameY + 30;
+      const badgeAnimations: AnimationKeyframe[] = [
+        {start: 0.04, end: Math.min(0.34, duration * 0.18), property: "opacity", from: 0, to: 0.12, easing: "easeOut"},
+        {start: 0.04, end: Math.min(0.34, duration * 0.18), property: "scale", from: 0.82, to: 1, easing: "spring"},
+      ];
+      elements.push(
+        buildPanelElement({
+          id: "kinetic-icon-badge",
+          layer: "background",
+          x: badgeX,
+          y: badgeY,
+          width: badgeSize,
+          height: badgeSize,
+          fill: accent,
+          cornerRadius: 28,
+          opacity: 0,
+          animations: badgeAnimations,
+        }),
+      );
+      elements.push(
+        buildIconElement(
+          "kinetic-icon",
+          payload.iconType,
+          badgeX + 28,
+          badgeY + 28,
+          48,
+          accent,
+          duration,
+        ),
+      );
+    }
+
+  safeLines.forEach((line, index) => {
+    const width = square
+      ? blockWidth
+      : Math.min(blockWidth, Math.round(line.length * fontSize * 0.74) + 56);
+    const align = portrait || square ? "center" : index % 2 === 0 ? "left" : "right";
     const x = align === "center"
-      ? Math.round((spec.width - width) / 2)
+      ? (square ? centerX : Math.round((spec.width - width) / 2))
       : align === "left"
         ? Math.round(spec.width * 0.1)
         : Math.max(Math.round(spec.width * 0.1), spec.width - width - Math.round(spec.width * 0.1));
-    const y = startY + index * lineGap;
-    const lineColor = index === 1 || index === lines.length - 1 ? accent : textColor;
-    const panelColor = index === 1 || index === lines.length - 1 ? accent : textColor;
-    const panelOpacity = index === 1 || index === lines.length - 1 ? 0.16 : 0.08;
+    const y = startY + index * (square ? squareLineStep : lineGap) + (square ? 10 : 0);
+    const lineColor = index === 1 || index === safeLines.length - 1 ? accent : textColor;
+    const panelColor = index === 1 || index === safeLines.length - 1 ? accent : textColor;
+    const panelOpacity = square ? (index === 1 || index === lines.length - 1 ? 0.12 : 0.06) : (index === 1 || index === lines.length - 1 ? 0.16 : 0.08);
     const start = 0.12 + index * (portrait ? 0.2 : 0.24);
     const end = Math.min(start + 0.64, duration * 0.82);
     const panelAnimations: AnimationKeyframe[] = [
@@ -619,13 +688,31 @@ const buildKineticElements = (payload: TextPayload, spec: CanvasSpec, accent: st
       1.016,
       "easeInOut",
     );
-    elements.push(buildPanelElement({id: `line-panel-${index}`, layer: "background", x: x - 18, y: y - 18, width: width + 36, height: fontSize + 34, fill: panelColor, cornerRadius: 30, opacity: 0, animations: panelAnimations}));
+    elements.push(buildPanelElement({id: `line-panel-${index}`, layer: "background", x: x - (square ? 12 : 18), y: y - (square ? 10 : 18), width: width + (square ? 24 : 36), height: fontSize + (square ? 20 : 34), fill: panelColor, cornerRadius: square ? 24 : 30, opacity: 0, animations: panelAnimations}));
     elements.push(buildTextElement({id: `line-text-${index}`, layer: "main", x, y, width, height: fontSize + 18, fill: lineColor, text: line.toUpperCase(), fontSize, fontWeight: 900, fontFamily, textAlign: align, letterSpacing: 1.1, lineHeight: 0.96, opacity: 0, animations: lineAnimations}));
   });
 
   if (payload.subheadline) {
-    const subLines = wrapText(payload.subheadline, spec.format === "portrait" ? 28 : 36, 2);
-    const subStart = Math.min(0.48 + lines.length * (portrait ? 0.18 : 0.22), duration * 0.62);
+    const subFit = fitTextBlock({
+      headline: payload.headline,
+      subheadline: payload.subheadline,
+        maxWidth: square ? Math.round(spec.width * 0.68) : Math.round(spec.width * 0.8),
+        maxHeight: square ? Math.round(spec.height * 0.2) : Math.round(spec.height * 0.22),
+      headlineChars: portrait ? 12 : 16,
+      maxHeadlineLines: safeLines.length,
+      subChars: portrait ? 28 : square ? 24 : 36,
+      maxSubLines: 2,
+      headlineDesired: fontSize,
+      headlineMin: fontSize,
+        subDesired: square ? 28 : 34,
+        subMin: square ? 22 : 22,
+      headlineWidthFactor: 0.82,
+      subWidthFactor: 0.6,
+      headlineLineHeight: 0.96,
+      subLineHeight: 1.16,
+    });
+    const subLines = subFit.subLines;
+    const subStart = Math.min(0.48 + safeLines.length * (portrait ? 0.18 : 0.22), duration * 0.62);
     const subEnd = Math.min(subStart + 0.9, duration * 0.88);
     const subAnimations: AnimationKeyframe[] = [
       {start: subStart, end: subEnd, property: "opacity", from: 0, to: 0.9, easing: "easeOut"},
@@ -641,8 +728,8 @@ const buildKineticElements = (payload: TextPayload, spec: CanvasSpec, accent: st
       -6,
       "easeInOut",
     );
-    elements.push(buildTextElement({id: "kinetic-subheadline", layer: "foreground", x: Math.round(spec.width * 0.1), y: startY + lines.length * lineGap + 34, width: Math.round(spec.width * 0.8), height: subLines.length * 36 * 1.16 + 20, fill: secondaryText, text: subLines.join("\n"), fontSize: 34, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1.16, opacity: 0, animations: subAnimations}));
-  }
+        elements.push(buildTextElement({id: "kinetic-subheadline", layer: "foreground", x: square ? frameX + 40 : Math.round(spec.width * 0.1), y: startY + stackHeight + (square ? 56 : 34), width: square ? frameWidth - 80 : Math.round(spec.width * 0.8), height: subLines.length * (subFit.subSize || 34) * 1.16 + 20, fill: secondaryText, text: subLines.join("\n"), fontSize: subFit.subSize || (square ? 28 : 34), fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1.16, opacity: 0, animations: subAnimations}));
+    }
 
   return elements;
 };
@@ -794,13 +881,34 @@ const buildMaskedRevealElements = (payload: TextPayload, spec: CanvasSpec, accen
   const secondaryText = getSecondaryTextColor(spec.background);
   const portrait = spec.format === "portrait";
   const landscape = spec.format === "landscape";
+  const design = resolveSceneDesignTokens(prompt, "editorial");
   const blockWidth = landscape ? Math.round(spec.width * 0.4) : portrait ? Math.round(spec.width * 0.66) : Math.round(spec.width * 0.56);
-  const headlineLines = wrapText(payload.headline, portrait ? 11 : 14, 3);
-  const subLines = payload.subheadline ? wrapText(payload.subheadline, portrait ? 18 : 26, portrait ? 3 : 2) : [];
-  const headlineSize = fitFontSize(headlineLines, blockWidth, portrait ? 70 : landscape ? 72 : 66, portrait ? 48 : landscape ? 52 : 46, 0.78, -2.4);
   const lineHeight = 0.9;
-  const headlineHeight = headlineLines.length * headlineSize * lineHeight + Math.round(headlineSize * 0.7);
-  const subFontSize = portrait ? 23 : 28;
+  const fit = fitTextBlock({
+    headline: payload.headline,
+    subheadline: payload.subheadline,
+    maxWidth: blockWidth,
+    maxHeight: portrait ? 408 : landscape ? 310 : 332,
+    headlineChars: portrait ? 11 : 14,
+    maxHeadlineLines: 3,
+    subChars: portrait ? 18 : 26,
+    maxSubLines: portrait ? 3 : 2,
+    headlineDesired: portrait ? 70 : landscape ? 72 : 66,
+    headlineMin: portrait ? 44 : 44,
+    subDesired: portrait ? 23 : 28,
+    subMin: 20,
+    headlineWidthFactor: 0.78,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2.4,
+    subLetterSpacing: -0.3,
+    headlineLineHeight: lineHeight,
+    subLineHeight: 1.16,
+  });
+  const headlineLines = fit.headlineLines;
+  const subLines = fit.subLines;
+  const headlineSize = fit.headlineSize;
+  const headlineHeight = fit.headlineHeight + Math.round(headlineSize * 0.44);
+  const subFontSize = fit.subSize || (portrait ? 23 : 28);
   const subLineHeight = 1.16;
   const subGap = Math.round(headlineSize * 0.7);
   const baseX = landscape ? 240 : portrait ? 140 : 172;
@@ -903,7 +1011,7 @@ const buildMaskedRevealElements = (payload: TextPayload, spec: CanvasSpec, accen
 
   const elements: AnimatedElement[] = [
     buildPanelElement({id: "masked-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: textColor, cornerRadius: 48, opacity: 0, animations: [{start: 0, end: Math.min(0.4, duration * 0.2), property: "opacity", from: 0, to: 0.075, easing: "easeOut"}, {start: 0, end: Math.min(0.4, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
-    {id: "masked-aura", type: "glow", layer: "background", x: stageX - 70, y: stageY - 54, width: stageWidth + 140, height: stageHeight + 110, fill: accent, glowColor: accent, glowStrength: 0.78, opacity: 0, animations: auraAnimations},
+    {id: "masked-aura", type: "glow", layer: "background", x: stageX - 70, y: stageY - 54, width: stageWidth + 140, height: stageHeight + 110, fill: accent, glowColor: accent, glowStrength: design.objectProminence === "dominant" ? 0.84 : 0.78, opacity: 0, animations: auraAnimations},
     buildPanelElement({id: "masked-stage", layer: "background", x: stageX, y: stageY, width: stageWidth, height: stageHeight, fill: accent, stroke: accent, strokeWidth: 2, cornerRadius: 38, opacity: 0, animations: [{start: 0.04, end: Math.min(0.44, duration * 0.2), property: "opacity", from: 0, to: 0.12, easing: "easeOut"}, {start: 0.04, end: Math.min(0.44, duration * 0.2), property: "scale", from: 0.88, to: 1, easing: "spring"}]}),
     buildPanelElement({id: "masked-rail", layer: "foreground", x: accentRailX, y: accentRailY, width: 12, height: accentRailHeight, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.06, end: Math.min(0.4, duration * 0.18), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.06, end: Math.min(0.4, duration * 0.18), property: "scale", from: 0.2, to: 1, easing: "spring"}]}),
     buildPanelElement({id: "masked-top-bar", layer: "foreground", x: baseX, y: baseY - 34, width: portrait ? 116 : 132, height: 8, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.04, end: Math.min(0.34, duration * 0.18), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.04, end: Math.min(0.34, duration * 0.18), property: "scale", from: 0.35, to: 1, easing: "spring"}]}),
@@ -942,29 +1050,158 @@ const buildChapterElements = (payload: TextPayload, spec: CanvasSpec, accent: st
   const fontFamily = pickFontFamily(prompt);
   const secondaryText = getSecondaryTextColor(spec.background);
   const portrait = spec.format === "portrait";
-  const numeralSize = portrait ? 116 : spec.format === "landscape" ? 150 : 164;
+  const square = spec.format === "square";
+  const design = resolveSceneDesignTokens(prompt, "editorial");
+
+  if (square) {
+    const blockWidth = Math.round(spec.width * 0.48);
+    const fit = fitTextBlock({
+      headline: payload.headline,
+      subheadline: payload.subheadline,
+      maxWidth: blockWidth,
+      maxHeight: Math.round(spec.height * 0.18),
+      headlineChars: 11,
+      maxHeadlineLines: 2,
+      subChars: 22,
+      maxSubLines: 2,
+      headlineDesired: 42,
+      headlineMin: 34,
+      subDesired: 18,
+      subMin: 16,
+      headlineWidthFactor: 0.68,
+      subWidthFactor: 0.54,
+      headlineLetterSpacing: -1.8,
+      subLetterSpacing: -0.3,
+      headlineLineHeight: 1.06,
+      subLineHeight: 1.18,
+    });
+    const headlineLines = fit.headlineLines;
+    const subLines = fit.subLines;
+    const headlineSize = fit.headlineSize;
+    const subFontSize = fit.subSize || 28;
+    const headlineLineHeight = 1.06;
+    const subLineHeight = 1.18;
+    const sectionNumber = payload.sectionNumber ?? "01";
+    const frameWidth = Math.round(spec.width * 0.68);
+    const frameX = Math.round((spec.width - frameWidth) / 2);
+    const frameY = Math.round(spec.height * 0.24);
+    const headlineHeight = headlineLines.length * headlineSize * headlineLineHeight + Math.round(headlineSize * 0.3);
+    const subHeight = subLines.length > 0 ? subLines.length * subFontSize * subLineHeight + 14 : 0;
+    const frameHeight = headlineHeight + subHeight + 236;
+    const kickerWidth = Math.min(196, Math.max(136, (payload.kicker ?? "Next Story").length * 10 + 44));
+    const baseX = Math.round((spec.width - blockWidth) / 2);
+    const kickerY = frameY + 46;
+    const dividerY = kickerY + 40;
+    const headlineY = dividerY + 54;
+    const subY = headlineY + headlineHeight + 56;
+    const numberSize = 146;
+    const numberX = Math.round((spec.width - numberSize) / 2);
+    const numberY = Math.round(spec.height * 0.12);
+
+    const chapterNumberAnimations: AnimationKeyframe[] = [
+      {start: 0, end: Math.min(0.5, duration * 0.22), property: "opacity", from: 0, to: Math.max(0.12, design.ornamentOpacity), easing: "easeOut"},
+      {start: 0, end: Math.min(0.5, duration * 0.22), property: "scale", from: 0.82, to: 1, easing: "spring"},
+    ];
+    appendMirrorAnimation(
+      chapterNumberAnimations,
+      "translateY",
+      Math.min(1.18, duration * 0.3),
+      Math.min(2.08, duration * 0.48),
+      Math.min(duration - 0.18, 3.24),
+      0,
+      -12,
+      "easeInOut",
+    );
+
+    const chapterHeadlineAnimations: AnimationKeyframe[] = [
+      {start: 0.12, end: Math.min(0.88, duration * 0.38), property: "opacity", from: 0, to: 1, easing: "easeOut"},
+      {start: 0.12, end: Math.min(0.88, duration * 0.38), property: "translateY", from: 28, to: 0, easing: "spring"},
+      {start: 0.12, end: Math.min(0.88, duration * 0.38), property: "scale", from: 0.96, to: 1, easing: "easeOut"},
+    ];
+    appendMirrorAnimation(
+      chapterHeadlineAnimations,
+      "translateY",
+      Math.min(1.42, duration * 0.34),
+      Math.min(2.28, duration * 0.54),
+      Math.min(duration - 0.16, 3.26),
+      0,
+      -8,
+      "easeInOut",
+    );
+
+    const elements: AnimatedElement[] = [
+      buildTextElement({id: "chapter-number", layer: "background", x: numberX, y: numberY, width: numberSize, height: numberSize, fill: accent, text: sectionNumber, fontSize: numberSize, fontWeight: 900, fontFamily: "'Arial Black', 'Segoe UI', sans-serif", textAlign: "center", letterSpacing: -6, lineHeight: 0.88, opacity: 0, animations: chapterNumberAnimations}),
+      buildPanelElement({id: "chapter-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: textColor, cornerRadius: 40, opacity: 0, animations: [{start: 0.06, end: Math.min(0.46, duration * 0.22), property: "opacity", from: 0, to: 0.055, easing: "easeOut"}, {start: 0.06, end: Math.min(0.46, duration * 0.22), property: "scale", from: 0.95, to: 1, easing: "spring"}]}),
+      buildTextElement({id: "chapter-kicker", layer: "foreground", x: frameX, y: kickerY, width: frameWidth, height: 24, fill: accent, text: (payload.kicker ?? "Next Story").toUpperCase(), fontSize: 22, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: 2, lineHeight: 1, opacity: 0, animations: [{start: 0.02, end: Math.min(0.3, duration * 0.15), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.02, end: Math.min(0.3, duration * 0.15), property: "translateY", from: 14, to: 0, easing: "easeOut"}]}),
+      buildPanelElement({id: "chapter-divider", layer: "foreground", x: Math.round((spec.width - kickerWidth) / 2), y: dividerY, width: kickerWidth, height: 6, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.08, end: Math.min(0.36, duration * 0.18), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0.08, end: Math.min(0.36, duration * 0.18), property: "scale", from: 0.4, to: 1, easing: "spring"}]}),
+      buildTextElement({id: "chapter-headline", layer: "main", x: baseX, y: headlineY, width: blockWidth, height: headlineHeight, fill: textColor, text: headlineLines.join("\n"), fontSize: headlineSize, fontWeight: 900, fontFamily, textAlign: "center", letterSpacing: -2, lineHeight: headlineLineHeight, opacity: 0, animations: chapterHeadlineAnimations}),
+    ];
+
+    if (subLines.length > 0) {
+      const chapterSubAnimations: AnimationKeyframe[] = [
+        {start: 0.28, end: Math.min(1.16, duration * 0.52), property: "opacity", from: 0, to: 0.92, easing: "easeOut"},
+        {start: 0.28, end: Math.min(1.16, duration * 0.52), property: "translateY", from: 18, to: 0, easing: "easeOut"},
+      ];
+      appendMirrorAnimation(
+        chapterSubAnimations,
+        "translateY",
+        Math.min(1.7, duration * 0.4),
+        Math.min(2.52, duration * 0.6),
+        Math.min(duration - 0.1, 3.46),
+        0,
+        -6,
+        "easeInOut",
+      );
+      elements.push(buildTextElement({id: "chapter-subheadline", layer: "foreground", x: baseX, y: subY, width: blockWidth, height: subHeight, fill: secondaryText, text: subLines.join("\n"), fontSize: subFontSize, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "center", letterSpacing: -0.3, lineHeight: subLineHeight, opacity: 0, animations: chapterSubAnimations}));
+      elements.push(buildPanelElement({id: "chapter-bottom-line", layer: "foreground", x: Math.round((spec.width - 152) / 2), y: subY + subHeight + 28, width: 152, height: 5, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.34, end: Math.min(1.22, duration * 0.56), property: "opacity", from: 0, to: 0.85, easing: "easeOut"}, {start: 0.34, end: Math.min(1.22, duration * 0.56), property: "scale", from: 0.42, to: 1, easing: "spring"}]}));
+    }
+
+    return elements;
+  }
+
+  const numeralSize = portrait ? 116 : spec.format === "landscape" ? 150 : square ? 180 : 164;
   const leftColumnX = portrait ? 40 : spec.format === "landscape" ? Math.round(spec.width * 0.1) : Math.round(spec.width * 0.12);
   const leftColumnWidth = portrait ? numeralSize : numeralSize + 48;
-  const baseX = portrait ? 52 : leftColumnX + leftColumnWidth + (spec.format === "landscape" ? 48 : 36);
-  const blockWidth = portrait ? spec.width - 104 : spec.format === "landscape" ? Math.round(spec.width * 0.34) : Math.round(spec.width * 0.4);
-  const headlineLines = wrapText(payload.headline, spec.format === "portrait" ? 12 : 15, 3);
-  const subLines = payload.subheadline ? wrapText(payload.subheadline, spec.format === "portrait" ? 24 : 30, 2) : [];
-  const headlineSize = fitFontSize(headlineLines, blockWidth, portrait ? 54 : spec.format === "landscape" ? 64 : 62, portrait ? 40 : spec.format === "landscape" ? 40 : 40, 0.72, -2);
-  const subFontSize = portrait ? 26 : 32;
+  const baseX = portrait ? 52 : square ? Math.round(spec.width * 0.16) : leftColumnX + leftColumnWidth + (spec.format === "landscape" ? 48 : 36);
+  const blockWidth = portrait ? spec.width - 104 : spec.format === "landscape" ? Math.round(spec.width * 0.34) : square ? Math.round(spec.width * 0.68) : Math.round(spec.width * 0.4);
+  const fit = fitTextBlock({
+    headline: payload.headline,
+    subheadline: payload.subheadline,
+    maxWidth: blockWidth,
+    maxHeight: portrait ? 368 : square ? 360 : 280,
+    headlineChars: portrait ? 12 : square ? 14 : 15,
+    maxHeadlineLines: 3,
+    subChars: portrait ? 24 : square ? 28 : 30,
+    maxSubLines: square ? 3 : 2,
+    headlineDesired: portrait ? 54 : spec.format === "landscape" ? 64 : square ? 74 : 62,
+    headlineMin: square ? 44 : 36,
+    subDesired: portrait ? 26 : square ? 30 : 32,
+    subMin: square ? 22 : 22,
+    headlineWidthFactor: 0.72,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.3,
+    headlineLineHeight: 0.94,
+    subLineHeight: 1.14,
+  });
+  const headlineLines = fit.headlineLines;
+  const subLines = fit.subLines;
+  const headlineSize = fit.headlineSize;
+  const subFontSize = fit.subSize || (portrait ? 26 : 32);
   const subLineHeight = 1.14;
   const headlineLineHeight = 0.94;
-  const baseY = portrait ? 236 : spec.format === "landscape" ? Math.round(spec.height * 0.28) : Math.round(spec.height * 0.33);
-  const numeralX = leftColumnX;
-  const numeralY = portrait ? 104 : baseY + 20;
-  const subGap = portrait ? 52 : 34;
-  const frameHeight = headlineLines.length * headlineSize * headlineLineHeight + (subLines.length > 0 ? subLines.length * subFontSize * subLineHeight + subGap + (portrait ? 128 : 130) : portrait ? 120 : 136);
-  const frameX = portrait ? 28 : baseX - 36;
-  const frameY = portrait ? baseY - 58 : baseY - 44;
-  const frameWidth = portrait ? spec.width - 56 : Math.max(blockWidth + 84, spec.format === "landscape" ? 520 : 560);
+  const baseY = portrait ? 236 : spec.format === "landscape" ? Math.round(spec.height * 0.28) : square ? Math.round(spec.height * 0.34) : Math.round(spec.height * 0.33);
+  const numeralX = square ? Math.round((spec.width - numeralSize) / 2) : leftColumnX;
+  const numeralY = portrait ? 104 : square ? Math.round(spec.height * 0.14) : baseY + 20;
+  const subGap = portrait ? 52 : square ? 44 : 34;
+  const frameHeight = headlineLines.length * headlineSize * headlineLineHeight + (subLines.length > 0 ? subLines.length * subFontSize * subLineHeight + subGap + (portrait ? 128 : square ? 144 : 130) : portrait ? 120 : square ? 132 : 136);
+  const frameX = portrait ? 28 : square ? Math.round(spec.width * 0.1) : baseX - 36;
+  const frameY = portrait ? baseY - 58 : square ? Math.round(spec.height * 0.24) : baseY - 44;
+  const frameWidth = portrait ? spec.width - 56 : square ? Math.round(spec.width * 0.8) : Math.max(blockWidth + 84, spec.format === "landscape" ? 520 : 560);
   const sectionNumber = payload.sectionNumber ?? "01";
 
   const chapterNumberAnimations: AnimationKeyframe[] = [
-    {start: 0, end: Math.min(0.5, duration * 0.22), property: "opacity", from: 0, to: portrait ? 0.09 : 0.12, easing: "easeOut"},
+    {start: 0, end: Math.min(0.5, duration * 0.22), property: "opacity", from: 0, to: portrait ? Math.max(0.09, design.ornamentOpacity - 0.02) : Math.max(0.12, design.ornamentOpacity), easing: "easeOut"},
     {start: 0, end: Math.min(0.5, duration * 0.22), property: "scale", from: 0.82, to: 1, easing: "spring"},
   ];
   appendMirrorAnimation(
@@ -995,11 +1232,11 @@ const buildChapterElements = (payload: TextPayload, spec: CanvasSpec, accent: st
   );
 
   const elements: AnimatedElement[] = [
-    buildTextElement({id: "chapter-number", layer: "background", x: numeralX, y: numeralY, width: numeralSize, height: numeralSize, fill: accent, text: sectionNumber, fontSize: numeralSize, fontWeight: 900, fontFamily: "'Arial Black', 'Segoe UI', sans-serif", textAlign: "left", letterSpacing: -6, lineHeight: 0.88, opacity: 0, animations: chapterNumberAnimations}),
+    buildTextElement({id: "chapter-number", layer: "background", x: numeralX, y: numeralY, width: numeralSize, height: numeralSize, fill: accent, text: sectionNumber, fontSize: numeralSize, fontWeight: 900, fontFamily: "'Arial Black', 'Segoe UI', sans-serif", textAlign: square ? "center" : "left", letterSpacing: -6, lineHeight: 0.88, opacity: 0, animations: chapterNumberAnimations}),
     buildPanelElement({id: "chapter-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: textColor, cornerRadius: 44, opacity: 0, animations: [{start: 0.06, end: Math.min(0.46, duration * 0.22), property: "opacity", from: 0, to: 0.06, easing: "easeOut"}, {start: 0.06, end: Math.min(0.46, duration * 0.22), property: "scale", from: 0.95, to: 1, easing: "spring"}]}),
-    buildPanelElement({id: "chapter-divider", layer: "foreground", x: baseX, y: baseY - 18, width: Math.min(192, Math.max(128, (payload.kicker ?? "").length * 10 + 48)), height: 6, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.08, end: Math.min(0.36, duration * 0.18), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0.08, end: Math.min(0.36, duration * 0.18), property: "scale", from: 0.4, to: 1, easing: "spring"}]}),
-    buildTextElement({id: "chapter-kicker", layer: "foreground", x: baseX, y: baseY - 56, width: blockWidth, height: 24, fill: accent, text: (payload.kicker ?? "Next Story").toUpperCase(), fontSize: 22, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: 2, lineHeight: 1, opacity: 0, animations: [{start: 0.02, end: Math.min(0.3, duration * 0.15), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.02, end: Math.min(0.3, duration * 0.15), property: "translateY", from: 14, to: 0, easing: "easeOut"}]}),
-    buildTextElement({id: "chapter-headline", layer: "main", x: baseX, y: baseY, width: blockWidth, height: headlineLines.length * headlineSize * headlineLineHeight + Math.round(headlineSize * 0.55), fill: textColor, text: headlineLines.join("\n"), fontSize: headlineSize, fontWeight: 900, fontFamily, textAlign: "left", letterSpacing: -2, lineHeight: headlineLineHeight, opacity: 0, animations: chapterHeadlineAnimations}),
+    buildPanelElement({id: "chapter-divider", layer: "foreground", x: square ? frameX + Math.round((frameWidth - Math.min(192, Math.max(128, (payload.kicker ?? "").length * 10 + 48))) / 2) : baseX, y: baseY - 18, width: Math.min(192, Math.max(128, (payload.kicker ?? "").length * 10 + 48)), height: 6, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.08, end: Math.min(0.36, duration * 0.18), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0.08, end: Math.min(0.36, duration * 0.18), property: "scale", from: 0.4, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "chapter-kicker", layer: "foreground", x: baseX, y: baseY - 56, width: blockWidth, height: 24, fill: accent, text: (payload.kicker ?? "Next Story").toUpperCase(), fontSize: 22, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: square ? "center" : "left", letterSpacing: 2, lineHeight: 1, opacity: 0, animations: [{start: 0.02, end: Math.min(0.3, duration * 0.15), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.02, end: Math.min(0.3, duration * 0.15), property: "translateY", from: 14, to: 0, easing: "easeOut"}]}),
+    buildTextElement({id: "chapter-headline", layer: "main", x: baseX, y: baseY, width: blockWidth, height: headlineLines.length * headlineSize * headlineLineHeight + Math.round(headlineSize * 0.55), fill: textColor, text: headlineLines.join("\n"), fontSize: headlineSize, fontWeight: 900, fontFamily, textAlign: square ? "center" : "left", letterSpacing: -2, lineHeight: headlineLineHeight, opacity: 0, animations: chapterHeadlineAnimations}),
   ];
 
   if (subLines.length > 0) {
@@ -1018,9 +1255,9 @@ const buildChapterElements = (payload: TextPayload, spec: CanvasSpec, accent: st
       -6,
       "easeInOut",
     );
-    elements.push(buildTextElement({id: "chapter-subheadline", layer: "foreground", x: baseX, y: subY, width: blockWidth, height: subLines.length * subFontSize * subLineHeight + 18, fill: secondaryText, text: subLines.join("\n"), fontSize: subFontSize, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.3, lineHeight: subLineHeight, opacity: 0, animations: chapterSubAnimations}));
-    elements.push(buildPanelElement({id: "chapter-bottom-line", layer: "foreground", x: baseX, y: subY + subLines.length * subFontSize * subLineHeight + 18, width: 168, height: 5, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.34, end: Math.min(1.22, duration * 0.56), property: "opacity", from: 0, to: 0.85, easing: "easeOut"}, {start: 0.34, end: Math.min(1.22, duration * 0.56), property: "scale", from: 0.42, to: 1, easing: "spring"}]}));
-  }
+      elements.push(buildTextElement({id: "chapter-subheadline", layer: "foreground", x: baseX, y: subY, width: blockWidth, height: subLines.length * subFontSize * subLineHeight + 18, fill: secondaryText, text: subLines.join("\n"), fontSize: subFontSize, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: square ? "center" : "left", letterSpacing: -0.3, lineHeight: subLineHeight, opacity: 0, animations: chapterSubAnimations}));
+      elements.push(buildPanelElement({id: "chapter-bottom-line", layer: "foreground", x: square ? frameX + Math.round((frameWidth - 168) / 2) : baseX, y: subY + subLines.length * subFontSize * subLineHeight + 18, width: 168, height: 5, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.34, end: Math.min(1.22, duration * 0.56), property: "opacity", from: 0, to: 0.85, easing: "easeOut"}, {start: 0.34, end: Math.min(1.22, duration * 0.56), property: "scale", from: 0.42, to: 1, easing: "spring"}]}));
+    }
 
   return elements;
 };

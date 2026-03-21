@@ -1,5 +1,5 @@
 import type {PromptRequest} from "../engine/request";
 
 export const GENERATED_REQUEST: PromptRequest = {
-  "prompt": "search icon query loading\nheadline: Find The Right Match\nsubheadline: A stronger SVG search scene with query input and result rows"
+  "prompt": "download save stack\nvariant: save stack\nheadline: Archive Ready\nsubheadline: A stacked save-state scene with handoff status, archive confidence, and cleaner utility rhythm"
 };

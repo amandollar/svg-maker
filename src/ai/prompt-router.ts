@@ -309,7 +309,8 @@ export const routePromptToType = (request: PromptRequest): PromptRoute => {
 
   const explicitTextStructure = hasExplicitTextStructure(request.prompt);
   const hasQuotedCopy = hasQuotedText(request.prompt);
-  const strongTextCue = explicitTextStructure || hasQuotedCopy || isStrongTextCue(normalized);
+  const namedTextCue = isStrongTextCue(normalized);
+  const strongTextCue = explicitTextStructure || hasQuotedCopy || namedTextCue;
   const mixedSceneCue = hasMixedSceneCue(normalized);
   const textScore = scoreIntent(normalized, tokens, TEXT_INTENT) + (hasQuotedCopy ? 2 : 0) + (explicitTextStructure ? 3 : 0);
   scores.text = textScore;
@@ -324,6 +325,12 @@ export const routePromptToType = (request: PromptRequest): PromptRoute => {
     .sort((a, b) => b.score - a.score);
   const iconMatch = iconScores[0]?.icon;
   const sceneLikePrompt = mixedSceneCue || Boolean(iconMatch && best.type !== "text");
+
+  // Explicit text-template prompts should not get stolen by icon matches like "lock" or "search".
+  if (namedTextCue && textScore >= Math.max(4, best.score)) {
+    const confidence = clamp01(0.58 + textScore / 12);
+    return {type: "text", confidence, scores};
+  }
 
   if (best.score >= 4) {
     if (strongTextCue && textScore >= 5 && (!sceneLikePrompt || best.type === "text")) {

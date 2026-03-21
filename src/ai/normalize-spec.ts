@@ -1793,8 +1793,10 @@ const normalizeElementForType = (
 ): AnimatedElement => {
   const effectiveType = element.type ?? promptType;
   const defaultSize = getDefaultSize(effectiveType, format);
-  const normalizedWidth = Math.max(element.width || defaultSize, defaultSize);
-  const normalizedHeight = Math.max(element.height || defaultSize, defaultSize);
+  const normalizedWidth =
+    typeof element.width === "number" && element.width > 0 ? element.width : defaultSize;
+  const normalizedHeight =
+    typeof element.height === "number" && element.height > 0 ? element.height : defaultSize;
   const {offsetX, offsetY} = getOpticalOffsets(effectiveType);
   const layer = element.layer ?? inferDefaultLayerForType(effectiveType);
 

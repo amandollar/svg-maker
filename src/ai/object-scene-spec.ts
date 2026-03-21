@@ -9,9 +9,19 @@ import {
   parseCanvasFormat,
   parseDuration,
 } from "./prompt-helpers";
+import {
+  ensureSurfaceContrast,
+  ensureTextContrast,
+  fitTextBlock,
+  resolveSceneDesignTokens,
+  type SceneDesignTokens,
+} from "./scene-design";
 
 type CanvasSpec = {format: "square" | "portrait" | "landscape"; width: number; height: number; background: string};
 type SceneVariant = "icon-lockup" | "media-card" | "dashboard-card" | "device-card";
+type SearchCompositionVariant = "search-card" | "search-spotlight" | "search-dashboard";
+type CartCompositionVariant = "cart-card" | "cart-spotlight" | "cart-checkout-stack";
+type DownloadCompositionVariant = "download-card" | "download-spotlight" | "download-save-stack";
 type SceneLookId = "romantic" | "cinematic" | "product" | "dashboard" | "editorial" | "neon";
 type SceneStyle = {
   look: SceneLookId;
@@ -24,6 +34,7 @@ type SceneStyle = {
   elevated: string;
   track: string;
   edge: string;
+  design: SceneDesignTokens;
 };
 type ScenePayload = {
   headline?: string;
@@ -132,14 +143,16 @@ const resolveSceneStyle = (prompt: string, type: ShapeType, variant: SceneVarian
   const defaults = getLookDefaults(look, type);
   const background = parseBackgroundColor(prompt) ?? defaults.background;
   const accent = parseAccentColor(prompt) ?? defaults.accent;
-  const text = getReadableTextColor(background);
-  const secondary = getSecondaryTextColor(background);
-  const frame = mixHex(background, text, text === "#111827" ? 0.08 : 0.12);
-  const surface = mixHex(background, accent, look === "product" ? 0.16 : look === "editorial" ? 0.2 : 0.24);
-  const elevated = mixHex(background, accent, look === "dashboard" ? 0.32 : 0.38);
-  const track = mixHex(frame, text, text === "#111827" ? 0.42 : 0.24);
-  const edge = mixHex(accent, text, text === "#111827" ? 0.24 : 0.1);
-  return {look, background, accent, text, secondary, frame, surface, elevated, track, edge};
+  const preferredLook = look === "romantic" ? "romantic" : look === "dashboard" ? "dashboard" : look === "editorial" ? "editorial" : "product";
+  const design = resolveSceneDesignTokens(prompt, preferredLook);
+  const text = ensureTextContrast(background, getReadableTextColor(background), design.minContrast);
+  const secondary = ensureTextContrast(background, getSecondaryTextColor(background), Math.max(3, design.minContrast - 1.1));
+  const frame = ensureSurfaceContrast(background, mixHex(background, text, design.frameMix), accent, 1.08);
+  const surface = ensureSurfaceContrast(background, mixHex(background, accent, design.surfaceMix), accent, 1.12);
+  const elevated = ensureSurfaceContrast(background, mixHex(background, accent, design.elevatedMix), accent, 1.16);
+  const track = ensureSurfaceContrast(background, mixHex(frame, text, design.trackMix), accent, 1.1);
+  const edge = ensureTextContrast(surface, mixHex(accent, text, design.edgeMix), 2.4);
+  return {look, background, accent, text, secondary, frame, surface, elevated, track, edge, design};
 };
 
 const cleanCopy = (value: string) => value.replace(/^["'`\u2018\u2019\u201c\u201d]+|["'`\u2018\u2019\u201c\u201d]+$/g, "").replace(/\s+/g, " ").trim();
@@ -514,6 +527,18 @@ const buildIconElement = (id: string, iconType: ShapeType, x: number, y: number,
   };
 };
 
+const buildSearchIconElement = (
+  id: string,
+  x: number,
+  y: number,
+  size: number,
+  accent: string,
+  duration: number,
+): AnimatedElement => ({
+  ...buildIconElement(id, "search", x, y, size, accent, duration),
+  strokeWidth: size >= 180 ? 4 : 3.5,
+});
+
 const buildHeartSceneElements = (
   payload: ScenePayload,
   canvas: CanvasSpec,
@@ -521,7 +546,7 @@ const buildHeartSceneElements = (
   duration: number,
   prompt: string,
 ): AnimatedElement[] => {
-  const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated} = sceneStyle;
+  const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated, design} = sceneStyle;
   const fontFamily = pickFontFamily(prompt);
   const portrait = canvas.format === "portrait";
   const square = canvas.format === "square";
@@ -541,10 +566,30 @@ const buildHeartSceneElements = (
   const textY = stacked ? (square ? stageY + stageHeight + 92 : stageY + stageHeight + 70) : frameY + 198;
   const textWidth = stacked ? (square ? frameWidth - 224 : stageWidth) : frameWidth - (textX - frameX) - 74;
   const textAlign = square ? "center" : "left";
-  const headlineLines = wrapText(payload.headline ?? "I love you", portrait ? 12 : 14, 2);
-  const headlineSize = fitFontSize(headlineLines, textWidth, portrait ? 82 : square ? 78 : 92, portrait ? 54 : square ? 54 : 60, 0.76, -2.2);
-  const headlineHeight = headlineLines.length * headlineSize * 0.92 + 24;
-  const subLines = payload.subheadline ? wrapText(payload.subheadline, portrait ? 22 : 24, stacked ? 3 : 4) : [];
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "I love you",
+    subheadline: payload.subheadline,
+    maxWidth: textWidth,
+    maxHeight: portrait ? 320 : square ? 274 : 286,
+    headlineChars: portrait ? 12 : 14,
+    maxHeadlineLines: 2,
+    subChars: portrait ? 22 : 24,
+    maxSubLines: stacked ? 3 : 4,
+    headlineDesired: portrait ? 82 : square ? 78 : 92,
+    headlineMin: portrait ? 48 : 52,
+    subDesired: portrait ? 24 : 26,
+    subMin: 20,
+    headlineWidthFactor: 0.76,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2.2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.16,
+  });
+  const headlineLines = fit.headlineLines;
+  const headlineSize = fit.headlineSize;
+  const headlineHeight = fit.headlineHeight;
+  const subLines = fit.subLines;
   const subY = textY + headlineHeight + 28;
   const chipY = portrait ? frameY + frameHeight - 122 : square ? frameY + frameHeight - 112 : frameY + frameHeight - 104;
   const notePanelX = square ? frameX + 48 : textX - 20;
@@ -570,7 +615,7 @@ const buildHeartSceneElements = (
     buildPanelElement({id: "heart-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 56, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
     buildPanelElement({id: "heart-stage", layer: "background", x: stageX, y: stageY, width: stageWidth, height: stageHeight, fill: surface, cornerRadius: 46, opacity: 0, animations: [{start: 0.04, end: Math.min(0.5, duration * 0.22), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.04, end: Math.min(0.5, duration * 0.22), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
     buildPanelElement({id: "heart-stage-inset", layer: "background", x: stageInsetX, y: stageInsetY, width: stageInsetWidth, height: stageInsetHeight, fill: mixHex(surface, "#FFFFFF", 0.14), cornerRadius: 38, opacity: 0, animations: [{start: 0.06, end: Math.min(0.54, duration * 0.24), property: "opacity", from: 0, to: 0.42, easing: "easeOut"}]}),
-    buildPanelElement({id: "heart-stage-sheen", layer: "background", x: stageX + 24, y: stageY + 24, width: stageWidth - 48, height: square ? 86 : 72, fill: mixHex(accent, "#FFFFFF", 0.72), cornerRadius: 999, opacity: 0, animations: [{start: 0.1, end: Math.min(0.58, duration * 0.26), property: "opacity", from: 0, to: 0.08, easing: "easeOut"}, {start: 0.1, end: Math.min(0.58, duration * 0.26), property: "scale", from: 0.84, to: 1, easing: "easeOut"}]}),
+    buildPanelElement({id: "heart-stage-sheen", layer: "background", x: stageX + 24, y: stageY + 24, width: stageWidth - 48, height: square ? 86 : 72, fill: mixHex(accent, "#FFFFFF", 0.72), cornerRadius: 999, opacity: 0, animations: [{start: 0.1, end: Math.min(0.58, duration * 0.26), property: "opacity", from: 0, to: Math.max(0.08, design.ornamentOpacity * 0.75), easing: "easeOut"}, {start: 0.1, end: Math.min(0.58, duration * 0.26), property: "scale", from: 0.84, to: 1, easing: "easeOut"}]}),
     buildPanelElement({id: "heart-stage-ribbon", layer: "background", x: stageRibbonX, y: stageY + stageHeight - (square ? 46 : 40), width: stageRibbonWidth, height: 10, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.16, end: Math.min(0.74, duration * 0.32), property: "opacity", from: 0, to: 0.54, easing: "easeOut"}, {start: 0.16, end: Math.min(0.74, duration * 0.32), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
     ...[0, 1, 2, 3].map((index) =>
       buildPanelElement({
@@ -1013,7 +1058,7 @@ const buildPhoneSceneElements = (
   ];
 };
 
-const buildSearchSceneElements = (
+const buildSearchCardSceneElements = (
   payload: ScenePayload,
   canvas: CanvasSpec,
   sceneStyle: SceneStyle,
@@ -1079,8 +1124,9 @@ const buildSearchSceneElements = (
       buildPanelElement({id: `search-chrome-dot-${index}`, layer: "background", x: searchBarX + 24 + index * 30, y: searchBarY - 4, width: 12, height: 12, fill: index === 0 ? accent : edge, cornerRadius: 999, opacity: 0, animations: [{start: 0.08 + index * 0.03, end: Math.min(0.56 + index * 0.02, duration * 0.24), property: "opacity", from: 0, to: index === 0 ? 0.84 : 0.5, easing: "easeOut"}, {start: 0.08 + index * 0.03, end: Math.min(0.56 + index * 0.02, duration * 0.24), property: "scale", from: 0.5, to: 1, easing: "spring"}]})
     ),
     buildPanelElement({id: "search-bar", layer: "foreground", x: searchBarX, y: searchBarY, width: searchBarWidth, height: portrait ? 92 : square ? 94 : 102, fill: square ? surface : elevated, stroke: square ? edge : undefined, strokeWidth: square ? 2 : undefined, cornerRadius: 999, opacity: 0, animations: [{start: 0.04, end: Math.min(0.46, duration * 0.22), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.04, end: Math.min(0.46, duration * 0.22), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
-    {id: "search-glow", type: "glow", layer: "background", x: searchBarX - 60, y: searchBarY - 44, width: 220, height: 220, fill: accent, glowColor: accent, glowStrength: 0.7, opacity: 0, animations: [{start: 0.06, end: Math.min(0.56, duration * 0.24), property: "opacity", from: 0, to: 0.1, easing: "easeOut"}]},
-    buildIconElement("search-icon", "search", searchBarX + 18, searchBarY + (portrait ? 10 : 12), searchIconSize, accent, duration),
+    {id: "search-glow", type: "glow", layer: "background", x: searchBarX - 36, y: searchBarY - 18, width: 166, height: 166, fill: accent, glowColor: accent, glowStrength: 0.58, opacity: 0, animations: [{start: 0.06, end: Math.min(0.56, duration * 0.24), property: "opacity", from: 0, to: 0.07, easing: "easeOut"}]},
+    buildPanelElement({id: "search-icon-badge", layer: "foreground", x: searchBarX + 18, y: searchBarY + 16, width: square ? 60 : 56, height: square ? 60 : 56, fill: surface, cornerRadius: 18, opacity: 0, animations: [{start: 0.08, end: Math.min(0.52, duration * 0.22), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.08, end: Math.min(0.52, duration * 0.22), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildSearchIconElement("search-icon", searchBarX + (square ? 30 : 28), searchBarY + (square ? 28 : 26), square ? 36 : 32, accent, duration),
     buildTextElement({id: "search-query", layer: "main", x: searchTextX, y: searchTextY, width: searchTextWidth, height: queryHeight, fill: textColor, text: queryLines.join("\n"), fontSize: portrait ? 36 : square ? 38 : 42, fontWeight: 900, fontFamily, textAlign: "left", letterSpacing: -1.1, lineHeight: 1.02, opacity: 0, animations: [{start: 0.12, end: Math.min(0.78, duration * 0.34), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.12, end: Math.min(0.78, duration * 0.34), property: "translateY", from: 12, to: 0, easing: "easeOut"}]}),
     buildPanelElement({id: "search-caret", layer: "foreground", x: searchCaretX, y: searchBarY + 24, width: 6, height: square ? 38 : 34, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.18, end: Math.min(0.82, duration * 0.36), property: "opacity", from: 0, to: 0.72, easing: "easeOut"}]}),
     ...["Fast match", "UI cues", "Ranked"].map((label, index) =>
@@ -1114,7 +1160,101 @@ const buildSearchSceneElements = (
   ];
 };
 
-const buildCartSceneElements = (
+const pickSearchCompositionVariant = (prompt: string): SearchCompositionVariant => {
+  const labeled = parseLabeledValue(prompt, ["scene variant", "composition variant", "search variant", "variant"]);
+  const normalizedLabel = labeled ? normalizePrompt(labeled) : "";
+  if (includesAny(normalizedLabel, ["spotlight"])) return "search-spotlight";
+  if (includesAny(normalizedLabel, ["dashboard"])) return "search-dashboard";
+  if (includesAny(normalizedLabel, ["card"])) return "search-card";
+
+  const normalized = normalizePrompt(prompt);
+  if (includesAny(normalized, ["dashboard", "score", "metrics", "ranked", "analytics", "inspector"])) return "search-dashboard";
+  if (includesAny(normalized, ["spotlight", "discover", "focus", "hero", "match"])) return "search-spotlight";
+  return "search-card";
+};
+
+const buildSearchSpotlightSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated, edge, track, design} = sceneStyle;
+  const fontFamily = pickFontFamily(prompt);
+  const portrait = canvas.format === "portrait";
+  const square = canvas.format === "square";
+  const frameX = portrait ? 86 : 92;
+  const frameY = portrait ? 260 : square ? 134 : 160;
+  const frameWidth = portrait ? canvas.width - 172 : canvas.width - 184;
+  const frameHeight = portrait ? 1100 : square ? 864 : 756;
+  const stageSize = portrait ? frameWidth - 128 : square ? 324 : 400;
+  const stageX = portrait ? frameX + 64 : square ? frameX + Math.round((frameWidth - stageSize) / 2) : frameX + 82;
+  const stageY = frameY + (portrait ? 78 : square ? 84 : 132);
+  const iconBadgeSize = portrait ? 284 : square ? 184 : 236;
+  const iconBadgeX = stageX + Math.round((stageSize - iconBadgeSize) / 2);
+  const iconBadgeY = stageY + Math.round((stageSize - iconBadgeSize) / 2);
+  const iconSize = portrait ? 204 : square ? 132 : 196;
+  const iconX = iconBadgeX + Math.round((iconBadgeSize - iconSize) / 2);
+  const iconY = iconBadgeY + Math.round((iconBadgeSize - iconSize) / 2);
+  const textX = portrait ? frameX + 72 : square ? frameX + 82 : stageX + stageSize + 96;
+  const textWidth = portrait ? frameWidth - 144 : square ? frameWidth - 164 : frameWidth - (textX - frameX) - 82;
+  const textY = portrait ? stageY + stageSize + 92 : square ? stageY + stageSize + 88 : frameY + 168;
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Find The Right Match",
+    subheadline: payload.subheadline,
+    maxWidth: textWidth,
+    maxHeight: portrait ? 320 : square ? 198 : 280,
+    headlineChars: portrait ? 13 : square ? 15 : 15,
+    maxHeadlineLines: 2,
+    subChars: portrait ? 24 : 26,
+    maxSubLines: 3,
+    headlineDesired: portrait ? 72 : square ? 48 : 82,
+    headlineMin: square ? 34 : 44,
+    subDesired: portrait ? 24 : square ? 21 : 28,
+    subMin: square ? 17 : 20,
+    headlineWidthFactor: 0.74,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.16,
+  });
+  const headlineHeight = fit.headlineHeight;
+  const subY = textY + headlineHeight + 30;
+  const chipsY = portrait ? frameY + frameHeight - 188 : square ? Math.min(frameY + frameHeight - 92, textY + fit.totalHeight + 76) : textY + fit.totalHeight + 82;
+  const align = square ? "center" : "left";
+  const chipWidth = portrait ? 250 : square ? 188 : 176;
+  const chipGap = portrait ? 22 : 18;
+  const chipStartX = square
+    ? frameX + Math.round((frameWidth - (chipWidth * 2 + chipGap)) / 2)
+    : portrait
+      ? frameX + Math.round((frameWidth - (chipWidth * 2 + chipGap)) / 2)
+      : textX;
+
+  return [
+    ...buildSceneBackdropOrnaments(canvas, sceneStyle, duration),
+    buildPanelElement({id: "search-spotlight-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 52, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "search-spotlight-stage", layer: "background", x: stageX, y: stageY, width: stageSize, height: stageSize, fill: surface, cornerRadius: 42, opacity: 0, animations: [{start: 0.04, end: Math.min(0.52, duration * 0.22), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.04, end: Math.min(0.52, duration * 0.22), property: "scale", from: 0.92, to: 1, easing: "spring"}]}),
+    {id: "search-spotlight-glow", type: "glow", layer: "background", x: stageX - 54, y: stageY - 54, width: stageSize + 108, height: stageSize + 108, fill: accent, glowColor: accent, glowStrength: design.objectProminence === "dominant" ? 0.76 : 0.62, opacity: 0, animations: [{start: 0.06, end: Math.min(0.58, duration * 0.24), property: "opacity", from: 0, to: 0.08, easing: "easeOut"}]} ,
+    buildPanelElement({id: "search-spotlight-icon-badge", layer: "foreground", x: iconBadgeX, y: iconBadgeY, width: iconBadgeSize, height: iconBadgeSize, fill: elevated, cornerRadius: Math.round(iconBadgeSize * 0.28), opacity: 0, animations: [{start: 0.08, end: Math.min(0.62, duration * 0.28), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.08, end: Math.min(0.62, duration * 0.28), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    {id: "search-spotlight-ring", type: "ring", layer: "background", x: iconBadgeX + 12, y: iconBadgeY + 12, width: iconBadgeSize - 24, height: iconBadgeSize - 24, stroke: mixHex(accent, "#FFFFFF", 0.42), strokeWidth: 3, opacity: 0, animations: [{start: 0.08, end: Math.min(0.72, duration * 0.3), property: "opacity", from: 0, to: 0.32, easing: "easeOut"}, {start: 0.08, end: Math.min(0.72, duration * 0.3), property: "draw", from: 0, to: 1, easing: "easeInOut"}]},
+    buildSearchIconElement("search-spotlight-icon", iconX, iconY, iconSize, accent, duration),
+    buildPanelElement({id: "search-spotlight-kicker-rule", layer: "foreground", x: align === "center" ? textX + Math.round((textWidth - Math.round(textWidth * 0.32)) / 2) : textX, y: textY - 24, width: Math.round(textWidth * 0.32), height: 8, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.08, end: Math.min(0.38, duration * 0.18), property: "opacity", from: 0, to: 0.8, easing: "easeOut"}, {start: 0.08, end: Math.min(0.38, duration * 0.18), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "search-spotlight-headline", layer: "main", x: textX, y: textY, width: textWidth, height: headlineHeight, fill: textColor, text: fit.headlineLines.join("\n"), fontSize: fit.headlineSize, fontWeight: 900, fontFamily, textAlign: align, letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.12, end: Math.min(0.84, duration * 0.36), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.12, end: Math.min(0.84, duration * 0.36), property: "translateY", from: 22, to: 0, easing: "spring"}]}),
+    ...(fit.subLines.length > 0 ? [
+      buildTextElement({id: "search-spotlight-sub", layer: "foreground", x: textX, y: subY, width: textWidth, height: fit.subHeight + 16, fill: secondaryText, text: fit.subLines.join("\n"), fontSize: fit.subSize || 26, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: align, letterSpacing: -0.2, lineHeight: 1.16, opacity: 0, animations: [{start: 0.22, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.22, end: Math.min(1.02, duration * 0.46), property: "translateY", from: 14, to: 0, easing: "easeOut"}]}),
+    ] : []),
+    ...["RANKED", "LIVE SCORE"].flatMap((label, index) => [
+      buildPanelElement({id: `search-spotlight-chip-${index}`, layer: "foreground", x: chipStartX + index * (chipWidth + chipGap), y: chipsY, width: chipWidth, height: 58, fill: index === 0 ? elevated : surface, cornerRadius: 999, opacity: 0, animations: [{start: 0.28 + index * 0.06, end: Math.min(1.06 + index * 0.04, duration * 0.48), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.28 + index * 0.06, end: Math.min(1.06 + index * 0.04, duration * 0.48), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
+      buildTextElement({id: `search-spotlight-chip-text-${index}`, layer: "foreground", x: chipStartX + 22 + index * (chipWidth + chipGap), y: chipsY + 18, width: chipWidth - 44, height: 22, fill: index === 0 ? accent : edge, text: label, fontSize: 18, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: 1, lineHeight: 1, opacity: 0, animations: [{start: 0.32 + index * 0.06, end: Math.min(1.1 + index * 0.04, duration * 0.5), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    ]),
+    buildPanelElement({id: "search-spotlight-track", layer: "background", x: textX, y: chipsY - 42, width: textWidth, height: 14, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.24, end: Math.min(0.94, duration * 0.42), property: "opacity", from: 0, to: 0.76, easing: "easeOut"}]}),
+    buildPanelElement({id: "search-spotlight-fill", layer: "foreground", x: textX, y: chipsY - 42, width: Math.round(textWidth * 0.68), height: 14, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.28, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.28, end: Math.min(1.02, duration * 0.46), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
+  ];
+};
+
+const buildSearchDashboardSceneElements = (
   payload: ScenePayload,
   canvas: CanvasSpec,
   sceneStyle: SceneStyle,
@@ -1124,49 +1264,378 @@ const buildCartSceneElements = (
   const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated, edge, track} = sceneStyle;
   const fontFamily = pickFontFamily(prompt);
   const portrait = canvas.format === "portrait";
-  const frameX = portrait ? 86 : 92;
-  const frameY = portrait ? 296 : 170;
-  const frameWidth = portrait ? canvas.width - 172 : canvas.width - 184;
-  const frameHeight = portrait ? 980 : 730;
-  const textColumnWidth = portrait ? frameWidth - 96 : Math.round((frameWidth - 120) * 0.42);
-  const headlineLines = wrapText(payload.headline ?? "Add To Cart", portrait ? 14 : 14, 2);
-  const headlineSize = fitFontSize(headlineLines, textColumnWidth, portrait ? 62 : 64, portrait ? 40 : 44, 0.74, -2);
-  const topX = frameX + 48;
-  const topY = frameY + 56;
-  const headlineHeight = headlineLines.length * headlineSize * 0.92 + 24;
-  const productX = portrait ? topX : frameX + frameWidth - Math.round((frameWidth - 120) * 0.5) - 48;
-  const productWidth = portrait ? frameWidth - 96 : Math.round((frameWidth - 120) * 0.5);
-  const productY = portrait ? topY + headlineHeight + 54 : frameY + 84;
-  const productHeight = portrait ? 180 : 212;
-  const checkoutY = portrait ? productY + productHeight + 34 : frameY + frameHeight - 154;
-  const ctaWidth = portrait ? frameWidth - 96 : textColumnWidth;
-  const summaryY = portrait ? checkoutY + 114 : productY + productHeight + 28;
-  const summaryWidth = portrait ? frameWidth - 96 : productWidth;
-  const priceChipY = portrait ? productY - 84 : topY + headlineHeight + 136;
-  const cartSize = portrait ? 118 : 106;
+  const square = canvas.format === "square";
+  const stacked = portrait || square;
+  const frameX = portrait ? 84 : 90;
+  const frameY = portrait ? 254 : square ? 132 : 156;
+  const frameWidth = portrait ? canvas.width - 168 : canvas.width - 180;
+  const frameHeight = portrait ? 1120 : square ? 858 : 748;
+  const leftX = frameX + 46;
+  const topY = frameY + 52;
+  const gridWidth = stacked ? frameWidth - 92 : Math.round(frameWidth * 0.54);
+  const gridHeight = portrait ? 438 : square ? 338 : frameHeight - 116;
+  const rightX = stacked ? leftX : leftX + gridWidth + 34;
+  const rightWidth = stacked ? gridWidth : frameWidth - (rightX - frameX) - 48;
+  const textY = stacked ? topY + gridHeight + 74 : topY + 40;
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Find The Right Match",
+    subheadline: payload.subheadline,
+    maxWidth: rightWidth,
+    maxHeight: portrait ? 270 : 236,
+    headlineChars: portrait ? 14 : 15,
+    maxHeadlineLines: 2,
+    subChars: 24,
+    maxSubLines: 3,
+    headlineDesired: portrait ? 64 : square ? 62 : 66,
+    headlineMin: 40,
+    subDesired: portrait ? 24 : 26,
+    subMin: 20,
+    headlineWidthFactor: 0.74,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -1.8,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.16,
+  });
+  const textX = portrait ? leftX : rightX;
+  const scoreY = portrait ? topY + gridHeight - 80 : frameY + frameHeight - 120;
+  const align = stacked ? "center" : "left";
+  const chartCardWidth = portrait ? Math.round((gridWidth - 20) / 2) : Math.round(gridWidth * 0.46);
+  const chartCardHeight = portrait ? 154 : 170;
+
+  return [
+    ...buildSceneBackdropOrnaments(canvas, sceneStyle, duration),
+    buildPanelElement({id: "search-dashboard-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 52, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "search-dashboard-grid", layer: "background", x: leftX, y: topY, width: gridWidth, height: gridHeight, fill: surface, cornerRadius: 40, opacity: 0, animations: [{start: 0.04, end: Math.min(0.5, duration * 0.22), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.04, end: Math.min(0.5, duration * 0.22), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "search-dashboard-topbar", layer: "foreground", x: leftX + 26, y: topY + 24, width: gridWidth - 52, height: 72, fill: elevated, cornerRadius: 28, opacity: 0, animations: [{start: 0.08, end: Math.min(0.58, duration * 0.24), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}]}),
+    buildPanelElement({id: "search-dashboard-icon-badge", layer: "foreground", x: leftX + 34, y: topY + 18, width: 64, height: 64, fill: surface, cornerRadius: 22, opacity: 0, animations: [{start: 0.1, end: Math.min(0.62, duration * 0.26), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.1, end: Math.min(0.62, duration * 0.26), property: "scale", from: 0.92, to: 1, easing: "spring"}]}),
+    buildSearchIconElement("search-dashboard-icon", leftX + 45, topY + 29, 40, accent, duration),
+    buildTextElement({id: "search-dashboard-query", layer: "foreground", x: leftX + 116, y: topY + 40, width: gridWidth - 180, height: 28, fill: textColor, text: "QUERY MATCH SCORE", fontSize: 20, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: 1.2, lineHeight: 1, opacity: 0, animations: [{start: 0.12, end: Math.min(0.66, duration * 0.28), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    ...[0, 1, 2, 3].flatMap((index) => {
+      const cardX = leftX + 26 + (portrait ? index % 2 : 0) * (chartCardWidth + 20);
+      const cardY = topY + 122 + Math.floor(index / (portrait ? 2 : 1)) * (chartCardHeight + 20);
+      const width = portrait ? chartCardWidth : gridWidth - 52;
+      return [
+        buildPanelElement({id: `search-dashboard-card-${index}`, layer: "foreground", x: cardX, y: cardY, width, height: chartCardHeight, fill: index % 2 === 0 ? elevated : surface, cornerRadius: 28, opacity: 0, animations: [{start: 0.16 + index * 0.05, end: Math.min(0.92 + index * 0.04, duration * 0.42), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.16 + index * 0.05, end: Math.min(0.92 + index * 0.04, duration * 0.42), property: "translateY", from: 18, to: 0, easing: "easeOut"}]}),
+        buildPanelElement({id: `search-dashboard-rail-${index}`, layer: "foreground", x: cardX + 18, y: cardY + 18, width: 8, height: chartCardHeight - 36, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.2 + index * 0.05, end: Math.min(0.96 + index * 0.04, duration * 0.44), property: "opacity", from: 0, to: 0.7, easing: "easeOut"}]}),
+        buildPanelElement({id: `search-dashboard-line-${index}`, layer: "foreground", x: cardX + 42, y: cardY + 34, width: Math.round(width * 0.52), height: 12, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.22 + index * 0.05, end: Math.min(0.98 + index * 0.04, duration * 0.46), property: "opacity", from: 0, to: 0.86, easing: "easeOut"}]}),
+        buildPanelElement({id: `search-dashboard-line-sub-${index}`, layer: "foreground", x: cardX + 42, y: cardY + 62, width: Math.round(width * (index % 2 === 0 ? 0.36 : 0.44)), height: 10, fill: edge, cornerRadius: 999, opacity: 0, animations: [{start: 0.24 + index * 0.05, end: Math.min(1.02 + index * 0.04, duration * 0.48), property: "opacity", from: 0, to: 0.58, easing: "easeOut"}]}),
+      ];
+    }),
+    buildTextElement({id: "search-dashboard-headline", layer: "main", x: textX, y: textY, width: rightWidth, height: fit.headlineHeight, fill: textColor, text: fit.headlineLines.join("\n"), fontSize: fit.headlineSize, fontWeight: 900, fontFamily, textAlign: align, letterSpacing: -1.8, lineHeight: 0.92, opacity: 0, animations: [{start: 0.14, end: Math.min(0.88, duration * 0.38), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.14, end: Math.min(0.88, duration * 0.38), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    ...(fit.subLines.length > 0 ? [
+      buildTextElement({id: "search-dashboard-sub", layer: "foreground", x: textX, y: textY + fit.headlineHeight + 24, width: rightWidth, height: fit.subHeight + 18, fill: secondaryText, text: fit.subLines.join("\n"), fontSize: fit.subSize || 24, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: align, letterSpacing: -0.2, lineHeight: 1.16, opacity: 0, animations: [{start: 0.24, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.24, end: Math.min(1.02, duration * 0.46), property: "translateY", from: 14, to: 0, easing: "easeOut"}]}),
+    ] : []),
+    buildPanelElement({id: "search-dashboard-score-track", layer: "background", x: textX, y: scoreY, width: rightWidth, height: 16, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.3, end: Math.min(1.06, duration * 0.5), property: "opacity", from: 0, to: 0.76, easing: "easeOut"}]}),
+    buildPanelElement({id: "search-dashboard-score-fill", layer: "foreground", x: textX, y: scoreY, width: Math.round(rightWidth * 0.78), height: 16, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.34, end: Math.min(1.12, duration * 0.54), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.34, end: Math.min(1.12, duration * 0.54), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "search-dashboard-score-text", layer: "foreground", x: textX, y: scoreY + 28, width: rightWidth, height: 24, fill: accent, text: "MATCH SCORE  78%", fontSize: 20, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: align, letterSpacing: 1.1, lineHeight: 1, opacity: 0, animations: [{start: 0.38, end: Math.min(1.16, duration * 0.56), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+  ];
+};
+
+const buildSearchSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const compositionVariant = pickSearchCompositionVariant(prompt);
+  if (compositionVariant === "search-spotlight") return buildSearchSpotlightSceneElements(payload, canvas, sceneStyle, duration, prompt);
+  if (compositionVariant === "search-dashboard") return buildSearchDashboardSceneElements(payload, canvas, sceneStyle, duration, prompt);
+  return buildSearchCardSceneElements(payload, canvas, sceneStyle, duration, prompt);
+};
+
+const pickCartCompositionVariant = (prompt: string): CartCompositionVariant => {
+  const labeled = parseLabeledValue(prompt, ["scene variant", "composition variant", "cart variant", "variant"]);
+  const normalizedLabel = labeled ? normalizePrompt(labeled) : "";
+  if (includesAny(normalizedLabel, ["spotlight", "hero", "feature"])) return "cart-spotlight";
+  if (includesAny(normalizedLabel, ["checkout", "stack", "summary"])) return "cart-checkout-stack";
+  if (includesAny(normalizedLabel, ["card"])) return "cart-card";
+
+  const normalized = normalizePrompt(prompt);
+  if (includesAny(normalized, ["spotlight", "hero", "featured", "product spotlight"])) return "cart-spotlight";
+  if (includesAny(normalized, ["checkout", "summary", "order", "cta", "buy", "purchase"])) return "cart-checkout-stack";
+  return "cart-card";
+};
+
+const pickDownloadCompositionVariant = (prompt: string): DownloadCompositionVariant => {
+  const labeled = parseLabeledValue(prompt, ["scene variant", "composition variant", "download variant", "variant"]);
+  const normalizedLabel = labeled ? normalizePrompt(labeled) : "";
+  if (includesAny(normalizedLabel, ["spotlight", "hero", "feature"])) return "download-spotlight";
+  if (includesAny(normalizedLabel, ["stack", "save stack", "status", "status board"])) return "download-save-stack";
+  if (includesAny(normalizedLabel, ["card"])) return "download-card";
+
+  const normalized = normalizePrompt(prompt);
+  if (includesAny(normalized, ["spotlight", "hero", "featured", "download spotlight"])) return "download-spotlight";
+  if (includesAny(normalized, ["save stack", "status board", "stacked save", "stacked download"])) return "download-save-stack";
+  return "download-card";
+};
+
+const buildCartCardSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated, edge, track} = sceneStyle;
+  const fontFamily = pickFontFamily(prompt);
+  const portrait = canvas.format === "portrait";
+  const square = canvas.format === "square";
+  const frameX = portrait ? 86 : square ? 92 : 92;
+  const frameY = portrait ? 296 : square ? 146 : 170;
+  const frameWidth = portrait ? canvas.width - 172 : square ? canvas.width - 184 : canvas.width - 184;
+  const frameHeight = portrait ? 980 : square ? 820 : 730;
+  const textColumnWidth = portrait ? frameWidth - 96 : square ? 480 : Math.round((frameWidth - 120) * 0.42);
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Add To Cart",
+    subheadline: payload.subheadline,
+    maxWidth: textColumnWidth,
+    maxHeight: portrait ? 228 : square ? 196 : 188,
+    headlineChars: 14,
+    maxHeadlineLines: 2,
+    subChars: portrait ? 22 : 24,
+    maxSubLines: 3,
+    headlineDesired: portrait ? 62 : square ? 54 : 64,
+    headlineMin: portrait ? 38 : square ? 40 : 42,
+    subDesired: portrait ? 24 : square ? 20 : 26,
+    subMin: square ? 16 : 20,
+    headlineWidthFactor: 0.74,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.14,
+  });
+  const headlineLines = fit.headlineLines;
+  const headlineSize = fit.headlineSize;
+  const headlineHeight = fit.headlineHeight;
+  const topX = portrait ? frameX + 48 : square ? frameX + Math.round((frameWidth - textColumnWidth) / 2) : frameX + 48;
+  const productWidth = portrait ? frameWidth - 96 : square ? 456 : Math.round((frameWidth - 120) * 0.5);
+  const productHeight = portrait ? 180 : square ? 258 : 212;
+  const productX = portrait ? topX : square ? frameX + Math.round((frameWidth - productWidth) / 2) : frameX + frameWidth - Math.round((frameWidth - 120) * 0.5) - 48;
+  const productY = portrait ? frameY + 56 + headlineHeight + 54 : square ? frameY + 86 : frameY + 84;
+  const topY = portrait ? frameY + 56 : square ? productY + productHeight + 64 : frameY + 56;
+  const checkoutY = portrait ? productY + productHeight + 34 : square ? frameY + frameHeight - 122 : frameY + frameHeight - 154;
+  const ctaWidth = portrait ? frameWidth - 96 : square ? textColumnWidth : textColumnWidth;
+  const summaryY = portrait ? checkoutY + 114 : square ? topY + headlineHeight + fit.subHeight + 132 : productY + productHeight + 28;
+  const summaryWidth = portrait ? frameWidth - 96 : square ? textColumnWidth : productWidth;
+  const priceChipY = portrait ? productY - 84 : square ? topY + headlineHeight + fit.subHeight + 34 : topY + headlineHeight + 136;
+  const cartSize = portrait ? 118 : square ? 92 : 106;
+  const textAlign = square ? "center" : "left";
+  const railX = portrait ? topX : square ? frameX + Math.round((frameWidth - Math.round(textColumnWidth * 0.34)) / 2) : topX;
+  const railY = portrait ? topY - 24 : square ? frameY + 34 : topY - 24;
+  const railWidth = portrait ? textColumnWidth : square ? Math.round(textColumnWidth * 0.38) : 14;
+  const railHeight = portrait ? 10 : square ? 10 : frameHeight - 152;
+  const thumbWidth = portrait ? 132 : square ? 148 : 150;
+  const thumbHeight = portrait ? 132 : square ? 148 : 150;
+  const thumbX = square ? productX + Math.round((productWidth - thumbWidth) / 2) : productX + 26;
+  const thumbY = productY + (square ? 26 : 24);
+  const badgeWidth = portrait ? 88 : square ? 92 : 102;
+  const badgeHeight = portrait ? 88 : square ? 92 : 102;
+  const badgeX = square ? thumbX + Math.round((thumbWidth - badgeWidth) / 2) : productX + 48;
+  const badgeY = square ? thumbY + 22 : productY + 46;
+  const productLineX = square ? productX + 34 : productX + (portrait ? 184 : 210);
+  const productLineWidth = square ? productWidth - 68 : portrait ? productWidth - 218 : productWidth - 246;
+  const productLine1Y = square ? productY + 190 : productY + 34;
+  const productLine2Y = square ? productY + 230 : productY + 84;
+  const summaryX = portrait ? topX : square ? topX : productX;
 
   return [
     ...buildSceneBackdropOrnaments(canvas, sceneStyle, duration),
     buildPanelElement({id: "cart-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 52, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
-    buildPanelElement({id: "cart-left-rail", layer: "background", x: topX, y: topY - 24, width: portrait ? textColumnWidth : 14, height: portrait ? 10 : frameHeight - 152, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.06, end: Math.min(0.4, duration * 0.18), property: "opacity", from: 0, to: 0.66, easing: "easeOut"}, {start: 0.06, end: Math.min(0.4, duration * 0.18), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
-    buildTextElement({id: "cart-headline", layer: "main", x: topX, y: topY, width: textColumnWidth, height: headlineHeight, fill: textColor, text: headlineLines.join("\n"), fontSize: headlineSize, fontWeight: 900, fontFamily, textAlign: "left", letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.08, end: Math.min(0.82, duration * 0.34), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.08, end: Math.min(0.82, duration * 0.34), property: "translateY", from: 22, to: 0, easing: "spring"}]}),
-    buildTextElement({id: "cart-copy", layer: "foreground", x: topX, y: topY + headlineHeight + 22, width: textColumnWidth, height: 88, fill: secondaryText, text: payload.subheadline ?? "Structured SVG motion scenes with cleaner layout logic.", fontSize: portrait ? 24 : 26, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.18, end: Math.min(0.98, duration * 0.44), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.18, end: Math.min(0.98, duration * 0.44), property: "translateY", from: 10, to: 0, easing: "easeOut"}]}),
-    buildPanelElement({id: "cart-price-chip", layer: "foreground", x: topX, y: priceChipY, width: portrait ? 286 : 228, height: 60, fill: surface, cornerRadius: 999, opacity: 0, animations: [{start: 0.22, end: Math.min(1, duration * 0.46), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.22, end: Math.min(1, duration * 0.46), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
-    buildTextElement({id: "cart-price-chip-text", layer: "foreground", x: topX + 22, y: priceChipY + 18, width: portrait ? 244 : 184, height: 20, fill: accent, text: "LIMITED DROP  $89", fontSize: 18, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: 1, lineHeight: 1, opacity: 0, animations: [{start: 0.26, end: Math.min(1.04, duration * 0.48), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-left-rail", layer: "background", x: railX, y: railY, width: railWidth, height: railHeight, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.06, end: Math.min(0.4, duration * 0.18), property: "opacity", from: 0, to: 0.66, easing: "easeOut"}, {start: 0.06, end: Math.min(0.4, duration * 0.18), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-headline", layer: "main", x: topX, y: topY, width: textColumnWidth, height: headlineHeight, fill: textColor, text: headlineLines.join("\n"), fontSize: headlineSize, fontWeight: 900, fontFamily, textAlign, letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.08, end: Math.min(0.82, duration * 0.34), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.08, end: Math.min(0.82, duration * 0.34), property: "translateY", from: 22, to: 0, easing: "spring"}]}),
+    buildTextElement({id: "cart-copy", layer: "foreground", x: topX, y: topY + headlineHeight + 22, width: textColumnWidth, height: Math.max(68, fit.subHeight + 12), fill: secondaryText, text: (fit.subLines.length > 0 ? fit.subLines.join("\n") : "Structured SVG motion scenes with cleaner layout logic."), fontSize: fit.subSize || (portrait ? 24 : square ? 20 : 26), fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign, letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.18, end: Math.min(0.98, duration * 0.44), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.18, end: Math.min(0.98, duration * 0.44), property: "translateY", from: 10, to: 0, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-price-chip", layer: "foreground", x: topX, y: priceChipY, width: portrait ? 286 : square ? textColumnWidth : 228, height: 60, fill: surface, cornerRadius: 999, opacity: 0, animations: [{start: 0.22, end: Math.min(1, duration * 0.46), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.22, end: Math.min(1, duration * 0.46), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "cart-price-chip-text", layer: "foreground", x: square ? topX : topX + 22, y: priceChipY + 18, width: portrait ? 244 : square ? textColumnWidth : 184, height: 20, fill: accent, text: "LIMITED DROP  $89", fontSize: 18, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign, letterSpacing: 1, lineHeight: 1, opacity: 0, animations: [{start: 0.26, end: Math.min(1.04, duration * 0.48), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
     buildPanelElement({id: "cart-product", layer: "background", x: productX, y: productY, width: productWidth, height: productHeight, fill: surface, cornerRadius: 36, opacity: 0, animations: [{start: 0.16, end: Math.min(0.88, duration * 0.38), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.16, end: Math.min(0.88, duration * 0.38), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
-    buildPanelElement({id: "cart-thumb", layer: "foreground", x: productX + 26, y: productY + 24, width: portrait ? 132 : 150, height: portrait ? 132 : 150, fill: elevated, cornerRadius: 28, opacity: 0, animations: [{start: 0.2, end: Math.min(0.9, duration * 0.4), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}]}),
-    buildPanelElement({id: "cart-thumb-badge", layer: "foreground", x: productX + 48, y: productY + 46, width: portrait ? 88 : 102, height: portrait ? 88 : 102, fill: accent, cornerRadius: 26, opacity: 0, animations: [{start: 0.24, end: Math.min(0.96, duration * 0.42), property: "opacity", from: 0, to: 0.72, easing: "easeOut"}, {start: 0.24, end: Math.min(0.96, duration * 0.42), property: "scale", from: 0.8, to: 1, easing: "spring"}]}),
-    buildTextElement({id: "cart-product-line-1", layer: "foreground", x: productX + (portrait ? 184 : 210), y: productY + 34, width: portrait ? productWidth - 218 : productWidth - 246, height: 40, fill: textColor, text: "Premium Motion Pack", fontSize: portrait ? 32 : 34, fontWeight: 800, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.6, lineHeight: 1, opacity: 0, animations: [{start: 0.24, end: Math.min(0.96, duration * 0.42), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.24, end: Math.min(0.96, duration * 0.42), property: "translateY", from: 10, to: 0, easing: "easeOut"}]}),
-    buildTextElement({id: "cart-product-line-2", layer: "foreground", x: productX + (portrait ? 184 : 210), y: productY + 84, width: portrait ? productWidth - 218 : productWidth - 246, height: 68, fill: secondaryText, text: "Bundle your best SVG scenes\ninto a cleaner checkout moment", fontSize: 24, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.28, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.28, end: Math.min(1.02, duration * 0.46), property: "translateY", from: 10, to: 0, easing: "easeOut"}]}),
-    buildIconElement("cart-icon", "cart", productX + productWidth - cartSize - 34, productY + 28, cartSize, accent, duration),
-    buildPanelElement({id: "cart-summary", layer: "background", x: portrait ? topX : productX, y: summaryY, width: summaryWidth, height: portrait ? 126 : 98, fill: elevated, cornerRadius: 30, opacity: 0, animations: [{start: 0.3, end: Math.min(1.06, duration * 0.48), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.3, end: Math.min(1.06, duration * 0.48), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
-    buildPanelElement({id: "cart-summary-track", layer: "background", x: (portrait ? topX : productX) + 28, y: summaryY + 30, width: summaryWidth - 56, height: 12, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.34, end: Math.min(1.12, duration * 0.52), property: "opacity", from: 0, to: 0.7, easing: "easeOut"}]}),
-    buildPanelElement({id: "cart-summary-fill", layer: "foreground", x: (portrait ? topX : productX) + 28, y: summaryY + 30, width: Math.round((summaryWidth - 56) * 0.78), height: 12, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.38, end: Math.min(1.18, duration * 0.54), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.38, end: Math.min(1.18, duration * 0.54), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
-    buildTextElement({id: "cart-summary-text", layer: "foreground", x: (portrait ? topX : productX) + 28, y: summaryY + 58, width: summaryWidth - 56, height: 26, fill: edge, text: "Order confidence 78%", fontSize: 22, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.4, end: Math.min(1.2, duration * 0.56), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-thumb", layer: "foreground", x: thumbX, y: thumbY, width: thumbWidth, height: thumbHeight, fill: elevated, cornerRadius: 28, opacity: 0, animations: [{start: 0.2, end: Math.min(0.9, duration * 0.4), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-thumb-badge", layer: "foreground", x: badgeX, y: badgeY, width: badgeWidth, height: badgeHeight, fill: accent, cornerRadius: 26, opacity: 0, animations: [{start: 0.24, end: Math.min(0.96, duration * 0.42), property: "opacity", from: 0, to: 0.72, easing: "easeOut"}, {start: 0.24, end: Math.min(0.96, duration * 0.42), property: "scale", from: 0.8, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "cart-product-line-1", layer: "foreground", x: productLineX, y: productLine1Y, width: productLineWidth, height: 44, fill: textColor, text: "Premium Motion Pack", fontSize: portrait ? 32 : square ? 34 : 34, fontWeight: 800, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign, letterSpacing: -0.6, lineHeight: 1, opacity: 0, animations: [{start: 0.24, end: Math.min(0.96, duration * 0.42), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.24, end: Math.min(0.96, duration * 0.42), property: "translateY", from: 10, to: 0, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-product-line-2", layer: "foreground", x: productLineX, y: productLine2Y, width: productLineWidth, height: square ? 64 : 68, fill: secondaryText, text: "Bundle your best SVG scenes\ninto a cleaner checkout moment", fontSize: square ? 20 : 24, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign, letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.28, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.28, end: Math.min(1.02, duration * 0.46), property: "translateY", from: 10, to: 0, easing: "easeOut"}]}),
+    buildIconElement("cart-icon", "cart", square ? productX + productWidth - cartSize - 26 : productX + productWidth - cartSize - 34, square ? productY + 26 : productY + 28, cartSize, accent, duration),
+    buildPanelElement({id: "cart-summary", layer: "background", x: summaryX, y: summaryY, width: summaryWidth, height: portrait ? 126 : square ? 116 : 98, fill: elevated, cornerRadius: 30, opacity: 0, animations: [{start: 0.3, end: Math.min(1.06, duration * 0.48), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.3, end: Math.min(1.06, duration * 0.48), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "cart-summary-track", layer: "background", x: summaryX + 28, y: summaryY + 30, width: summaryWidth - 56, height: 12, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.34, end: Math.min(1.12, duration * 0.52), property: "opacity", from: 0, to: 0.7, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-summary-fill", layer: "foreground", x: summaryX + 28, y: summaryY + 30, width: Math.round((summaryWidth - 56) * 0.78), height: 12, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.38, end: Math.min(1.18, duration * 0.54), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.38, end: Math.min(1.18, duration * 0.54), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-summary-text", layer: "foreground", x: summaryX + 28, y: summaryY + 60, width: summaryWidth - 56, height: 28, fill: edge, text: "Order confidence 78%", fontSize: square ? 24 : 22, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign, letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.4, end: Math.min(1.2, duration * 0.56), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
     buildPanelElement({id: "cart-cta", layer: "foreground", x: topX, y: checkoutY, width: ctaWidth, height: 72, fill: elevated, cornerRadius: 999, opacity: 0, animations: [{start: 0.32, end: Math.min(1.08, duration * 0.48), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.32, end: Math.min(1.08, duration * 0.48), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
-    buildTextElement({id: "cart-cta-text", layer: "foreground", x: topX + 28, y: checkoutY + 22, width: ctaWidth - 56, height: 28, fill: accent, text: "CHECKOUT READY", fontSize: 24, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: 1.3, lineHeight: 1, opacity: 0, animations: [{start: 0.36, end: Math.min(1.14, duration * 0.5), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.36, end: Math.min(1.14, duration * 0.5), property: "translateY", from: 10, to: 0, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-cta-text", layer: "foreground", x: square ? topX : topX + 28, y: checkoutY + 22, width: square ? ctaWidth : ctaWidth - 56, height: 28, fill: accent, text: "CHECKOUT READY", fontSize: 24, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign, letterSpacing: 1.3, lineHeight: 1, opacity: 0, animations: [{start: 0.36, end: Math.min(1.14, duration * 0.5), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.36, end: Math.min(1.14, duration * 0.5), property: "translateY", from: 10, to: 0, easing: "easeOut"}]}),
     buildPanelElement({id: "cart-total-bar", layer: "foreground", x: topX, y: frameY + frameHeight - 110, width: frameWidth - 96, height: 12, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.4, end: Math.min(1.22, duration * 0.56), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.4, end: Math.min(1.22, duration * 0.56), property: "scale", from: 0.3, to: 1, easing: "easeOut"}]}),
   ];
+};
+
+const buildCartSpotlightSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated, edge, track, design} = sceneStyle;
+  const fontFamily = pickFontFamily(prompt);
+  const portrait = canvas.format === "portrait";
+  const square = canvas.format === "square";
+  const frameX = portrait ? 82 : 92;
+  const frameY = portrait ? 252 : square ? 132 : 156;
+  const frameWidth = portrait ? canvas.width - 164 : canvas.width - 184;
+  const frameHeight = portrait ? 1280 : square ? 900 : 780;
+  const stageWidth = portrait ? frameWidth - 110 : square ? 760 : 620;
+  const stageHeight = portrait ? 420 : square ? 520 : 390;
+  const stageX = frameX + Math.round((frameWidth - stageWidth) / 2);
+  const stageY = frameY + (square ? 38 : 54);
+  const productWidth = portrait ? 318 : square ? 486 : 344;
+  const productHeight = portrait ? 318 : square ? 486 : 344;
+  const productX = stageX + Math.round((stageWidth - productWidth) / 2);
+  const productY = stageY + Math.round((stageHeight - productHeight) / 2);
+  const badgeSize = portrait ? 96 : square ? 140 : 96;
+  const badgeX = stageX + stageWidth - badgeSize - (square ? 24 : 34);
+  const badgeY = stageY + (square ? 24 : 34);
+  const iconSize = portrait ? 88 : square ? 112 : 86;
+  const textWidth = portrait ? frameWidth - 170 : square ? 660 : 560;
+  const textX = frameX + Math.round((frameWidth - textWidth) / 2);
+  const textY = stageY + stageHeight + (square ? 28 : 72);
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Ready To Buy",
+    subheadline: payload.subheadline,
+    maxWidth: textWidth,
+    maxHeight: portrait ? 260 : square ? 228 : 240,
+    headlineChars: square ? 10 : 15,
+    maxHeadlineLines: 2,
+    subChars: square ? 18 : 24,
+    maxSubLines: square ? 2 : 3,
+    headlineDesired: portrait ? 72 : square ? 96 : 74,
+    headlineMin: square ? 68 : 44,
+    subDesired: portrait ? 24 : square ? 28 : 26,
+    subMin: 18,
+    headlineWidthFactor: 0.66,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.14,
+  });
+  const headlineHeight = fit.headlineHeight;
+  const summaryWidth = portrait ? frameWidth - 150 : square ? 560 : 468;
+  const summaryX = frameX + Math.round((frameWidth - summaryWidth) / 2);
+  const summaryY = textY + headlineHeight + fit.subHeight + (square ? 20 : 54);
+  const ctaWidth = portrait ? summaryWidth : square ? 470 : 340;
+  const ctaX = frameX + Math.round((frameWidth - ctaWidth) / 2);
+  const ctaY = frameY + frameHeight - 138;
+
+  return [
+    ...buildSceneBackdropOrnaments(canvas, sceneStyle, duration),
+    buildPanelElement({id: "cart-spotlight-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 54, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "cart-spotlight-stage", layer: "background", x: stageX, y: stageY, width: stageWidth, height: stageHeight, fill: surface, cornerRadius: 52, opacity: 0, animations: [{start: 0.04, end: Math.min(0.52, duration * 0.24), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0.04, end: Math.min(0.52, duration * 0.24), property: "scale", from: 0.92, to: 1, easing: "spring"}]}),
+    {id: "cart-spotlight-glow", type: "glow", layer: "background", x: stageX - 68, y: stageY - 68, width: stageWidth + 136, height: stageHeight + 136, fill: accent, glowColor: accent, glowStrength: design.objectProminence === "dominant" ? 0.9 : 0.76, opacity: 0, animations: [{start: 0.08, end: Math.min(0.58, duration * 0.28), property: "opacity", from: 0, to: 0.13, easing: "easeOut"}]},
+    buildPanelElement({id: "cart-spotlight-hero-sheen", layer: "background", x: stageX + 22, y: stageY + 22, width: stageWidth - 44, height: Math.round(stageHeight * 0.24), fill: mixHex(accent, "#FFFFFF", 0.74), cornerRadius: 999, opacity: 0, animations: [{start: 0.1, end: Math.min(0.62, duration * 0.28), property: "opacity", from: 0, to: 0.12, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-spotlight-product", layer: "foreground", x: productX, y: productY, width: productWidth, height: productHeight, fill: elevated, cornerRadius: 42, opacity: 0, animations: [{start: 0.1, end: Math.min(0.62, duration * 0.28), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.1, end: Math.min(0.62, duration * 0.28), property: "scale", from: 0.88, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "cart-spotlight-thumb", layer: "foreground", x: productX + Math.round(productWidth * 0.08), y: productY + Math.round(productHeight * 0.1), width: Math.round(productWidth * 0.34), height: Math.round(productHeight * 0.34), fill: accent, cornerRadius: 34, opacity: 0, animations: [{start: 0.14, end: Math.min(0.7, duration * 0.32), property: "opacity", from: 0, to: 0.84, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-spotlight-price-pill", layer: "foreground", x: productX + Math.round(productWidth * 0.6), y: productY + Math.round(productHeight * 0.12), width: Math.round(productWidth * 0.22), height: square ? 60 : 52, fill: surface, cornerRadius: 999, opacity: 0, animations: [{start: 0.18, end: Math.min(0.76, duration * 0.34), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.18, end: Math.min(0.76, duration * 0.34), property: "scale", from: 0.82, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "cart-spotlight-price-pill-text", layer: "foreground", x: productX + Math.round(productWidth * 0.6), y: productY + Math.round(productHeight * 0.12) + (square ? 17 : 13), width: Math.round(productWidth * 0.22), height: 28, fill: accent, text: "$89", fontSize: square ? 32 : 22, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.2, end: Math.min(0.8, duration * 0.36), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-spotlight-product-line-1", layer: "foreground", x: productX + 36, y: productY + Math.round(productHeight * 0.56), width: productWidth - 72, height: 54, fill: textColor, text: "Premium Motion Pack", fontSize: square ? 44 : 30, fontWeight: 800, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "center", letterSpacing: -0.8, lineHeight: 1, opacity: 0, animations: [{start: 0.16, end: Math.min(0.74, duration * 0.34), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-spotlight-product-line-2", layer: "foreground", x: productX + 36, y: productY + Math.round(productHeight * 0.73), width: productWidth - 72, height: 70, fill: secondaryText, text: "Curated SVG scenes\nfor a cleaner storefront", fontSize: square ? 24 : 20, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.18, end: Math.min(0.78, duration * 0.36), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-spotlight-badge", layer: "foreground", x: badgeX, y: badgeY, width: badgeSize, height: badgeSize, fill: elevated, cornerRadius: 26, opacity: 0, animations: [{start: 0.16, end: Math.min(0.72, duration * 0.34), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.16, end: Math.min(0.72, duration * 0.34), property: "scale", from: 0.82, to: 1, easing: "spring"}]}),
+    buildIconElement("cart-spotlight-icon", "cart", badgeX + Math.round((badgeSize - iconSize) / 2), badgeY + Math.round((badgeSize - iconSize) / 2), iconSize, accent, duration),
+    buildPanelElement({id: "cart-spotlight-rail", layer: "foreground", x: textX + Math.round((textWidth - Math.round(textWidth * 0.3)) / 2), y: textY - 28, width: Math.round(textWidth * 0.3), height: 8, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.14, end: Math.min(0.46, duration * 0.22), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.14, end: Math.min(0.46, duration * 0.22), property: "scale", from: 0.28, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-spotlight-headline", layer: "main", x: textX, y: textY, width: textWidth, height: headlineHeight, fill: textColor, text: fit.headlineLines.join("\n"), fontSize: fit.headlineSize, fontWeight: 900, fontFamily, textAlign: "center", letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.18, end: Math.min(0.92, duration * 0.42), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.18, end: Math.min(0.92, duration * 0.42), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildTextElement({id: "cart-spotlight-sub", layer: "foreground", x: textX, y: textY + headlineHeight + 20, width: textWidth, height: Math.max(64, fit.subHeight + 16), fill: secondaryText, text: fit.subLines.length > 0 ? fit.subLines.join("\n") : "A clearer checkout scene with product focus and conversion framing.", fontSize: fit.subSize || (square ? 22 : 24), fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.24, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-spotlight-summary", layer: "background", x: summaryX, y: summaryY, width: summaryWidth, height: square ? 124 : 112, fill: elevated, cornerRadius: 34, opacity: 0, animations: [{start: 0.28, end: Math.min(1.06, duration * 0.48), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.28, end: Math.min(1.06, duration * 0.48), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "cart-spotlight-summary-track", layer: "background", x: summaryX + 28, y: summaryY + 28, width: summaryWidth - 56, height: 14, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.32, end: Math.min(1.12, duration * 0.52), property: "opacity", from: 0, to: 0.74, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-spotlight-summary-fill", layer: "foreground", x: summaryX + 28, y: summaryY + 28, width: Math.round((summaryWidth - 56) * 0.84), height: 14, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.36, end: Math.min(1.18, duration * 0.54), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.36, end: Math.min(1.18, duration * 0.54), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-spotlight-summary-text", layer: "foreground", x: summaryX + 28, y: summaryY + 60, width: summaryWidth - 56, height: 30, fill: edge, text: "Conversion confidence 84%", fontSize: square ? 24 : 24, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.4, end: Math.min(1.24, duration * 0.58), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-spotlight-cta", layer: "foreground", x: ctaX, y: ctaY, width: ctaWidth, height: 80, fill: elevated, cornerRadius: 999, opacity: 0, animations: [{start: 0.42, end: Math.min(1.28, duration * 0.6), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.42, end: Math.min(1.28, duration * 0.6), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "cart-spotlight-cta-text", layer: "foreground", x: ctaX, y: ctaY + 24, width: ctaWidth, height: 30, fill: accent, text: "CHECKOUT READY", fontSize: 24, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: 1.2, lineHeight: 1, opacity: 0, animations: [{start: 0.46, end: Math.min(1.34, duration * 0.62), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+  ];
+};
+
+const buildCartCheckoutStackSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated, edge, track} = sceneStyle;
+  const fontFamily = pickFontFamily(prompt);
+  const portrait = canvas.format === "portrait";
+  const square = canvas.format === "square";
+  const frameX = portrait ? 82 : 92;
+  const frameY = portrait ? 252 : square ? 132 : 152;
+  const frameWidth = portrait ? canvas.width - 164 : canvas.width - 184;
+  const frameHeight = portrait ? 1260 : square ? 900 : 780;
+  const leftWidth = portrait ? frameWidth - 132 : square ? frameWidth - 132 : 520;
+  const leftX = portrait ? frameX + 54 : square ? frameX + 66 : frameX + 54;
+  const topY = frameY + 64;
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Ready To Buy",
+    subheadline: payload.subheadline,
+    maxWidth: leftWidth,
+    maxHeight: portrait ? 250 : square ? 236 : 240,
+    headlineChars: square ? 12 : 14,
+    maxHeadlineLines: 2,
+    subChars: 23,
+    maxSubLines: 3,
+    headlineDesired: portrait ? 68 : square ? 72 : 72,
+    headlineMin: square ? 44 : 42,
+    subDesired: portrait ? 24 : square ? 22 : 24,
+    subMin: 18,
+    headlineWidthFactor: 0.74,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.14,
+  });
+  const headlineHeight = fit.headlineHeight;
+  const rightCardWidth = portrait ? frameWidth - 132 : square ? 560 : 420;
+  const rightCardX = portrait ? frameX + frameWidth - rightCardWidth - 46 : square ? frameX + Math.round((frameWidth - rightCardWidth) / 2) : frameX + frameWidth - rightCardWidth - 46;
+  const stackTopY = portrait ? topY + headlineHeight + fit.subHeight + 68 : square ? topY + headlineHeight + fit.subHeight + 74 : frameY + 108;
+  const card1Y = stackTopY;
+  const card2Y = card1Y + (square ? 78 : 56);
+  const card3Y = card2Y + (square ? 78 : 56);
+  const cardHeight = portrait ? 208 : square ? 246 : 186;
+  const summaryX = square ? frameX + Math.round((frameWidth - (frameWidth - 156)) / 2) : leftX;
+  const summaryY = square ? card3Y + cardHeight + 48 : topY + headlineHeight + fit.subHeight + 72;
+  const summaryWidth = square ? frameWidth - 156 : leftWidth;
+  const ctaX = square ? frameX + Math.round((frameWidth - 430) / 2) : leftX;
+  const ctaY = frameY + frameHeight - 134;
+  const ctaWidth = square ? 430 : portrait ? leftWidth : 320;
+  const cartSize = square ? 104 : 82;
+
+  return [
+    ...buildSceneBackdropOrnaments(canvas, sceneStyle, duration),
+    buildPanelElement({id: "cart-stack-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 54, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "cart-stack-rail", layer: "foreground", x: square ? leftX + Math.round((leftWidth - Math.round(leftWidth * 0.28)) / 2) : leftX, y: topY - 30, width: Math.round(leftWidth * (square ? 0.28 : 0.34)), height: 8, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.06, end: Math.min(0.38, duration * 0.18), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.06, end: Math.min(0.38, duration * 0.18), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-stack-headline", layer: "main", x: leftX, y: topY, width: leftWidth, height: headlineHeight, fill: textColor, text: fit.headlineLines.join("\n"), fontSize: fit.headlineSize, fontWeight: 900, fontFamily, textAlign: square ? "center" : "left", letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.08, end: Math.min(0.82, duration * 0.34), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.08, end: Math.min(0.82, duration * 0.34), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildTextElement({id: "cart-stack-copy", layer: "foreground", x: leftX, y: topY + headlineHeight + 20, width: leftWidth, height: Math.max(72, fit.subHeight + 16), fill: secondaryText, text: fit.subLines.length > 0 ? fit.subLines.join("\n") : "A stronger ecommerce scene with checkout stack and conversion framing.", fontSize: fit.subSize || (square ? 22 : 24), fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: square ? "center" : "left", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.16, end: Math.min(0.94, duration * 0.42), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-stack-card-3", layer: "background", x: square ? rightCardX + 58 : rightCardX + 42, y: card3Y, width: square ? rightCardWidth - 116 : rightCardWidth - 84, height: square ? cardHeight - 38 : cardHeight - 24, fill: surface, cornerRadius: 34, opacity: 0, animations: [{start: 0.18, end: Math.min(0.9, duration * 0.4), property: "opacity", from: 0, to: 0.34, easing: "easeOut"}, {start: 0.18, end: Math.min(0.9, duration * 0.4), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildPanelElement({id: "cart-stack-card-2", layer: "background", x: square ? rightCardX + 28 : rightCardX + 20, y: card2Y, width: square ? rightCardWidth - 56 : rightCardWidth - 40, height: square ? cardHeight - 16 : cardHeight - 12, fill: elevated, cornerRadius: 38, opacity: 0, animations: [{start: 0.2, end: Math.min(0.94, duration * 0.42), property: "opacity", from: 0, to: 0.58, easing: "easeOut"}, {start: 0.2, end: Math.min(0.94, duration * 0.42), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildPanelElement({id: "cart-stack-card-1", layer: "foreground", x: rightCardX, y: card1Y, width: rightCardWidth, height: cardHeight, fill: surface, cornerRadius: 40, opacity: 0, animations: [{start: 0.22, end: Math.min(0.98, duration * 0.44), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.22, end: Math.min(0.98, duration * 0.44), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildPanelElement({id: "cart-stack-thumb", layer: "foreground", x: rightCardX + 34, y: card1Y + 34, width: square ? 118 : 96, height: square ? 118 : 96, fill: accent, cornerRadius: 28, opacity: 0, animations: [{start: 0.26, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.76, easing: "easeOut"}]}),
+    buildIconElement("cart-stack-icon", "cart", rightCardX + rightCardWidth - cartSize - 30, card1Y + 34, cartSize, accent, duration),
+    buildTextElement({id: "cart-stack-line-1", layer: "foreground", x: rightCardX + 34, y: card1Y + (square ? 168 : 144), width: rightCardWidth - 68, height: 44, fill: textColor, text: "Premium Motion Pack", fontSize: square ? 36 : 30, fontWeight: 800, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.5, lineHeight: 1, opacity: 0, animations: [{start: 0.28, end: Math.min(1.04, duration * 0.48), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-stack-line-2", layer: "foreground", x: rightCardX + 34, y: card1Y + (square ? 216 : 186), width: rightCardWidth - 68, height: 70, fill: secondaryText, text: "Bundle your best SVG scenes\ninto a cleaner checkout moment", fontSize: square ? 22 : 20, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.3, end: Math.min(1.08, duration * 0.5), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-stack-summary", layer: "background", x: summaryX, y: summaryY, width: summaryWidth, height: 114, fill: elevated, cornerRadius: 30, opacity: 0, animations: [{start: 0.32, end: Math.min(1.1, duration * 0.5), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.32, end: Math.min(1.1, duration * 0.5), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "cart-stack-summary-track", layer: "background", x: summaryX + 28, y: summaryY + 28, width: summaryWidth - 56, height: 12, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.36, end: Math.min(1.16, duration * 0.54), property: "opacity", from: 0, to: 0.74, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-stack-summary-fill", layer: "foreground", x: summaryX + 28, y: summaryY + 28, width: Math.round((summaryWidth - 56) * 0.72), height: 12, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.4, end: Math.min(1.22, duration * 0.56), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.4, end: Math.min(1.22, duration * 0.56), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "cart-stack-summary-text", layer: "foreground", x: summaryX + 28, y: summaryY + 58, width: summaryWidth - 56, height: 28, fill: edge, text: "Checkout confidence 72%", fontSize: square ? 24 : 24, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: square ? "center" : "left", letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.44, end: Math.min(1.26, duration * 0.58), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
+    buildPanelElement({id: "cart-stack-cta", layer: "foreground", x: ctaX, y: ctaY, width: ctaWidth, height: 72, fill: elevated, cornerRadius: 999, opacity: 0, animations: [{start: 0.42, end: Math.min(1.24, duration * 0.58), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.42, end: Math.min(1.24, duration * 0.58), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "cart-stack-cta-text", layer: "foreground", x: ctaX, y: ctaY + 22, width: ctaWidth, height: 26, fill: accent, text: "CHECKOUT READY", fontSize: 22, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: 1.2, lineHeight: 1, opacity: 0, animations: [{start: 0.46, end: Math.min(1.3, duration * 0.6), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+  ];
+};
+
+const buildCartSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const compositionVariant = pickCartCompositionVariant(prompt);
+  if (compositionVariant === "cart-spotlight") return buildCartSpotlightSceneElements(payload, canvas, sceneStyle, duration, prompt);
+  if (compositionVariant === "cart-checkout-stack") return buildCartCheckoutStackSceneElements(payload, canvas, sceneStyle, duration, prompt);
+  return buildCartCardSceneElements(payload, canvas, sceneStyle, duration, prompt);
 };
 
 const buildHeadphonesSceneElements = (
@@ -1193,10 +1662,30 @@ const buildHeadphonesSceneElements = (
   const textY = portrait ? stageY + stageHeight + 84 : square ? stageY + stageHeight + 64 : frameY + 132;
   const textWidth = stacked ? frameWidth - 152 : frameWidth - (textX - frameX) - 72;
   const textAlign = stacked ? "center" : "left";
-  const headlineLines = wrapText(payload.headline ?? "Podcast Mode", stacked ? 14 : 15, 2);
-  const headlineSize = fitFontSize(headlineLines, textWidth, portrait ? 68 : square ? 70 : 66, portrait ? 44 : 44, 0.74, -2);
-  const headlineHeight = headlineLines.length * headlineSize * 0.92 + 24;
-  const subLines = payload.subheadline ? wrapText(payload.subheadline, 24, square ? 3 : 4) : [];
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Podcast Mode",
+    subheadline: payload.subheadline,
+    maxWidth: textWidth,
+    maxHeight: portrait ? 320 : square ? 286 : 300,
+    headlineChars: stacked ? 14 : 15,
+    maxHeadlineLines: 2,
+    subChars: 24,
+    maxSubLines: square ? 3 : 4,
+    headlineDesired: portrait ? 68 : square ? 70 : 66,
+    headlineMin: 42,
+    subDesired: portrait ? 24 : square ? 24 : 28,
+    subMin: 20,
+    headlineWidthFactor: 0.74,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.16,
+  });
+  const headlineLines = fit.headlineLines;
+  const headlineSize = fit.headlineSize;
+  const headlineHeight = fit.headlineHeight;
+  const subLines = fit.subLines;
   const subY = textY + headlineHeight + 28;
   const iconSize = portrait ? 236 : square ? 214 : 252;
   const iconX = stageX + Math.round((stageWidth - iconSize) / 2);
@@ -1262,7 +1751,7 @@ const buildHeadphonesSceneElements = (
     buildTextElement({id: "audio-headline", layer: "main", x: textX, y: textY, width: textWidth, height: headlineHeight, fill: textColor, text: headlineLines.join("\n"), fontSize: headlineSize, fontWeight: 900, fontFamily, textAlign, letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.12, end: Math.min(0.86, duration * 0.38), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.12, end: Math.min(0.86, duration * 0.38), property: "translateY", from: 22, to: 0, easing: "spring"}]}),
     ...(subLines.length > 0 ? [
       buildPanelElement({id: "audio-sub-line", layer: "foreground", x: stacked ? textX + Math.round((textWidth - Math.round(textWidth * 0.36)) / 2) : textX, y: subY - 20, width: Math.round(textWidth * (stacked ? 0.36 : 0.34)), height: 6, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.18, end: Math.min(0.7, duration * 0.3), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.18, end: Math.min(0.7, duration * 0.3), property: "scale", from: 0.3, to: 1, easing: "easeOut"}]}),
-      buildTextElement({id: "audio-subheadline", layer: "foreground", x: textX, y: subY, width: textWidth, height: subLines.length * 28 * 1.16 + 20, fill: secondaryText, text: subLines.join("\n"), fontSize: portrait ? 24 : square ? 24 : 28, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign, letterSpacing: -0.2, lineHeight: 1.16, opacity: 0, animations: [{start: 0.24, end: Math.min(1.04, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.24, end: Math.min(1.04, duration * 0.46), property: "translateY", from: 18, to: 0, easing: "easeOut"}]}),
+      buildTextElement({id: "audio-subheadline", layer: "foreground", x: textX, y: subY, width: textWidth, height: fit.subHeight + 20, fill: secondaryText, text: subLines.join("\n"), fontSize: fit.subSize || (portrait ? 24 : square ? 24 : 28), fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign, letterSpacing: -0.2, lineHeight: 1.16, opacity: 0, animations: [{start: 0.24, end: Math.min(1.04, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.24, end: Math.min(1.04, duration * 0.46), property: "translateY", from: 18, to: 0, easing: "easeOut"}]}),
     ] : []),
     buildPanelElement({id: "audio-episode-chip", layer: "foreground", x: episodeX, y: episodeY, width: episodeWidth, height: 62, fill: elevated, cornerRadius: 999, opacity: 0, animations: [{start: 0.34, end: Math.min(1.14, duration * 0.52), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.34, end: Math.min(1.14, duration * 0.52), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
     buildTextElement({id: "audio-episode-text", layer: "foreground", x: episodeTextX, y: episodeY + 18, width: episodeTextWidth, height: 22, fill: accent, text: "EPISODE 47  LIVE", fontSize: 20, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign, letterSpacing: 1, lineHeight: 1, opacity: 0, animations: [{start: 0.38, end: Math.min(1.18, duration * 0.54), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
@@ -1474,7 +1963,7 @@ const buildPieSceneElements = (
   ];
 };
 
-const buildDownloadSceneElements = (
+const buildDownloadCardSceneElements = (
   payload: ScenePayload,
   canvas: CanvasSpec,
   sceneStyle: SceneStyle,
@@ -1485,66 +1974,277 @@ const buildDownloadSceneElements = (
   const fontFamily = pickFontFamily(prompt);
   const landscape = canvas.format === "landscape";
   const portrait = canvas.format === "portrait";
+  const square = canvas.format === "square";
   const stacked = !landscape;
   const frameX = stacked ? 88 : 100;
   const frameY = portrait ? 270 : stacked ? 136 : 176;
   const frameWidth = stacked ? canvas.width - 176 : canvas.width - 200;
   const frameHeight = portrait ? 940 : stacked ? 760 : 708;
-  const docStageX = frameX + (stacked ? 54 : 74);
-  const docStageY = frameY + (stacked ? 84 : 112);
-  const docStageWidth = stacked ? frameWidth - 108 : 420;
-  const docStageHeight = portrait ? 322 : stacked ? 286 : 364;
-  const docX = docStageX + Math.round((docStageWidth - (stacked ? 214 : 224)) / 2);
-  const docY = docStageY + 34;
-  const docWidth = stacked ? 214 : 224;
-  const docHeight = stacked ? 246 : 258;
-  const textX = stacked ? docStageX : docStageX + docStageWidth + 88;
-  const textY = stacked ? docStageY + docStageHeight + (portrait ? 94 : 72) : frameY + 104;
-  const textWidth = stacked ? docStageWidth : frameWidth - (textX - frameX) - 78;
-  const headlineLines = wrapText(payload.headline ?? "Saving File", stacked ? 14 : 16, 2);
-  const headlineSize = fitFontSize(headlineLines, textWidth, stacked ? 66 : 80, stacked ? 44 : 52, 0.74, -2);
-  const headlineHeight = headlineLines.length * headlineSize * 0.92 + 24;
-  const subLines = payload.subheadline ? wrapText(payload.subheadline, 24, stacked ? 4 : 4) : [];
+  const docStageWidth = portrait ? frameWidth - 108 : square ? 248 : 420;
+  const docStageX = portrait ? frameX + 54 : square ? frameX + Math.round((frameWidth - docStageWidth) / 2) : frameX + 74;
+  const docStageY = frameY + (portrait ? 84 : square ? 84 : 112);
+  const docStageHeight = portrait ? 322 : square ? 184 : 364;
+  const docWidth = portrait ? 214 : square ? 136 : 224;
+  const docHeight = portrait ? 246 : square ? 158 : 258;
+  const docX = docStageX + Math.round((docStageWidth - docWidth) / 2);
+  const docY = docStageY + (square ? 12 : 34);
+  const textWidth = portrait ? docStageWidth : square ? 420 : frameWidth - (docStageX + docStageWidth + 88 - frameX) - 78;
+  const textX = portrait ? docStageX : square ? frameX + Math.round((frameWidth - textWidth) / 2) : docStageX + docStageWidth + 88;
+  const textY = portrait ? docStageY + docStageHeight + 94 : square ? docStageY + docStageHeight + 88 : frameY + 104;
+  const textAlign = square ? "center" : "left";
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Saving File",
+    subheadline: payload.subheadline,
+    maxWidth: textWidth,
+    maxHeight: portrait ? 284 : square ? 168 : stacked ? 248 : 266,
+    headlineChars: portrait ? 14 : square ? 15 : 16,
+    maxHeadlineLines: 2,
+    subChars: 24,
+    maxSubLines: 3,
+    headlineDesired: portrait ? 66 : square ? 40 : 80,
+    headlineMin: square ? 32 : stacked ? 40 : 48,
+    subDesired: portrait ? 24 : square ? 17 : 28,
+    subMin: square ? 16 : 20,
+    headlineWidthFactor: 0.74,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.16,
+  });
+  const headlineLines = fit.headlineLines;
+  const headlineSize = fit.headlineSize;
+  const headlineHeight = fit.headlineHeight;
+  const subLines = fit.subLines;
   const subY = textY + headlineHeight + 28;
-  const chipY = portrait ? subY + 154 : stacked ? subY + 128 : subY + 124;
-  const saveY = portrait ? frameY + frameHeight - 146 : stacked ? frameY + frameHeight - 112 : frameY + frameHeight - 124;
-  const chipAWidth = portrait ? 292 : stacked ? 260 : 276;
-  const chipATextWidth = portrait ? 248 : stacked ? 216 : 228;
-  const chipBWidth = portrait ? 340 : stacked ? 260 : 236;
+  const chipY = portrait ? subY + 154 : square ? subY + 48 : stacked ? subY + 128 : subY + 124;
+  const saveY = portrait ? frameY + frameHeight - 146 : square ? frameY + frameHeight - 96 : stacked ? frameY + frameHeight - 112 : frameY + frameHeight - 124;
+  const chipAWidth = portrait ? 292 : square ? 248 : stacked ? 260 : 276;
+  const chipATextWidth = portrait ? 248 : square ? 204 : stacked ? 216 : 228;
+  const chipBWidth = portrait ? 340 : square ? 248 : stacked ? 260 : 236;
   const chipBX = textX + (portrait ? 0 : stacked ? 0 : 292);
-  const chipBY = chipY + (portrait ? 82 : stacked ? 80 : 0);
-  const chipBTextX = textX + (portrait ? 24 : stacked ? 24 : 316);
-  const chipBTextY = chipY + (portrait ? 100 : stacked ? 98 : 18);
-  const chipBTextWidth = portrait ? 292 : stacked ? 212 : 188;
+  const chipBY = chipY + (portrait ? 82 : square ? 74 : stacked ? 80 : 0);
+  const chipBTextX = textX + (portrait ? 24 : square ? 22 : stacked ? 24 : 316);
+  const chipBTextY = chipY + (portrait ? 100 : square ? 92 : stacked ? 98 : 18);
+  const chipBTextWidth = portrait ? 292 : square ? 204 : stacked ? 212 : 188;
+  const topRailWidth = portrait ? 220 : square ? 154 : 282;
+  const topRailX = portrait ? frameX + 54 : square ? frameX + Math.round((frameWidth - topRailWidth) / 2) : textX;
+  const iconBadgeSize = square ? 60 : 104;
+  const iconBadgeX = docX + Math.round((docWidth - iconBadgeSize) / 2);
+  const iconBadgeY = docY + (square ? 22 : 34);
+  const iconSize = square ? 28 : 64;
+  const iconX = iconBadgeX + Math.round((iconBadgeSize - iconSize) / 2);
+  const iconY = iconBadgeY + Math.round((iconBadgeSize - iconSize) / 2);
+  const docLineBaseY = iconBadgeY + iconBadgeSize + (square ? 18 : 38);
 
   return [
     ...buildSceneBackdropOrnaments(canvas, sceneStyle, duration),
     buildPanelElement({id: "download-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 52, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
-    buildPanelElement({id: "download-top-rail", layer: "background", x: portrait ? frameX + 54 : textX, y: frameY + 34, width: portrait ? 220 : 282, height: 10, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.02, end: Math.min(0.34, duration * 0.16), property: "opacity", from: 0, to: 0.72, easing: "easeOut"}, {start: 0.02, end: Math.min(0.34, duration * 0.16), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
-    buildPanelElement({id: "download-stage", layer: "background", x: docStageX, y: docStageY, width: docStageWidth, height: docStageHeight, fill: surface, cornerRadius: 44, opacity: 0, animations: [{start: 0.04, end: Math.min(0.5, duration * 0.22), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.04, end: Math.min(0.5, duration * 0.22), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
-    {id: "download-aura", type: "glow", layer: "background", x: docX - 74, y: docY - 74, width: docWidth + 148, height: docHeight + 148, fill: accent, glowColor: accent, glowStrength: 0.72, opacity: 0, animations: [{start: 0.08, end: Math.min(0.66, duration * 0.28), property: "opacity", from: 0, to: 0.1, easing: "easeOut"}, {start: 0.08, end: Math.min(0.66, duration * 0.28), property: "scale", from: 0.78, to: 1, easing: "spring"}]},
-    buildPanelElement({id: "download-doc", layer: "foreground", x: docX, y: docY, width: docWidth, height: docHeight, fill: elevated, stroke: accent, strokeWidth: 4, cornerRadius: 28, opacity: 0, animations: [{start: 0.1, end: Math.min(0.62, duration * 0.26), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.1, end: Math.min(0.62, duration * 0.26), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
-    buildPanelElement({id: "download-doc-fold", layer: "foreground", x: docX + docWidth - 58, y: docY + 18, width: 34, height: 34, fill: surface, cornerRadius: 8, opacity: 0, animations: [{start: 0.16, end: Math.min(0.72, duration * 0.3), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}]}),
-    buildIconElement("download-icon", "download", docX + Math.round((docWidth - 104) / 2), docY + 52, 104, accent, duration),
+    buildPanelElement({id: "download-top-rail", layer: "background", x: topRailX, y: frameY + 34, width: topRailWidth, height: 10, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.02, end: Math.min(0.34, duration * 0.16), property: "opacity", from: 0, to: 0.72, easing: "easeOut"}, {start: 0.02, end: Math.min(0.34, duration * 0.16), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
+      buildPanelElement({id: "download-stage", layer: "background", x: docStageX, y: docStageY, width: docStageWidth, height: docStageHeight, fill: square ? mixHex(surface, elevated, 0.42) : surface, stroke: square ? mixHex(accent, "#FFFFFF", 0.45) : undefined, strokeWidth: square ? 2 : undefined, cornerRadius: 40, opacity: 0, animations: [{start: 0.04, end: Math.min(0.5, duration * 0.22), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.04, end: Math.min(0.5, duration * 0.22), property: "scale", from: 0.92, to: 1, easing: "spring"}]}),
+      {id: "download-aura", type: "glow", layer: "background", x: docX - 42, y: docY - 42, width: docWidth + 84, height: docHeight + 84, fill: accent, glowColor: accent, glowStrength: square ? 0.52 : 0.72, opacity: 0, animations: [{start: 0.08, end: Math.min(0.66, duration * 0.28), property: "opacity", from: 0, to: square ? 0.05 : 0.1, easing: "easeOut"}, {start: 0.08, end: Math.min(0.66, duration * 0.28), property: "scale", from: 0.82, to: 1, easing: "spring"}]},
+    buildPanelElement({id: "download-doc", layer: "foreground", x: docX, y: docY, width: docWidth, height: docHeight, fill: elevated, stroke: accent, strokeWidth: square ? 3 : 4, cornerRadius: 28, opacity: 0, animations: [{start: 0.1, end: Math.min(0.62, duration * 0.26), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.1, end: Math.min(0.62, duration * 0.26), property: "scale", from: 0.86, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "download-doc-fold", layer: "foreground", x: docX + docWidth - (square ? 40 : 58), y: docY + 18, width: square ? 24 : 34, height: square ? 24 : 34, fill: surface, cornerRadius: 8, opacity: 0, animations: [{start: 0.16, end: Math.min(0.72, duration * 0.3), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-icon-badge", layer: "foreground", x: iconBadgeX, y: iconBadgeY, width: iconBadgeSize, height: iconBadgeSize, fill: surface, cornerRadius: 24, opacity: 0, animations: [{start: 0.14, end: Math.min(0.68, duration * 0.3), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.14, end: Math.min(0.68, duration * 0.3), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildIconElement("download-icon", "download", iconX, iconY, iconSize, accent, duration),
     ...[0, 1, 2].map((index) =>
-      buildPanelElement({id: `download-doc-line-${index}`, layer: "foreground", x: docX + 34, y: docY + 168 + index * 24, width: index === 0 ? docWidth - 68 : index === 1 ? docWidth - 84 : docWidth - 106, height: 10, fill: edge, cornerRadius: 999, opacity: 0, animations: [{start: 0.22 + index * 0.04, end: Math.min(0.9 + index * 0.04, duration * 0.4), property: "opacity", from: 0, to: 0.58, easing: "easeOut"}, {start: 0.22 + index * 0.04, end: Math.min(0.9 + index * 0.04, duration * 0.4), property: "scale", from: 0.2, to: 1, easing: "easeOut"}]})
-    ),
+        buildPanelElement({id: `download-doc-line-${index}`, layer: "foreground", x: docX + (square ? 28 : 34), y: docLineBaseY + index * (square ? 18 : 22), width: index === 0 ? docWidth - (square ? 56 : 68) : index === 1 ? docWidth - (square ? 68 : 84) : docWidth - (square ? 86 : 106), height: square ? 8 : 10, fill: edge, cornerRadius: 999, opacity: 0, animations: [{start: 0.22 + index * 0.04, end: Math.min(0.9 + index * 0.04, duration * 0.4), property: "opacity", from: 0, to: 0.58, easing: "easeOut"}, {start: 0.22 + index * 0.04, end: Math.min(0.9 + index * 0.04, duration * 0.4), property: "scale", from: 0.2, to: 1, easing: "easeOut"}]})
+      ),
     buildPanelElement({id: "download-progress-track", layer: "background", x: docStageX + 34, y: docStageY + docStageHeight - 54, width: docStageWidth - 68, height: 16, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.24, end: Math.min(0.94, duration * 0.42), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}]}),
     buildPanelElement({id: "download-progress-fill", layer: "foreground", x: docStageX + 34, y: docStageY + docStageHeight - 54, width: Math.round((docStageWidth - 68) * 0.78), height: 16, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.28, end: Math.min(1.1, duration * 0.5), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.28, end: Math.min(1.1, duration * 0.5), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
-    buildTextElement({id: "download-kicker", layer: "foreground", x: textX, y: textY - 46, width: textWidth, height: 24, fill: accent, text: (payload.kicker ?? "FILE FLOW").toUpperCase(), fontSize: 20, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: 1.7, lineHeight: 1, opacity: 0, animations: [{start: 0.08, end: Math.min(0.34, duration * 0.16), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
-    buildTextElement({id: "download-headline", layer: "main", x: textX, y: textY, width: textWidth, height: headlineHeight, fill: textColor, text: headlineLines.join("\n"), fontSize: headlineSize, fontWeight: 900, fontFamily, textAlign: "left", letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.12, end: Math.min(0.84, duration * 0.36), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.12, end: Math.min(0.84, duration * 0.36), property: "translateY", from: 22, to: 0, easing: "spring"}]}),
+    buildTextElement({id: "download-kicker", layer: "foreground", x: textX, y: textY - 46, width: textWidth, height: 24, fill: accent, text: (payload.kicker ?? "FILE FLOW").toUpperCase(), fontSize: 20, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign, letterSpacing: 1.7, lineHeight: 1, opacity: 0, animations: [{start: 0.08, end: Math.min(0.34, duration * 0.16), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "download-headline", layer: "main", x: textX, y: textY, width: textWidth, height: headlineHeight, fill: textColor, text: headlineLines.join("\n"), fontSize: headlineSize, fontWeight: 900, fontFamily, textAlign, letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.12, end: Math.min(0.84, duration * 0.36), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.12, end: Math.min(0.84, duration * 0.36), property: "translateY", from: 22, to: 0, easing: "spring"}]}),
     ...(subLines.length > 0 ? [
-      buildPanelElement({id: "download-sub-line", layer: "foreground", x: textX, y: subY - 20, width: Math.round(textWidth * 0.42), height: 6, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.18, end: Math.min(0.7, duration * 0.3), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.18, end: Math.min(0.7, duration * 0.3), property: "scale", from: 0.3, to: 1, easing: "easeOut"}]}),
-      buildTextElement({id: "download-subheadline", layer: "foreground", x: textX, y: subY, width: textWidth, height: subLines.length * 28 * 1.16 + 20, fill: secondaryText, text: subLines.join("\n"), fontSize: stacked ? 24 : 28, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.2, lineHeight: 1.16, opacity: 0, animations: [{start: 0.22, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.22, end: Math.min(1.02, duration * 0.46), property: "translateY", from: 18, to: 0, easing: "easeOut"}]}),
+      buildPanelElement({id: "download-sub-line", layer: "foreground", x: square ? textX + Math.round((textWidth - Math.round(textWidth * 0.42)) / 2) : textX, y: subY - 20, width: Math.round(textWidth * 0.42), height: 6, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.18, end: Math.min(0.7, duration * 0.3), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.18, end: Math.min(0.7, duration * 0.3), property: "scale", from: 0.3, to: 1, easing: "easeOut"}]}),
+      buildTextElement({id: "download-subheadline", layer: "foreground", x: textX, y: subY, width: textWidth, height: fit.subHeight + 20, fill: secondaryText, text: subLines.join("\n"), fontSize: fit.subSize || (stacked ? 24 : 28), fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign, letterSpacing: -0.2, lineHeight: 1.16, opacity: 0, animations: [{start: 0.22, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.22, end: Math.min(1.02, duration * 0.46), property: "translateY", from: 18, to: 0, easing: "easeOut"}]}),
     ] : []),
     buildPanelElement({id: "download-chip-a", layer: "foreground", x: textX, y: chipY, width: chipAWidth, height: 62, fill: surface, cornerRadius: 999, opacity: 0, animations: [{start: 0.28, end: Math.min(1.08, duration * 0.48), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.28, end: Math.min(1.08, duration * 0.48), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
-    buildTextElement({id: "download-chip-a-text", layer: "foreground", x: textX + 24, y: chipY + 18, width: chipATextWidth, height: 22, fill: accent, text: "78% SAVED", fontSize: 20, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: 1, lineHeight: 1, opacity: 0, animations: [{start: 0.32, end: Math.min(1.12, duration * 0.5), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+      buildTextElement({id: "download-chip-a-text", layer: "foreground", x: square ? textX : textX + 24, y: chipY + 18, width: square ? chipAWidth : chipATextWidth, height: 22, fill: accent, text: "78% SAVED", fontSize: 20, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign, letterSpacing: 1, lineHeight: 1, opacity: 0, animations: [{start: 0.32, end: Math.min(1.12, duration * 0.5), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
     buildPanelElement({id: "download-chip-b", layer: "foreground", x: chipBX, y: chipBY, width: chipBWidth, height: 62, fill: elevated, cornerRadius: 999, opacity: 0, animations: [{start: 0.34, end: Math.min(1.14, duration * 0.52), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.34, end: Math.min(1.14, duration * 0.52), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
-    buildTextElement({id: "download-chip-b-text", layer: "foreground", x: chipBTextX, y: chipBTextY, width: chipBTextWidth, height: 22, fill: edge, text: "clean save state, clearer handoff", fontSize: 18, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: -0.1, lineHeight: 1, opacity: 0, animations: [{start: 0.38, end: Math.min(1.18, duration * 0.54), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
+      buildTextElement({id: "download-chip-b-text", layer: "foreground", x: square ? chipBX : chipBTextX, y: chipBTextY, width: square ? chipBWidth : chipBTextWidth, height: 22, fill: edge, text: "clean save state, clearer handoff", fontSize: 18, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign, letterSpacing: -0.1, lineHeight: 1, opacity: 0, animations: [{start: 0.38, end: Math.min(1.18, duration * 0.54), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
     buildPanelElement({id: "download-save-track", layer: "background", x: textX, y: saveY, width: textWidth, height: 16, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.4, end: Math.min(1.18, duration * 0.54), property: "opacity", from: 0, to: 0.78, easing: "easeOut"}]}),
     buildPanelElement({id: "download-save-fill", layer: "foreground", x: textX, y: saveY, width: Math.round(textWidth * 0.78), height: 16, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.44, end: Math.min(1.24, duration * 0.56), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.44, end: Math.min(1.24, duration * 0.56), property: "scale", from: 0.2, to: 1, easing: "easeOut"}]}),
-    buildTextElement({id: "download-save-text", layer: "foreground", x: textX, y: saveY + 30, width: textWidth, height: 24, fill: edge, text: "File archived successfully", fontSize: 22, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "left", letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.48, end: Math.min(1.28, duration * 0.58), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
+    buildTextElement({id: "download-save-text", layer: "foreground", x: textX, y: saveY + 30, width: textWidth, height: 24, fill: edge, text: "File archived successfully", fontSize: 22, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign, letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.48, end: Math.min(1.28, duration * 0.58), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
   ];
+};
+
+const buildDownloadSpotlightSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated, edge, track, design} = sceneStyle;
+  const fontFamily = pickFontFamily(prompt);
+  const portrait = canvas.format === "portrait";
+  const square = canvas.format === "square";
+  const frameX = portrait ? 84 : 92;
+  const frameY = portrait ? 248 : square ? 132 : 160;
+  const frameWidth = portrait ? canvas.width - 168 : canvas.width - 184;
+  const frameHeight = portrait ? 1220 : square ? 900 : 760;
+  const stageWidth = portrait ? frameWidth - 110 : square ? 340 : 620;
+  const stageHeight = portrait ? 420 : square ? 176 : 384;
+  const stageX = frameX + Math.round((frameWidth - stageWidth) / 2);
+  const stageY = frameY + (square ? 72 : 56);
+  const docWidth = portrait ? 312 : square ? 156 : 320;
+  const docHeight = portrait ? 364 : square ? 164 : 372;
+  const docX = stageX + Math.round((stageWidth - docWidth) / 2);
+  const docY = stageY + Math.round((stageHeight - docHeight) / 2);
+  const badgeSize = portrait ? 94 : square ? 60 : 96;
+  const badgeX = stageX + stageWidth - badgeSize - 24;
+  const badgeY = stageY + 24;
+  const iconSize = portrait ? 72 : square ? 40 : 74;
+  const textWidth = portrait ? frameWidth - 170 : square ? 430 : 560;
+  const textX = frameX + Math.round((frameWidth - textWidth) / 2);
+  const textY = stageY + stageHeight + (square ? 68 : 72);
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Saving File",
+    subheadline: payload.subheadline,
+    maxWidth: textWidth,
+    maxHeight: portrait ? 260 : square ? 120 : 240,
+    headlineChars: square ? 14 : 14,
+    maxHeadlineLines: 2,
+    subChars: square ? 20 : 24,
+    maxSubLines: square ? 2 : 2,
+    headlineDesired: portrait ? 70 : square ? 44 : 76,
+    headlineMin: square ? 32 : 44,
+    subDesired: portrait ? 24 : square ? 16 : 26,
+    subMin: 14,
+    headlineWidthFactor: 0.66,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.14,
+  });
+  const headlineHeight = fit.headlineHeight;
+  const summaryWidth = portrait ? frameWidth - 150 : square ? 332 : 468;
+  const summaryX = frameX + Math.round((frameWidth - summaryWidth) / 2);
+  const summaryY = textY + headlineHeight + fit.subHeight + (square ? 22 : 48);
+  const ctaWidth = portrait ? summaryWidth : square ? 260 : 340;
+  const ctaX = frameX + Math.round((frameWidth - ctaWidth) / 2);
+  const ctaY = square ? summaryY + 118 : frameY + frameHeight - 136;
+  const progressWidth = Math.round(docWidth * 0.74);
+  const progressX = docX + Math.round((docWidth - progressWidth) / 2);
+  const progressY = docY + docHeight - (square ? 56 : 72);
+
+  return [
+    ...buildSceneBackdropOrnaments(canvas, sceneStyle, duration),
+    buildPanelElement({id: "download-spotlight-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 54, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "download-spotlight-stage", layer: "background", x: stageX, y: stageY, width: stageWidth, height: stageHeight, fill: surface, cornerRadius: 52, opacity: 0, animations: [{start: 0.04, end: Math.min(0.52, duration * 0.24), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0.04, end: Math.min(0.52, duration * 0.24), property: "scale", from: 0.92, to: 1, easing: "spring"}]}),
+    {id: "download-spotlight-glow", type: "glow", layer: "background", x: stageX - 64, y: stageY - 64, width: stageWidth + 128, height: stageHeight + 128, fill: accent, glowColor: accent, glowStrength: design.objectProminence === "dominant" ? 0.9 : 0.76, opacity: 0, animations: [{start: 0.08, end: Math.min(0.58, duration * 0.28), property: "opacity", from: 0, to: 0.12, easing: "easeOut"}]},
+    buildPanelElement({id: "download-spotlight-sheen", layer: "background", x: stageX + 22, y: stageY + 22, width: stageWidth - 44, height: Math.round(stageHeight * 0.24), fill: mixHex(accent, "#FFFFFF", 0.74), cornerRadius: 999, opacity: 0, animations: [{start: 0.1, end: Math.min(0.62, duration * 0.28), property: "opacity", from: 0, to: 0.12, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-spotlight-doc", layer: "foreground", x: docX, y: docY, width: docWidth, height: docHeight, fill: elevated, stroke: accent, strokeWidth: square ? 3 : 4, cornerRadius: 30, opacity: 0, animations: [{start: 0.1, end: Math.min(0.62, duration * 0.28), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.1, end: Math.min(0.62, duration * 0.28), property: "scale", from: 0.88, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "download-spotlight-fold", layer: "foreground", x: docX + docWidth - 42, y: docY + 18, width: 24, height: 24, fill: surface, cornerRadius: 8, opacity: 0, animations: [{start: 0.14, end: Math.min(0.68, duration * 0.3), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-spotlight-icon-badge", layer: "foreground", x: docX + Math.round((docWidth - 72) / 2), y: docY + 20, width: 72, height: 72, fill: surface, cornerRadius: 22, opacity: 0, animations: [{start: 0.14, end: Math.min(0.68, duration * 0.3), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.14, end: Math.min(0.68, duration * 0.3), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildIconElement("download-spotlight-icon", "download", docX + Math.round((docWidth - iconSize) / 2), docY + 20 + Math.round((72 - iconSize) / 2), iconSize, accent, duration),
+    ...[0, 1, 2].map((index) =>
+      buildPanelElement({id: `download-spotlight-line-${index}`, layer: "foreground", x: docX + 28, y: docY + (square ? 104 : 162) + index * (square ? 18 : 28), width: index === 0 ? docWidth - 56 : index === 1 ? docWidth - 72 : docWidth - 94, height: square ? 8 : 12, fill: edge, cornerRadius: 999, opacity: 0, animations: [{start: 0.22 + index * 0.04, end: Math.min(0.9 + index * 0.04, duration * 0.4), property: "opacity", from: 0, to: 0.58, easing: "easeOut"}, {start: 0.22 + index * 0.04, end: Math.min(0.9 + index * 0.04, duration * 0.4), property: "scale", from: 0.2, to: 1, easing: "easeOut"}]})
+    ),
+    buildPanelElement({id: "download-spotlight-progress-track", layer: "background", x: progressX, y: progressY, width: progressWidth, height: 16, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.24, end: Math.min(0.94, duration * 0.42), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-spotlight-progress-fill", layer: "foreground", x: progressX, y: progressY, width: Math.round(progressWidth * 0.84), height: 16, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.28, end: Math.min(1.1, duration * 0.5), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.28, end: Math.min(1.1, duration * 0.5), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-spotlight-badge", layer: "foreground", x: badgeX, y: badgeY, width: badgeSize, height: badgeSize, fill: elevated, cornerRadius: 28, opacity: 0, animations: [{start: 0.16, end: Math.min(0.72, duration * 0.34), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}, {start: 0.16, end: Math.min(0.72, duration * 0.34), property: "scale", from: 0.82, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "download-spotlight-badge-text", layer: "foreground", x: badgeX, y: badgeY + 18, width: badgeSize, height: 24, fill: accent, text: "SAVE", fontSize: square ? 18 : 22, fontWeight: 900, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: 1.2, lineHeight: 1, opacity: 0, animations: [{start: 0.2, end: Math.min(0.8, duration * 0.36), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-spotlight-rail", layer: "foreground", x: textX + Math.round((textWidth - Math.round(textWidth * 0.28)) / 2), y: textY - 28, width: Math.round(textWidth * 0.28), height: 8, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.14, end: Math.min(0.46, duration * 0.22), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.14, end: Math.min(0.46, duration * 0.22), property: "scale", from: 0.28, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "download-spotlight-headline", layer: "main", x: textX, y: textY, width: textWidth, height: fit.headlineHeight, fill: textColor, text: fit.headlineLines.join("\n"), fontSize: fit.headlineSize, fontWeight: 900, fontFamily, textAlign: "center", letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.18, end: Math.min(0.92, duration * 0.42), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.18, end: Math.min(0.92, duration * 0.42), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildTextElement({id: "download-spotlight-sub", layer: "foreground", x: textX, y: textY + fit.headlineHeight + 20, width: textWidth, height: Math.max(64, fit.subHeight + 16), fill: secondaryText, text: fit.subLines.length > 0 ? fit.subLines.join("\n") : "A stronger save-state scene with archive clarity and handoff confidence.", fontSize: fit.subSize || (square ? 22 : 24), fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.24, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-spotlight-summary", layer: "background", x: summaryX, y: summaryY, width: summaryWidth, height: square ? 94 : 112, fill: elevated, cornerRadius: 30, opacity: 0, animations: [{start: 0.28, end: Math.min(1.06, duration * 0.48), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}, {start: 0.28, end: Math.min(1.06, duration * 0.48), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "download-spotlight-summary-track", layer: "background", x: summaryX + 24, y: summaryY + 22, width: summaryWidth - 48, height: 12, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.32, end: Math.min(1.12, duration * 0.52), property: "opacity", from: 0, to: 0.74, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-spotlight-summary-fill", layer: "foreground", x: summaryX + 24, y: summaryY + 22, width: Math.round((summaryWidth - 48) * 0.82), height: 12, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.36, end: Math.min(1.18, duration * 0.54), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.36, end: Math.min(1.18, duration * 0.54), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "download-spotlight-summary-text", layer: "foreground", x: summaryX + 24, y: summaryY + 46, width: summaryWidth - 48, height: 24, fill: edge, text: "Archive confidence 82%", fontSize: square ? 18 : 24, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.4, end: Math.min(1.24, duration * 0.58), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-spotlight-cta", layer: "foreground", x: ctaX, y: ctaY, width: ctaWidth, height: 64, fill: elevated, cornerRadius: 999, opacity: 0, animations: [{start: 0.42, end: Math.min(1.28, duration * 0.6), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.42, end: Math.min(1.28, duration * 0.6), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "download-spotlight-cta-text", layer: "foreground", x: ctaX, y: ctaY + 18, width: ctaWidth, height: 24, fill: accent, text: "ARCHIVE READY", fontSize: 18, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: 1.2, lineHeight: 1, opacity: 0, animations: [{start: 0.46, end: Math.min(1.34, duration * 0.62), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+  ];
+};
+
+const buildDownloadSaveStackSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const {accent, text: textColor, secondary: secondaryText, frame, surface, elevated, edge, track} = sceneStyle;
+  const fontFamily = pickFontFamily(prompt);
+  const portrait = canvas.format === "portrait";
+  const square = canvas.format === "square";
+  const frameX = portrait ? 82 : 92;
+  const frameY = portrait ? 252 : square ? 132 : 160;
+  const frameWidth = portrait ? canvas.width - 164 : canvas.width - 184;
+  const frameHeight = portrait ? 1220 : square ? 900 : 780;
+  const textWidth = portrait ? frameWidth - 132 : square ? 360 : 500;
+  const textX = portrait ? frameX + 66 : square ? frameX + Math.round((frameWidth - textWidth) / 2) : frameX + 54;
+  const topY = frameY + (square ? 72 : 64);
+  const fit = fitTextBlock({
+    headline: payload.headline ?? "Saving File",
+    subheadline: payload.subheadline,
+    maxWidth: textWidth,
+    maxHeight: portrait ? 240 : square ? 116 : 220,
+    headlineChars: square ? 12 : 14,
+    maxHeadlineLines: 2,
+    subChars: 22,
+    maxSubLines: square ? 2 : 3,
+    headlineDesired: portrait ? 68 : square ? 38 : 72,
+    headlineMin: square ? 30 : 42,
+    subDesired: portrait ? 24 : square ? 15 : 24,
+    subMin: 16,
+    headlineWidthFactor: 0.72,
+    subWidthFactor: 0.6,
+    headlineLetterSpacing: -2,
+    subLetterSpacing: -0.2,
+    headlineLineHeight: 0.92,
+    subLineHeight: 1.14,
+  });
+  const headlineHeight = fit.headlineHeight;
+  const railWidth = Math.round(textWidth * 0.28);
+  const cardWidth = portrait ? frameWidth - 150 : square ? 408 : 420;
+  const cardX = frameX + Math.round((frameWidth - cardWidth) / 2);
+  const cardHeight = portrait ? 198 : square ? 176 : 196;
+  const card1Y = topY + headlineHeight + fit.subHeight + (square ? 92 : 78);
+  const card2Y = card1Y + (square ? 54 : 60);
+  const card3Y = card2Y + (square ? 54 : 60);
+  const summaryWidth = portrait ? frameWidth - 150 : square ? 356 : textWidth;
+  const summaryX = frameX + Math.round((frameWidth - summaryWidth) / 2);
+  const summaryY = card3Y + cardHeight + (square ? 34 : 44);
+  const ctaWidth = portrait ? summaryWidth : square ? 280 : 340;
+  const ctaX = frameX + Math.round((frameWidth - ctaWidth) / 2);
+  const ctaY = square ? summaryY + 118 : frameY + frameHeight - 134;
+  const iconSize = square ? 72 : 76;
+
+  return [
+    ...buildSceneBackdropOrnaments(canvas, sceneStyle, duration),
+    buildPanelElement({id: "download-stack-frame", layer: "background", x: frameX, y: frameY, width: frameWidth, height: frameHeight, fill: frame, cornerRadius: 54, opacity: 0, animations: [{start: 0, end: Math.min(0.42, duration * 0.2), property: "opacity", from: 0, to: 0.95, easing: "easeOut"}, {start: 0, end: Math.min(0.42, duration * 0.2), property: "scale", from: 0.94, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "download-stack-rail", layer: "foreground", x: textX + Math.round((textWidth - railWidth) / 2), y: topY - 30, width: railWidth, height: 8, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.06, end: Math.min(0.38, duration * 0.18), property: "opacity", from: 0, to: 0.82, easing: "easeOut"}, {start: 0.06, end: Math.min(0.38, duration * 0.18), property: "scale", from: 0.24, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "download-stack-headline", layer: "main", x: textX, y: topY, width: textWidth, height: headlineHeight, fill: textColor, text: fit.headlineLines.join("\n"), fontSize: fit.headlineSize, fontWeight: 900, fontFamily, textAlign: "center", letterSpacing: -2, lineHeight: 0.92, opacity: 0, animations: [{start: 0.08, end: Math.min(0.82, duration * 0.34), property: "opacity", from: 0, to: 1, easing: "easeOut"}, {start: 0.08, end: Math.min(0.82, duration * 0.34), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildTextElement({id: "download-stack-copy", layer: "foreground", x: textX, y: topY + headlineHeight + 20, width: textWidth, height: Math.max(72, fit.subHeight + 16), fill: secondaryText, text: fit.subLines.length > 0 ? fit.subLines.join("\n") : "A stronger save-state scene with stacked statuses and archive handoff framing.", fontSize: fit.subSize || (square ? 22 : 24), fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.16, end: Math.min(0.94, duration * 0.42), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-stack-card-3", layer: "background", x: cardX + (square ? 40 : 54), y: card3Y, width: cardWidth - (square ? 80 : 108), height: cardHeight - (square ? 26 : 34), fill: surface, cornerRadius: 34, opacity: 0, animations: [{start: 0.18, end: Math.min(0.9, duration * 0.4), property: "opacity", from: 0, to: 0.34, easing: "easeOut"}, {start: 0.18, end: Math.min(0.9, duration * 0.4), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildPanelElement({id: "download-stack-card-2", layer: "background", x: cardX + (square ? 18 : 26), y: card2Y, width: cardWidth - (square ? 36 : 52), height: cardHeight - (square ? 8 : 16), fill: elevated, cornerRadius: 38, opacity: 0, animations: [{start: 0.2, end: Math.min(0.94, duration * 0.42), property: "opacity", from: 0, to: 0.58, easing: "easeOut"}, {start: 0.2, end: Math.min(0.94, duration * 0.42), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildPanelElement({id: "download-stack-card-1", layer: "foreground", x: cardX, y: card1Y, width: cardWidth, height: cardHeight, fill: surface, cornerRadius: 40, opacity: 0, animations: [{start: 0.22, end: Math.min(0.98, duration * 0.44), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.22, end: Math.min(0.98, duration * 0.44), property: "translateY", from: 20, to: 0, easing: "spring"}]}),
+    buildPanelElement({id: "download-stack-icon-badge", layer: "foreground", x: cardX + 28, y: card1Y + 28, width: square ? 92 : 96, height: square ? 92 : 96, fill: accent, cornerRadius: 30, opacity: 0, animations: [{start: 0.26, end: Math.min(1.02, duration * 0.46), property: "opacity", from: 0, to: 0.76, easing: "easeOut"}]}),
+    buildIconElement("download-stack-icon", "download", cardX + 28 + Math.round(((square ? 92 : 96) - iconSize) / 2), card1Y + 28 + Math.round(((square ? 92 : 96) - iconSize) / 2), iconSize, mixHex(accent, "#FFFFFF", 0.1), duration),
+    buildTextElement({id: "download-stack-line-1", layer: "foreground", x: cardX + 28 + (square ? 118 : 124), y: card1Y + (square ? 38 : 40), width: cardWidth - (square ? 146 : 158), height: 30, fill: textColor, text: "Premium Motion Pack", fontSize: square ? 22 : 30, fontWeight: 800, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.5, lineHeight: 1, opacity: 0, animations: [{start: 0.28, end: Math.min(1.04, duration * 0.48), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "download-stack-line-2", layer: "foreground", x: cardX + 28 + (square ? 118 : 124), y: card1Y + (square ? 72 : 84), width: cardWidth - (square ? 146 : 158), height: 52, fill: secondaryText, text: "Archive state, handoff tags,\nand cleaner save timing", fontSize: square ? 15 : 20, fontWeight: 600, fontFamily: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif", textAlign: "left", letterSpacing: -0.2, lineHeight: 1.14, opacity: 0, animations: [{start: 0.3, end: Math.min(1.08, duration * 0.5), property: "opacity", from: 0, to: 0.92, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-stack-summary", layer: "background", x: summaryX, y: summaryY, width: summaryWidth, height: 114, fill: elevated, cornerRadius: 30, opacity: 0, animations: [{start: 0.32, end: Math.min(1.1, duration * 0.5), property: "opacity", from: 0, to: 0.9, easing: "easeOut"}, {start: 0.32, end: Math.min(1.1, duration * 0.5), property: "scale", from: 0.9, to: 1, easing: "spring"}]}),
+    buildPanelElement({id: "download-stack-summary-track", layer: "background", x: summaryX + 28, y: summaryY + 28, width: summaryWidth - 56, height: 12, fill: track, cornerRadius: 999, opacity: 0, animations: [{start: 0.36, end: Math.min(1.16, duration * 0.54), property: "opacity", from: 0, to: 0.74, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-stack-summary-fill", layer: "foreground", x: summaryX + 28, y: summaryY + 28, width: Math.round((summaryWidth - 56) * 0.72), height: 12, fill: accent, cornerRadius: 999, opacity: 0, animations: [{start: 0.4, end: Math.min(1.22, duration * 0.56), property: "opacity", from: 0, to: 0.96, easing: "easeOut"}, {start: 0.4, end: Math.min(1.22, duration * 0.56), property: "scale", from: 0.22, to: 1, easing: "easeOut"}]}),
+    buildTextElement({id: "download-stack-summary-text", layer: "foreground", x: summaryX + 28, y: summaryY + 58, width: summaryWidth - 56, height: 28, fill: edge, text: "Archive confidence 72%", fontSize: square ? 24 : 24, fontWeight: 700, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: -0.2, lineHeight: 1, opacity: 0, animations: [{start: 0.44, end: Math.min(1.26, duration * 0.58), property: "opacity", from: 0, to: 0.94, easing: "easeOut"}]}),
+    buildPanelElement({id: "download-stack-cta", layer: "foreground", x: ctaX, y: ctaY, width: ctaWidth, height: 72, fill: elevated, cornerRadius: 999, opacity: 0, animations: [{start: 0.42, end: Math.min(1.24, duration * 0.58), property: "opacity", from: 0, to: 0.88, easing: "easeOut"}, {start: 0.42, end: Math.min(1.24, duration * 0.58), property: "scale", from: 0.84, to: 1, easing: "spring"}]}),
+    buildTextElement({id: "download-stack-cta-text", layer: "foreground", x: ctaX, y: ctaY + 22, width: ctaWidth, height: 26, fill: accent, text: "ARCHIVE READY", fontSize: 22, fontWeight: 800, fontFamily: "'Segoe UI', Arial, sans-serif", textAlign: "center", letterSpacing: 1.2, lineHeight: 1, opacity: 0, animations: [{start: 0.46, end: Math.min(1.3, duration * 0.6), property: "opacity", from: 0, to: 1, easing: "easeOut"}]}),
+  ];
+};
+
+const buildDownloadSceneElements = (
+  payload: ScenePayload,
+  canvas: CanvasSpec,
+  sceneStyle: SceneStyle,
+  duration: number,
+  prompt: string,
+): AnimatedElement[] => {
+  const compositionVariant = pickDownloadCompositionVariant(prompt);
+  if (compositionVariant === "download-spotlight") return buildDownloadSpotlightSceneElements(payload, canvas, sceneStyle, duration, prompt);
+  if (compositionVariant === "download-save-stack") return buildDownloadSaveStackSceneElements(payload, canvas, sceneStyle, duration, prompt);
+  return buildDownloadCardSceneElements(payload, canvas, sceneStyle, duration, prompt);
 };
 
 const subjectLabel = (type: ShapeType) => {

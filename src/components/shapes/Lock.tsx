@@ -9,6 +9,9 @@ const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 
 const dash = (length: number, progress: number) => {
   const p = clamp01(progress);
+  if (p >= 0.999) {
+    return {} as const;
+  }
   return {
     strokeDasharray: length,
     strokeDashoffset: length * (1 - p),
@@ -56,4 +59,3 @@ export const Lock = ({
     </>
   );
 };
-

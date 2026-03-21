@@ -17,36 +17,38 @@ const dash = (length: number, progress: number) => {
 
 export const SearchIcon = ({
   stroke = "#FFFFFF",
-  strokeWidth = 6,
+  strokeWidth = 5,
   opacity = 1,
   drawProgress = 1,
 }: SearchIconProps) => {
-  const circleLen = 2 * Math.PI * 26;
-  const handleLen = 26;
+  const radius = 23;
+  const circleLen = 2 * Math.PI * radius;
+  const handleLen = 30;
 
   return (
     <>
       <circle
-        cx="44"
-        cy="44"
-        r="26"
+        cx="42"
+        cy="42"
+        r={radius}
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
+        strokeLinejoin="round"
         opacity={opacity}
         {...dash(circleLen, drawProgress)}
       />
       <path
-        d="M60 60 78 78"
+        d="M58 58 79 79"
         fill="none"
         stroke={stroke}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
+        strokeLinejoin="round"
         opacity={opacity}
         {...dash(handleLen, drawProgress)}
       />
     </>
   );
 };
-
